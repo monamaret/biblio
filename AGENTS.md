@@ -37,6 +37,11 @@ breakdown (all design questions in its §0 are now resolved).
   `docs/<section>/<page>.md`, `site.yaml`) — see the confirmed layout
   convention in the Decision Log of
   [001-static-site-platform-with-mcp.md](specs/research/001-static-site-platform-with-mcp.md#decision-log).
+- **Test-driven development (NON-NEGOTIABLE):** write a failing test before
+  writing the implementation that makes it pass — red-green-refactor, for
+  every feature, fix, and refactor, in both `biblio-cli` (Go) and the
+  site/MCP server (TypeScript/React + MCP tool contract tests). No change
+  lands without a test that demonstrates the gap it closes.
 - **No speculative abstraction:** this is a single-private-author
   project — favor the minimal-dependency path, defer
   storage/search escalation until a real site hits a documented
@@ -58,7 +63,11 @@ biblio-cli dev     # vite dev + wrangler dev together
 Update this section with real `install`/`build`/`test`/`lint`/`format`
 commands as soon as the CLI and a site scaffold land — see
 [specs/research/deployment-guide.md](specs/research/deployment-guide.md)
-for the expected end-to-end usage.
+for the expected end-to-end usage. Whatever test runner/framework is
+chosen for the Go side (`go test` + likely `testify`) and the TS/React
+side (e.g. Vitest + MCP tool contract tests), tests are written and
+confirmed failing *before* the corresponding implementation — see the
+test-driven development convention above.
 
 ## Subagents
 
@@ -70,6 +79,51 @@ here, one line per agent, as they're created.
 
 None yet — there is no `.opencode/skills/` directory. Add entries here,
 one line per skill, as project-specific skills are created.
+
+## Feature development process
+
+The fixed pipeline from idea to shipped feature — steps are not skipped,
+reordered, or collapsed, even for small features:
+
+1. **Numbered research discussion document** — open or extend a numbered doc
+   under `specs/research/` (copy `research-template.md` for a new one) and
+   record confirmed decisions in its Decision Log (date, decision, rationale,
+   owner — see `001-static-site-platform-with-mcp.md` for the pattern;
+   superseded entries are kept, marked **Superseded**, not deleted).
+2. **Feature item creation** — create a feature item under `specs/features/`
+   from `specs/features/TEMPLATE.md`, pointing back to the now-confirmed
+   decisions rather than re-deciding anything inline.
+3. **Roadmap inclusion** — add the feature item to
+   [specs/research/roadmap.md](specs/research/roadmap.md) in its
+   dependency-ordered place, keeping the roadmap the single current view of
+   "what's next."
+4. **Architecture sync** — update
+   [specs/research/architecture.md](specs/research/architecture.md) with any
+   resulting diagram/call-flow changes *before* implementation starts.
+5. **Spec Kit workflow** — only then run the Spec Kit (speckit) workflow
+   (`/speckit.specify` → `/speckit.clarify` → `/speckit.plan` →
+   `/speckit.tasks` → `/speckit.implement`, etc.) to produce spec/plan/tasks
+   artifacts and drive implementation, following the documented process at
+   https://github.com/github/spec-kit/blob/main/spec-driven.md rather than
+   improvising a different artifact shape.
+
+## Release process
+
+Each release is packaged as a numbered directory `specs/release_X.XX/` (e.g.
+`specs/release_1.00/`) once its features have actually shipped — not drafted
+ahead of the work it documents. It MUST contain:
+
+- **Final feature list** — the definitive shipped-feature list, each entry
+  linking back to its `specs/features/` item (and from there to the research
+  doc/Decision Log entries that justified it).
+- **Release notes** — a plain, owner-facing summary of what changed and why
+  (no external-user/marketing framing — this is a single-author project).
+- **Unit and integration tests** — both layers, covering the release's
+  features end to end, per the test-driven-development convention above; a
+  release isn't "final" until both exist and pass.
+- **Usage guide** — covering, at minimum, how to **create**, **configure**,
+  **update**, **deploy**, and **destroy** a `biblio` site with that release's
+  `biblio-cli` — the full site lifecycle, end to end.
 
 ## Notes
 

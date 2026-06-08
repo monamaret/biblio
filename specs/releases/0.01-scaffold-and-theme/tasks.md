@@ -44,7 +44,7 @@ Single Go module/CLI project (plan.md "Structure Decision: Option 1 shape, CLI-f
 
 - [X] T005 Implement the Cobra root command (`biblio-cli`, `--version`) with Viper config loading in `internal/cli/root.go`
 - [X] T006 [P] Implement shared Bubble Tea/Lip Gloss TUI base styles and prompt helpers (used by every guided flow) in `internal/tui/styles.go`
-- [ ] T007 [P] Implement the embedded scaffold-template asset loader (Go `embed` over `templates/site/`) in `internal/scaffold/assets.go`
+- [X] T007 [P] Implement the embedded scaffold-template asset loader (Go `embed` over `templates/site/`) in `internal/scaffold/assets.go`
 
 **Checkpoint**: Foundation ready — `biblio-cli --version` runs, shared TUI styles and template-asset loading exist; user story implementation can begin
 

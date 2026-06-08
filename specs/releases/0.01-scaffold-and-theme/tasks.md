@@ -42,9 +42,9 @@ Single Go module/CLI project (plan.md "Structure Decision: Option 1 shape, CLI-f
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T005 Implement the Cobra root command (`biblio-cli`, `--version`) with Viper config loading in `internal/cli/root.go`
-- [ ] T006 [P] Implement shared Bubble Tea/Lip Gloss TUI base styles and prompt helpers (used by every guided flow) in `internal/tui/styles.go`
-- [ ] T007 [P] Implement the embedded scaffold-template asset loader (Go `embed` over `templates/site/`) in `internal/scaffold/assets.go`
+- [X] T005 Implement the Cobra root command (`biblio-cli`, `--version`) with Viper config loading in `internal/cli/root.go`
+- [X] T006 [P] Implement shared Bubble Tea/Lip Gloss TUI base styles and prompt helpers (used by every guided flow) in `internal/tui/styles.go`
+- [X] T007 [P] Implement the embedded scaffold-template asset loader (Go `embed` over `templates/site/`) in `internal/scaffold/assets.go`
 
 **Checkpoint**: Foundation ready — `biblio-cli --version` runs, shared TUI styles and template-asset loading exist; user story implementation can begin
 
@@ -60,18 +60,18 @@ Single Go module/CLI project (plan.md "Structure Decision: Option 1 shape, CLI-f
 
 > Write these FIRST; confirm they FAIL before implementation (Principle VI)
 
-- [ ] T008 [P] [US1] Write failing test for Theme Preset definitions + deterministic `tokens.css` generation in `internal/theme/theme_test.go`
-- [ ] T009 [P] [US1] Write failing test for the scaffold generator (project-dir creation, seeded `content/`, `site.yaml`, `wrangler.jsonc`, collision detection) in `internal/scaffold/generator_test.go`
-- [ ] T010 [P] [US1] Write failing test for `new` command flag validation and error paths (unknown `--type`, `--theme` not valid for `--type`, colliding `project-name`) in `internal/cli/new_test.go`
+- [X] T008 [P] [US1] Write failing test for Theme Preset definitions + deterministic `tokens.css` generation in `internal/theme/theme_test.go`
+- [X] T009 [P] [US1] Write failing test for the scaffold generator (project-dir creation, seeded `content/`, `site.yaml`, `wrangler.jsonc`, collision detection) in `internal/scaffold/generator_test.go`
+- [X] T010 [P] [US1] Write failing test for `new` command flag validation and error paths (unknown `--type`, `--theme` not valid for `--type`, colliding `project-name`) in `internal/cli/new_test.go`
 
 ### Implementation for User Story 1
 
-- [ ] T011 [P] [US1] Define the Theme Preset entity and one ready-to-use preset per site type (`profile`, `log`, `docs`) in `internal/theme/presets.go` (data-model.md "Theme Preset"; FR-004)
-- [ ] T012 [US1] Implement deterministic `tokens.css` generation from a selected Theme Preset in `internal/theme/tokens.go` (depends on T011; research.md "Theming ownership and artifact" — generated once, owned solely by `biblio-cli`)
-- [ ] T013 [P] [US1] Author seed content and scaffold file templates for the three site types in `templates/site/profile/`, `templates/site/log/`, `templates/site/docs/`
-- [ ] T014 [US1] Implement the scaffold generator producing the Site Project entity (`content/`, `content/site.yaml` with `mcp_enabled: true`, `wrangler.jsonc` with `--domain`-derived routing, `tokens.css`) in `internal/scaffold/generator.go` (depends on T007, T012, T013; data-model.md "Site Project")
-- [ ] T015 [US1] Implement the Bubble Tea guided `new` flow (interactive type/domain/theme prompts, theme choices filtered to the selected type) in `internal/tui/new_flow.go` (depends on T006, T011)
-- [ ] T016 [US1] Wire `biblio-cli new <project-name>` in `internal/cli/new.go`: flag parsing, TUI fallback when flags are omitted, generator invocation, and the contract's success/failure output and exit codes (depends on T014, T015; contracts/cli-commands.md `biblio-cli new`)
+- [X] T011 [P] [US1] Define the Theme Preset entity and one ready-to-use preset per site type (`profile`, `log`, `docs`) in `internal/theme/presets.go` (data-model.md "Theme Preset"; FR-004)
+- [X] T012 [US1] Implement deterministic `tokens.css` generation from a selected Theme Preset in `internal/theme/tokens.go` (depends on T011; research.md "Theming ownership and artifact" — generated once, owned solely by `biblio-cli`)
+- [X] T013 [P] [US1] Author seed content and scaffold file templates for the three site types in `templates/site/profile/`, `templates/site/log/`, `templates/site/docs/`
+- [X] T014 [US1] Implement the scaffold generator producing the Site Project entity (`content/`, `content/site.yaml` with `mcp_enabled: true`, `wrangler.jsonc` with `--domain`-derived routing, `tokens.css`) in `internal/scaffold/generator.go` (depends on T007, T012, T013; data-model.md "Site Project")
+- [X] T015 [US1] Implement the Bubble Tea guided `new` flow (interactive type/domain/theme prompts, theme choices filtered to the selected type) in `internal/tui/new_flow.go` (depends on T006, T011)
+- [X] T016 [US1] Wire `biblio-cli new <project-name>` in `internal/cli/new.go`: flag parsing, TUI fallback when flags are omitted, generator invocation, and the contract's success/failure output and exit codes (depends on T014, T015; contracts/cli-commands.md `biblio-cli new`)
 
 **Checkpoint**: User Story 1 is independently functional — `biblio-cli new` produces a complete, themed, runnable project for any of the three site types (SC-001, SC-002 partial)
 

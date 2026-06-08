@@ -60,9 +60,9 @@ Single Go module/CLI project (plan.md "Structure Decision: Option 1 shape, CLI-f
 
 > Write these FIRST; confirm they FAIL before implementation (Principle VI)
 
-- [ ] T008 [P] [US1] Write failing test for Theme Preset definitions + deterministic `tokens.css` generation in `internal/theme/theme_test.go`
-- [ ] T009 [P] [US1] Write failing test for the scaffold generator (project-dir creation, seeded `content/`, `site.yaml`, `wrangler.jsonc`, collision detection) in `internal/scaffold/generator_test.go`
-- [ ] T010 [P] [US1] Write failing test for `new` command flag validation and error paths (unknown `--type`, `--theme` not valid for `--type`, colliding `project-name`) in `internal/cli/new_test.go`
+- [X] T008 [P] [US1] Write failing test for Theme Preset definitions + deterministic `tokens.css` generation in `internal/theme/theme_test.go`
+- [X] T009 [P] [US1] Write failing test for the scaffold generator (project-dir creation, seeded `content/`, `site.yaml`, `wrangler.jsonc`, collision detection) in `internal/scaffold/generator_test.go`
+- [X] T010 [P] [US1] Write failing test for `new` command flag validation and error paths (unknown `--type`, `--theme` not valid for `--type`, colliding `project-name`) in `internal/cli/new_test.go`
 
 ### Implementation for User Story 1
 

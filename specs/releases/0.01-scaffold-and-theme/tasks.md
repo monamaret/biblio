@@ -42,7 +42,7 @@ Single Go module/CLI project (plan.md "Structure Decision: Option 1 shape, CLI-f
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T005 Implement the Cobra root command (`biblio-cli`, `--version`) with Viper config loading in `internal/cli/root.go`
+- [X] T005 Implement the Cobra root command (`biblio-cli`, `--version`) with Viper config loading in `internal/cli/root.go`
 - [ ] T006 [P] Implement shared Bubble Tea/Lip Gloss TUI base styles and prompt helpers (used by every guided flow) in `internal/tui/styles.go`
 - [ ] T007 [P] Implement the embedded scaffold-template asset loader (Go `embed` over `templates/site/`) in `internal/scaffold/assets.go`
 

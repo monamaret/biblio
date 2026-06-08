@@ -29,7 +29,7 @@ Single Go module/CLI project (plan.md "Structure Decision: Option 1 shape, CLI-f
 
 **Purpose**: Initialize the Go module and project skeleton exactly as laid out in plan.md's Project Structure
 
-- [ ] T001 Create the directory skeleton (`cmd/biblio-cli/`, `internal/{cli,tui,scaffold,content,index,theme,devserver}/`, `templates/site/{profile,log,docs}/`, `test/{unit,integration}/`) per plan.md Project Structure
+- [X] T001 Create the directory skeleton (`cmd/biblio-cli/`, `internal/{cli,tui,scaffold,content,index,theme,devserver}/`, `templates/site/{profile,log,docs}/`, `test/{unit,integration}/`) per plan.md Project Structure
 - [ ] T002 Initialize the Go module (`go.mod`, Go 1.22+) and add Cobra, Viper, Bubble Tea, Lip Gloss, and Glamour dependencies
 - [ ] T003 [P] Author `.goreleaser.yaml` for cross-platform (macOS/Linux/Windows) binary build/release config (FR-006, research.md "Distribution method")
 - [ ] T004 [P] Configure Go formatting/vetting (`gofmt`, `go vet`) as a repeatable local check (e.g. `Makefile` or `scripts/check.sh`)

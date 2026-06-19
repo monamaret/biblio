@@ -87,16 +87,16 @@ Single Go module/CLI project (plan.md "Structure Decision: Option 1 shape, CLI-f
 
 > Write these FIRST; confirm they FAIL before implementation (Principle VI)
 
-- [ ] T017 [P] [US2] Write failing test for the canonical frontmatter schema parser/validator across all three site types' field shapes (including malformed/missing-field error surfacing) in `internal/content/schema_test.go`
-- [ ] T018 [P] [US2] Write failing test for slug derivation from content path (stable, collision-free within a site) in `internal/content/slug_test.go`
-- [ ] T019 [P] [US2] Write failing test for content-index generation (one entry per item, correct `slug`/`path`, per-file error listing on validation failure) in `internal/index/generator_test.go`
+- [X] T017 [P] [US2] Write failing test for the canonical frontmatter schema parser/validator across all three site types' field shapes (including malformed/missing-field error surfacing) in `internal/content/schema_test.go`
+- [X] T018 [P] [US2] Write failing test for slug derivation from content path (stable, collision-free within a site) in `internal/content/slug_test.go`
+- [X] T019 [P] [US2] Write failing test for content-index generation (one entry per item, correct `slug`/`path`, per-file error listing on validation failure) in `internal/index/generator_test.go`
 
 ### Implementation for User Story 2
 
-- [ ] T020 [P] [US2] Implement the canonical Go-side frontmatter schema parser/validator (the single source of truth per Principle II — never duplicated on the TS side) in `internal/content/schema.go` (data-model.md "Authored Content Item")
-- [ ] T021 [P] [US2] Implement slug derivation from content path per the confirmed layout convention in `internal/content/slug.go`
-- [ ] T022 [US2] Implement the Content Index generator producing `content-index.json` (`entries[]`, shape consumable by both `prerender` (v0.02) and the MCP query layer (v0.03)) in `internal/index/generator.go` (depends on T020, T021; data-model.md "Content Index"; research.md "Content-index shape and ownership")
-- [ ] T023 [US2] Wire `biblio-cli index [path]` in `internal/cli/index.go`: defaulting `path` to the project's `content/`, writing `content-index.json`, and reporting every failing file (not just the first) on validation error (depends on T022; contracts/cli-commands.md `biblio-cli index`)
+- [X] T020 [P] [US2] Implement the canonical Go-side frontmatter schema parser/validator (the single source of truth per Principle II — never duplicated on the TS side) in `internal/content/schema.go` (data-model.md "Authored Content Item")
+- [X] T021 [P] [US2] Implement slug derivation from content path per the confirmed layout convention in `internal/content/slug.go`
+- [X] T022 [US2] Implement the Content Index generator producing `content-index.json` (`entries[]`, shape consumable by both `prerender` (v0.02) and the MCP query layer (v0.03)) in `internal/index/generator.go` (depends on T020, T021; data-model.md "Content Index"; research.md "Content-index shape and ownership")
+- [X] T023 [US2] Wire `biblio-cli index [path]` in `internal/cli/index.go`: defaulting `path` to the project's `content/`, writing `content-index.json`, and reporting every failing file (not just the first) on validation error (depends on T022; contracts/cli-commands.md `biblio-cli index`)
 
 **Checkpoint**: User Stories 1 AND 2 both work independently — a scaffolded project can now also produce a structurally correct canonical index (SC-002 complete)
 
@@ -112,12 +112,12 @@ Single Go module/CLI project (plan.md "Structure Decision: Option 1 shape, CLI-f
 
 > Write these FIRST; confirm they FAIL before implementation (Principle VI)
 
-- [ ] T024 [P] [US3] Write failing test for the dev-server supervisor (starts both processes, surfaces both addresses, reports which process failed and why on startup failure, clean shutdown on interrupt) in `internal/devserver/supervisor_test.go`
+- [X] T024 [P] [US3] Write failing test for the dev-server supervisor (starts both processes, surfaces both addresses, reports which process failed and why on startup failure, clean shutdown on interrupt) in `internal/devserver/supervisor_test.go`
 
 ### Implementation for User Story 3
 
-- [ ] T025 [US3] Implement the supervisor wrapping and forwarding output for `vite dev` + `wrangler dev` as one supervised process pair in `internal/devserver/supervisor.go`
-- [ ] T026 [US3] Wire `biblio-cli dev` in `internal/cli/dev.go`: launching the supervisor, surfacing addresses, and the contract's failure reporting (port collision, missing `wrangler.jsonc`) and exit-on-interrupt behavior (depends on T025; contracts/cli-commands.md `biblio-cli dev`)
+- [X] T025 [US3] Implement the supervisor wrapping and forwarding output for `vite dev` + `wrangler dev` as one supervised process pair in `internal/devserver/supervisor.go`
+- [X] T026 [US3] Wire `biblio-cli dev` in `internal/cli/dev.go`: launching the supervisor, surfacing addresses, and the contract's failure reporting (port collision, missing `wrangler.jsonc`) and exit-on-interrupt behavior (depends on T025; contracts/cli-commands.md `biblio-cli dev`)
 
 **Checkpoint**: All three user stories are independently functional — the full `new` → `index` → `dev` path now runs end to end (SC-001, SC-003)
 
@@ -127,10 +127,10 @@ Single Go module/CLI project (plan.md "Structure Decision: Option 1 shape, CLI-f
 
 **Purpose**: Cross-story wiring, the binary entrypoint, distribution, and final validation against the spec's Success Criteria
 
-- [ ] T027 [P] Write end-to-end "scaffold → index → dev" integration tests for each of the three site types in `test/integration/`
-- [ ] T028 [P] Wire `cmd/biblio-cli/main.go` as the binary entrypoint invoking the root command from `internal/cli`
-- [ ] T029 [P] Document install/usage (GitHub Releases binary download and `go install`) per FR-006 and research.md "Distribution method"
-- [ ] T030 Run [quickstart.md](./quickstart.md) end to end for all three site types and confirm SC-001..SC-003
+- [X] T027 [P] Write end-to-end "scaffold → index → dev" integration tests for each of the three site types in `test/integration/`
+- [X] T028 [P] Wire `cmd/biblio-cli/main.go` as the binary entrypoint invoking the root command from `internal/cli`
+- [X] T029 [P] Document install/usage (GitHub Releases binary download and `go install`) per FR-006 and research.md "Distribution method"
+- [X] T030 Run [quickstart.md](./quickstart.md) end to end for all three site types and confirm SC-001..SC-003
 
 ---
 

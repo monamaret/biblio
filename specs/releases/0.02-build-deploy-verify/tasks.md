@@ -60,7 +60,7 @@ Extends the existing Go CLI module and v0.01-scaffolded combined-project templat
 
 > Write these FIRST; confirm they FAIL before implementation (Principle VI)
 
-- [ ] T006 [P] [US1] Write failing test for the profile/experience/skills/projects list and detail route modules rendering authored content correctly in `test/unit/profile_routes_test.go` (or the TS-side equivalent colocated with the route modules, per plan.md Testing)
+- [ ] T006 [P] [US1] Write failing test for the profile/experience/skills/projects list and detail route modules rendering authored content correctly in `templates/site/profile/app/routes/*.test.tsx` (colocated with each route module, per plan.md Testing's TypeScript/React test layer)
 - [ ] T007 [P] [US1] Write failing test for `biblio-cli build` succeeding with zero missing/broken pages against a fully authored project in `internal/cli/build_test.go`
 - [ ] T008 [P] [US1] Write failing test for `biblio-cli build` failing with a clear, per-file message on malformed authored content (spec Edge Cases) in `internal/cli/build_test.go`
 
@@ -86,11 +86,12 @@ Extends the existing Go CLI module and v0.01-scaffolded combined-project templat
 
 - [ ] T012 [P] [US2] Write failing test for `biblio-cli deploy` succeeding against a built project and surfacing the configured public address in `internal/cli/deploy_test.go`
 - [ ] T013 [P] [US2] Write failing test for `biblio-cli deploy` surfacing the underlying `wrangler deploy`/CI failure with diagnosable context on error (e.g. missing build artifact, auth failure) in `internal/cli/deploy_test.go`
+- [ ] T014 [P] [US2] Write failing test for re-running `biblio-cli deploy` against an already-live site updating cleanly in place with no visitor-facing disruption (spec Edge Cases; data-model.md "Deployment" re-deploy-semantics invariant) in `internal/cli/deploy_test.go`
 
 ### Implementation for User Story 2
 
-- [ ] T014 [US2] Implement `biblio-cli deploy` as a thin wrapper over `wrangler deploy` in `internal/cli/deploy.go`: failing early if no build artifact exists, invoking the deploy against the existing `wrangler.jsonc` route binding, and the contract's success/failure output and exit codes (depends on T011; contracts/cli-commands.md `deploy`)
-- [ ] T015 [US2] Wire the generated CI workflow (`templates/site/profile/.github/workflows/deploy.yml`, T003) to invoke `biblio-cli build` then `biblio-cli deploy` on push, matching the confirmed one-CLI-surface decision (research.md "Build/deploy command surface")
+- [ ] T015 [US2] Implement `biblio-cli deploy` as a thin wrapper over `wrangler deploy` in `internal/cli/deploy.go`: failing early if no build artifact exists, invoking the deploy against the existing `wrangler.jsonc` route binding, satisfying the clean in-place re-deploy invariant, and the contract's success/failure output and exit codes (depends on T011; contracts/cli-commands.md `deploy`)
+- [ ] T016 [US2] Wire the generated CI workflow (`templates/site/profile/.github/workflows/deploy.yml`, T003) to invoke `biblio-cli build` then `biblio-cli deploy` on push, matching the confirmed one-CLI-surface decision (research.md "Build/deploy command surface")
 
 **Checkpoint**: User Story 2 is independently functional — a built pilot site can be published to and re-deployed at its configured public address (SC-002)
 
@@ -106,12 +107,12 @@ Extends the existing Go CLI module and v0.01-scaffolded combined-project templat
 
 > Write these FIRST; confirm they FAIL before implementation (Principle VI)
 
-- [ ] T016 [P] [US3] Write failing test confirming every route module applies the unchanged `tokens.css` theme (no inline/duplicate styling path) in `test/unit/theme_application_test.go`
+- [ ] T017 [P] [US3] Write failing test confirming every route module applies the unchanged `tokens.css` theme (no inline/duplicate styling path) in `templates/site/profile/app/routes/theme.test.tsx`
 
 ### Implementation for User Story 3
 
-- [ ] T017 [US3] Verify and, if needed, adjust the route modules from T009 so each links `tokens.css` and renders without relying on any styling path other than the v0.01-generated theme (depends on T009, T016)
-- [ ] T018 [US3] Author and run the end-to-end content → build → deploy → live-verification integration check against one real, fully authored pilot profile/CV site in `test/integration/pilot-site/` (FR-004; data-model.md "Pilot Site Validation Record"; constitution Release Process release-closing test)
+- [ ] T018 [US3] Verify and, if needed, adjust the route modules from T009 so each links `tokens.css` and renders without relying on any styling path other than the v0.01-generated theme (depends on T009, T017)
+- [ ] T019 [US3] Author and run the end-to-end content → build → deploy → live-verification integration check against one real, fully authored pilot profile/CV site in `test/integration/pilot-site/` (FR-004; data-model.md "Pilot Site Validation Record"; constitution Release Process release-closing test)
 
 **Checkpoint**: All user stories independently functional — the full content → build → deploy → live-verification path is demonstrated on one real pilot site (SC-001, SC-002, SC-003)
 
@@ -121,8 +122,8 @@ Extends the existing Go CLI module and v0.01-scaffolded combined-project templat
 
 **Purpose**: Final consistency pass across the release
 
-- [ ] T019 [P] Update `specs/releases/0.02-release.md` status and this release's `AGENTS.md`/CLAUDE.md SPECKIT markers to reflect completion, per the project's documentation-stays-in-sync convention
-- [ ] T020 [P] Run `gofmt`/`go vet` (`scripts/check.sh`) and the TS-side lint/typecheck across all files touched in this release
+- [ ] T020 [P] Update `specs/releases/0.02-release.md` status and this release's `AGENTS.md`/CLAUDE.md SPECKIT markers to reflect completion, per the project's documentation-stays-in-sync convention
+- [ ] T021 [P] Run `gofmt`/`go vet` (`scripts/check.sh`) and the TS-side lint/typecheck across all files touched in this release
 
 ---
 
@@ -138,8 +139,8 @@ Extends the existing Go CLI module and v0.01-scaffolded combined-project templat
 - Phase 1: T002 and T003 in parallel (independent template files)
 - Phase 2: T004 and T005 in parallel (independent modules), both before Phase 3
 - Phase 3 tests: T006, T007, T008 in parallel before any Phase 3 implementation task
-- Phase 4 tests: T012, T013 in parallel before T014
-- Phase 6: T019 and T020 in parallel
+- Phase 4 tests: T012, T013, T014 in parallel before T015
+- Phase 6: T020 and T021 in parallel
 
 ## Implementation Strategy
 

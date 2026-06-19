@@ -1,1 +1,22 @@
+# Go
+*.exe
+*.test
+*.out
+vendor/
+
+# biblio-cli build output
 /biblio-cli
+/dist/
+
+# Node (generated site templates wrap vite/wrangler)
+node_modules/
+dist/
+build/
+.wrangler/
+*.log
+
+# Universal
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp

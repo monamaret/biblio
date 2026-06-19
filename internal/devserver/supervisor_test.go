@@ -28,9 +28,9 @@ func TestSupervisor_StartsBothProcesses(t *testing.T) {
 
 	var buf strings.Builder
 	s := devserver.NewSupervisor(devserver.Config{
-		ViteCmd:    []string{"sh", "-c", "echo vite-started && exit 0"},
+		ViteCmd:     []string{"sh", "-c", "echo vite-started && exit 0"},
 		WranglerCmd: []string{"sh", "-c", "echo wrangler-started && exit 0"},
-		Output:     &buf,
+		Output:      &buf,
 	})
 
 	if err := s.Run(ctx); err != nil {
@@ -50,9 +50,9 @@ func TestSupervisor_SurfacesOutput(t *testing.T) {
 
 	var buf strings.Builder
 	s := devserver.NewSupervisor(devserver.Config{
-		ViteCmd:    []string{"sh", "-c", "echo 'Local: http://localhost:5173'"},
+		ViteCmd:     []string{"sh", "-c", "echo 'Local: http://localhost:5173'"},
 		WranglerCmd: []string{"sh", "-c", "echo 'Ready on http://localhost:8787'"},
-		Output:     &buf,
+		Output:      &buf,
 	})
 
 	_ = s.Run(ctx)
@@ -76,9 +76,9 @@ func TestSupervisor_ReportsFailingProcess(t *testing.T) {
 
 	var buf strings.Builder
 	s := devserver.NewSupervisor(devserver.Config{
-		ViteCmd:    []string{"sh", "-c", "exit 1"},
+		ViteCmd:     []string{"sh", "-c", "exit 1"},
 		WranglerCmd: []string{"sh", "-c", "sleep 60"},
-		Output:     &buf,
+		Output:      &buf,
 	})
 
 	err := s.Run(ctx)
@@ -99,9 +99,9 @@ func TestSupervisor_CleanShutdown(t *testing.T) {
 
 	var buf strings.Builder
 	s := devserver.NewSupervisor(devserver.Config{
-		ViteCmd:    []string{"sh", "-c", "sleep 60"},
+		ViteCmd:     []string{"sh", "-c", "sleep 60"},
 		WranglerCmd: []string{"sh", "-c", "sleep 60"},
-		Output:     &buf,
+		Output:      &buf,
 	})
 
 	done := make(chan error, 1)

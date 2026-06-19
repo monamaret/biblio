@@ -31,9 +31,9 @@ Extends the existing Go CLI module and v0.01-scaffolded combined-project templat
 
 **Purpose**: Add the dependencies and config scaffolding that both the `build`/`deploy` CLI wrappers and the prerendered template need, before any user story work begins
 
-- [ ] T001 Add React Router v7 (`react-router`, `@react-router/dev`) and content-rendering dependencies (`gray-matter`, `react-markdown`, `remark-gfm`) to `templates/site/profile/package.json`
-- [ ] T002 [P] Author the base `react-router.config.ts` template (no `prerender` entries yet — wired in US1) in `templates/site/profile/react-router.config.ts`
-- [ ] T003 [P] Author the generated CI workflow template invoked by `biblio-cli deploy` in `templates/site/profile/.github/workflows/deploy.yml` (research.md "Build/deploy command surface")
+- [X] T001 Add React Router v7 (`react-router`, `@react-router/dev`) and content-rendering dependencies (`gray-matter`, `react-markdown`, `remark-gfm`) to `templates/site/profile/package.json`
+- [X] T002 [P] Author the base `react-router.config.ts` template (no `prerender` entries yet — wired in US1) in `templates/site/profile/react-router.config.ts`
+- [X] T003 [P] Author the generated CI workflow template invoked by `biblio-cli deploy` in `templates/site/profile/.github/workflows/deploy.yml` (research.md "Build/deploy command surface")
 
 ---
 
@@ -43,8 +43,8 @@ Extends the existing Go CLI module and v0.01-scaffolded combined-project templat
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T004 Implement the `import.meta.glob` + `gray-matter` content-loading module, reading the unchanged v0.01 `content-index.json` as its single source of truth (Principle II; data-model.md "Pre-rendered Page Set" `source-index`) in `templates/site/profile/app/content/load.ts`
-- [ ] T005 [P] Implement the `react-markdown` + `remark-gfm` rendering component used by every detail view in `templates/site/profile/app/content/render.tsx`
+- [X] T004 Implement the `import.meta.glob` + `gray-matter` content-loading module, reading the unchanged v0.01 `content-index.json` as its single source of truth (Principle II; data-model.md "Pre-rendered Page Set" `source-index`) in `templates/site/profile/app/content/load.ts`
+- [X] T005 [P] Implement the `react-markdown` + `remark-gfm` rendering component used by every detail view in `templates/site/profile/app/content/render.tsx`
 
 **Checkpoint**: Foundation ready — content can be loaded from `content-index.json` and rendered; route/view implementation can begin
 
@@ -60,15 +60,15 @@ Extends the existing Go CLI module and v0.01-scaffolded combined-project templat
 
 > Write these FIRST; confirm they FAIL before implementation (Principle VI)
 
-- [ ] T006 [P] [US1] Write failing test for the profile/experience/skills/projects list and detail route modules rendering authored content correctly in `templates/site/profile/app/routes/*.test.tsx` (colocated with each route module, per plan.md Testing's TypeScript/React test layer)
-- [ ] T007 [P] [US1] Write failing test for `biblio-cli build` succeeding with zero missing/broken pages against a fully authored project in `internal/cli/build_test.go`
-- [ ] T008 [P] [US1] Write failing test for `biblio-cli build` failing with a clear, per-file message on malformed authored content (spec Edge Cases) in `internal/cli/build_test.go`
+- [X] T006 [P] [US1] Write failing test for the profile/experience/skills/projects list and detail route modules rendering authored content correctly in `templates/site/profile/app/routes/*.test.tsx` (colocated with each route module, per plan.md Testing's TypeScript/React test layer)
+- [X] T007 [P] [US1] Write failing test for `biblio-cli build` succeeding with zero missing/broken pages against a fully authored project in `internal/cli/build_test.go`
+- [X] T008 [P] [US1] Write failing test for `biblio-cli build` failing with a clear, per-file message on malformed authored content (spec Edge Cases) in `internal/cli/build_test.go`
 
 ### Implementation for User Story 1
 
-- [ ] T009 [P] [US1] Implement the profile list/detail route modules (profile, experience, skills, projects) and shared navigation view in `templates/site/profile/app/routes/`
-- [ ] T010 [US1] Wire `prerender` in `templates/site/profile/react-router.config.ts` to enumerate every `content-index.json` entry into a pre-rendered route, satisfying the Pre-rendered Page Set completeness invariant (depends on T002, T004, T009; data-model.md "Pre-rendered Page Set")
-- [ ] T011 [US1] Implement `biblio-cli build` as a thin wrapper over `vite build` in `internal/cli/build.go`: invoking the build, surfacing per-file validation failures from `prerender` with a non-zero exit, and the contract's success output (depends on T010; contracts/cli-commands.md `build`)
+- [X] T009 [P] [US1] Implement the profile list/detail route modules (profile, experience, skills, projects) and shared navigation view in `templates/site/profile/app/routes/`
+- [X] T010 [US1] Wire `prerender` in `templates/site/profile/react-router.config.ts` to enumerate every `content-index.json` entry into a pre-rendered route, satisfying the Pre-rendered Page Set completeness invariant (depends on T002, T004, T009; data-model.md "Pre-rendered Page Set")
+- [X] T011 [US1] Implement `biblio-cli build` as a thin wrapper over `vite build` in `internal/cli/build.go`: invoking the build, surfacing per-file validation failures from `prerender` with a non-zero exit, and the contract's success output (depends on T010; contracts/cli-commands.md `build`)
 
 **Checkpoint**: User Story 1 is independently functional — `biblio-cli build` produces a complete, gap-free static output for the pilot profile site (SC-002 partial)
 
@@ -84,14 +84,14 @@ Extends the existing Go CLI module and v0.01-scaffolded combined-project templat
 
 > Write these FIRST; confirm they FAIL before implementation (Principle VI)
 
-- [ ] T012 [P] [US2] Write failing test for `biblio-cli deploy` succeeding against a built project and surfacing the configured public address in `internal/cli/deploy_test.go`
-- [ ] T013 [P] [US2] Write failing test for `biblio-cli deploy` surfacing the underlying `wrangler deploy`/CI failure with diagnosable context on error (e.g. missing build artifact, auth failure) in `internal/cli/deploy_test.go`
-- [ ] T014 [P] [US2] Write failing test for re-running `biblio-cli deploy` against an already-live site updating cleanly in place with no visitor-facing disruption (spec Edge Cases; data-model.md "Deployment" re-deploy-semantics invariant) in `internal/cli/deploy_test.go`
+- [X] T012 [P] [US2] Write failing test for `biblio-cli deploy` succeeding against a built project and surfacing the configured public address in `internal/cli/deploy_test.go`
+- [X] T013 [P] [US2] Write failing test for `biblio-cli deploy` surfacing the underlying `wrangler deploy`/CI failure with diagnosable context on error (e.g. missing build artifact, auth failure) in `internal/cli/deploy_test.go`
+- [X] T014 [P] [US2] Write failing test for re-running `biblio-cli deploy` against an already-live site updating cleanly in place with no visitor-facing disruption (spec Edge Cases; data-model.md "Deployment" re-deploy-semantics invariant) in `internal/cli/deploy_test.go`
 
 ### Implementation for User Story 2
 
-- [ ] T015 [US2] Implement `biblio-cli deploy` as a thin wrapper over `wrangler deploy` in `internal/cli/deploy.go`: failing early if no build artifact exists, invoking the deploy against the existing `wrangler.jsonc` route binding, satisfying the clean in-place re-deploy invariant, and the contract's success/failure output and exit codes (depends on T011; contracts/cli-commands.md `deploy`)
-- [ ] T016 [US2] Wire the generated CI workflow (`templates/site/profile/.github/workflows/deploy.yml`, T003) to invoke `biblio-cli build` then `biblio-cli deploy` on push, matching the confirmed one-CLI-surface decision (research.md "Build/deploy command surface")
+- [X] T015 [US2] Implement `biblio-cli deploy` as a thin wrapper over `wrangler deploy` in `internal/cli/deploy.go`: failing early if no build artifact exists, invoking the deploy against the existing `wrangler.jsonc` route binding, satisfying the clean in-place re-deploy invariant, and the contract's success/failure output and exit codes (depends on T011; contracts/cli-commands.md `deploy`)
+- [X] T016 [US2] Wire the generated CI workflow (`templates/site/profile/.github/workflows/deploy.yml`, T003) to invoke `biblio-cli build` then `biblio-cli deploy` on push, matching the confirmed one-CLI-surface decision (research.md "Build/deploy command surface")
 
 **Checkpoint**: User Story 2 is independently functional — a built pilot site can be published to and re-deployed at its configured public address (SC-002)
 
@@ -107,12 +107,12 @@ Extends the existing Go CLI module and v0.01-scaffolded combined-project templat
 
 > Write these FIRST; confirm they FAIL before implementation (Principle VI)
 
-- [ ] T017 [P] [US3] Write failing test confirming every route module applies the unchanged `tokens.css` theme (no inline/duplicate styling path) in `templates/site/profile/app/routes/theme.test.tsx`
+- [X] T017 [P] [US3] Write failing test confirming every route module applies the unchanged `tokens.css` theme (no inline/duplicate styling path) in `templates/site/profile/app/routes/theme.test.tsx`
 
 ### Implementation for User Story 3
 
-- [ ] T018 [US3] Verify and, if needed, adjust the route modules from T009 so each links `tokens.css` and renders without relying on any styling path other than the v0.01-generated theme (depends on T009, T017)
-- [ ] T019 [US3] Author and run the end-to-end content → build → deploy → live-verification integration check against one real, fully authored pilot profile/CV site in `test/integration/pilot-site/` (FR-004; data-model.md "Pilot Site Validation Record"; constitution Release Process release-closing test)
+- [X] T018 [US3] Verify and, if needed, adjust the route modules from T009 so each links `tokens.css` and renders without relying on any styling path other than the v0.01-generated theme (depends on T009, T017)
+- [X] T019 [US3] Author and run the end-to-end content → build → deploy → live-verification integration check against one real, fully authored pilot profile/CV site in `test/integration/pilot-site/` (FR-004; data-model.md "Pilot Site Validation Record"; constitution Release Process release-closing test)
 
 **Checkpoint**: All user stories independently functional — the full content → build → deploy → live-verification path is demonstrated on one real pilot site (SC-001, SC-002, SC-003)
 
@@ -122,8 +122,8 @@ Extends the existing Go CLI module and v0.01-scaffolded combined-project templat
 
 **Purpose**: Final consistency pass across the release
 
-- [ ] T020 [P] Update `specs/releases/0.02-release.md` status and this release's `AGENTS.md`/CLAUDE.md SPECKIT markers to reflect completion, per the project's documentation-stays-in-sync convention
-- [ ] T021 [P] Run `gofmt`/`go vet` (`scripts/check.sh`) and the TS-side lint/typecheck across all files touched in this release
+- [X] T020 [P] Update `specs/releases/0.02-release.md` status and this release's `AGENTS.md`/CLAUDE.md SPECKIT markers to reflect completion, per the project's documentation-stays-in-sync convention
+- [X] T021 [P] Run `gofmt`/`go vet` (`scripts/check.sh`) and the TS-side lint/typecheck across all files touched in this release
 
 ---
 

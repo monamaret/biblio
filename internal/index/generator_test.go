@@ -39,8 +39,8 @@ func writeTempContent(t *testing.T, siteType string, files map[string]string) st
 // (data-model.md "Content Index"; contracts/cli-commands.md `biblio-cli index`).
 func TestGenerate_OneEntryPerItem(t *testing.T) {
 	contentDir := writeTempContent(t, "profile", map[string]string{
-		"about.md":             "---\ntitle: \"About\"\n---\n\nBody.\n",
-		"projects/my-proj.md":  "---\ntitle: \"Project\"\n---\n\nDesc.\n",
+		"about.md":            "---\ntitle: \"About\"\n---\n\nBody.\n",
+		"projects/my-proj.md": "---\ntitle: \"Project\"\n---\n\nDesc.\n",
 	})
 
 	idx, errs := index.Generate(contentDir)

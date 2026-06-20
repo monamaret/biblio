@@ -133,13 +133,13 @@ Single Go module (`biblio-cli`) at the repository root, per plan.md:
 
 ### Tests for User Story 4
 
-- [ ] T028 [US4] Write failing integration test: the GA Readiness Review aggregates the Update Run suite (US1/US2) and Storage-Escalation Guidance Checks (US3) by reference, without re-running v0.01–v0.05's already-closed evidence (SC-003) in `test/integration/ga-readiness-review/aggregate_test.go`
+- [X] T028 [US4] Write failing integration test: the GA Readiness Review aggregates the Update Run suite (US1/US2) and Storage-Escalation Guidance Checks (US3) by reference, without re-running v0.01–v0.05's already-closed evidence (SC-003) in `test/integration/ga-readiness-review/aggregate_test.go`
 
 ### Implementation for User Story 4
 
-- [ ] T029 [US4] Implement the GA Readiness Review artifact (`deliverables[]`, `update-evidence`, `escalation-evidence`, `ga-determination`) per data-model.md in `internal/escalation/ga_review.go` (depends on T020, T027) — makes T028 pass
-- [ ] T030 [US4] Cross-reference every roadmap deliverable in `specs/research/roadmap.md` §1–§10, and every release v0.01–v0.06, against this release's acceptance bar, recording each deliverable's status (depends on T029); if T027 recorded any `crossed` threshold, confirm and document that GA still only requires the corresponding path to be `proven-executable-on-demand` — not actually carried out (spec Assumptions, FR-006) — rather than treating the crossing itself as a blocker
-- [ ] T031 [US4] Produce the closing `ga-determination: true` record once every deliverable meets its bar (depends on T030)
+- [X] T029 [US4] Implement the GA Readiness Review artifact (`deliverables[]`, `update-evidence`, `escalation-evidence`, `ga-determination`) per data-model.md in `internal/escalation/ga_review.go` (depends on T020, T027) — makes T028 pass
+- [X] T030 [US4] Cross-reference every roadmap deliverable in `specs/research/roadmap.md` §1–§10, and every release v0.01–v0.06, against this release's acceptance bar, recording each deliverable's status (depends on T029); if T027 recorded any `crossed` threshold, confirm and document that GA still only requires the corresponding path to be `proven-executable-on-demand` — not actually carried out (spec Assumptions, FR-006) — rather than treating the crossing itself as a blocker
+- [X] T031 [US4] Produce the closing `ga-determination: true` record once every deliverable meets its bar (depends on T030)
 
 **Checkpoint**: The platform is marked Generally Available — every roadmap deliverable is complete-and-demonstrated or proven-executable-on-demand.
 

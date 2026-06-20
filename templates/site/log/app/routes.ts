@@ -1,6 +1,8 @@
-import type { RouteConfig } from "@react-router/dev/routes";
+import { type RouteConfig, index, route } from "@react-router/dev/routes";
 
-// Empty for now — Phase 3 (T019) wires in the entry-list/detail routes
-// once home.tsx/detail.tsx exist. Kept as a valid, empty RouteConfig here
-// so the log site builds and typechecks cleanly at the Phase 1 checkpoint.
-export default [] satisfies RouteConfig;
+export default [
+  index("routes/home.tsx"),
+  // A splat (not ":slug") so multi-segment slugs like "posts/2026-06-01-hello-world"
+  // resolve to one detail route instead of needing one per nesting depth.
+  route("*", "routes/detail.tsx"),
+] satisfies RouteConfig;

@@ -84,7 +84,10 @@ func TestScaffoldThenIndex_Profile(t *testing.T) {
 }
 
 // TestScaffoldThenIndex_Log validates the full scaffold → index path for the
-// log site type including the date field required by that site type (SC-002).
+// log site type, confirming content-index.json carries the date/tags fields
+// correctly through the real Go-side indexing pipeline — not just the
+// static template fixture (SC-002; data-model.md "Project-Log Entry";
+// spec FR-002).
 func TestScaffoldThenIndex_Log(t *testing.T) {
 	shape, _ := scaffoldAndIndex(t, "log")
 	entries, _ := shape["entries"].([]any)
@@ -95,6 +98,10 @@ func TestScaffoldThenIndex_Log(t *testing.T) {
 		e := raw.(map[string]any)
 		if e["date"] == nil || e["date"] == "" {
 			t.Errorf("log entry missing required 'date' field: %v", e)
+		}
+		tags, ok := e["tags"].([]any)
+		if !ok || len(tags) == 0 {
+			t.Errorf("log entry missing seeded 'tags' field: %v", e)
 		}
 	}
 }

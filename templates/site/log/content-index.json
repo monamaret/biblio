@@ -7,6 +7,24 @@
       "slug": "posts/2026-06-01-hello-world",
       "tags": ["meta"],
       "title": "Hello, World"
+    },
+    {
+      "body": "Shipped the date/tag/project filter UI today. Visitors can now narrow the\nentry list down to exactly what they're looking for.\n",
+      "date": "2026-06-05",
+      "path": "posts/2026-06-05-shipped-the-filter-ui.md",
+      "slug": "posts/2026-06-05-shipped-the-filter-ui",
+      "tags": ["shipping", "frontend"],
+      "project": "biblio",
+      "title": "Shipped the filter UI"
+    },
+    {
+      "body": "Cleaned up the content-index generation step ahead of the next round of\nfiltering work.\n",
+      "date": "2026-06-10",
+      "path": "posts/2026-06-10-refactored-the-content-index.md",
+      "slug": "posts/2026-06-10-refactored-the-content-index",
+      "tags": ["shipping", "backend"],
+      "project": "biblio",
+      "title": "Refactored the content index"
     }
   ]
 }

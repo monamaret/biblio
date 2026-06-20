@@ -46,12 +46,12 @@ Single Go module (`biblio-cli`) at the repository root, per plan.md:
 
 **⚠️ CRITICAL**: US1 and US2 cannot begin until this phase is complete.
 
-- [ ] T004 [P] Write failing unit test for Scaffold Region Classification (`scaffold-tracked` / `author-customized` / `ambiguous`, every region classified before any write) in `test/unit/migrate/classify_test.go`
-- [ ] T005 Implement Scaffold Region Classification in `internal/migrate/classify.go`, derived from the single canonical scaffold-template definitions (Principle II) — makes T004 pass
-- [ ] T006 [P] Write failing unit test for diff/merge logic that advances `scaffold-tracked` regions and preserves `author-customized` regions byte-for-byte in `test/unit/migrate/merge_test.go`
-- [ ] T007 Implement merge logic in `internal/migrate/merge.go` (depends on T005) — makes T006 pass
-- [ ] T008 [P] Write failing unit test for conflict surfacing — every `ambiguous` classification becomes an Update Conflict that is never auto-resolved, and an interrupted run leaves the site in a consistent, recoverable state — in `test/unit/migrate/conflict_test.go`
-- [ ] T009 Implement conflict surfacing and interruption-recovery state in `internal/migrate/conflict.go` (depends on T005, T007) — makes T008 pass
+- [X] T004 [P] Write failing unit test for Scaffold Region Classification (`scaffold-tracked` / `author-customized` / `ambiguous`, every region classified before any write) in `test/unit/migrate/classify_test.go`
+- [X] T005 Implement Scaffold Region Classification in `internal/migrate/classify.go`, derived from the single canonical scaffold-template definitions (Principle II) — makes T004 pass
+- [X] T006 [P] Write failing unit test for diff/merge logic that advances `scaffold-tracked` regions and preserves `author-customized` regions byte-for-byte in `test/unit/migrate/merge_test.go`
+- [X] T007 Implement merge logic in `internal/migrate/merge.go` (depends on T005) — makes T006 pass
+- [X] T008 [P] Write failing unit test for conflict surfacing — every `ambiguous` classification becomes an Update Conflict that is never auto-resolved, and an interrupted run leaves the site in a consistent, recoverable state — in `test/unit/migrate/conflict_test.go`
+- [X] T009 Implement conflict surfacing and interruption-recovery state in `internal/migrate/conflict.go` (depends on T005, T007) — makes T008 pass
 
 **Checkpoint**: `internal/migrate` classify/merge/conflict logic is implemented and unit-tested. US1 and US2 implementation can begin.
 

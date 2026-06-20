@@ -1,0 +1,20 @@
+{
+  "entries": [
+    {
+      "body": "Welcome to your new profile site! Replace this page with your own bio,\nbackground, and the work you want to highlight.\n",
+      "path": "about.md",
+      "role": "Software Engineer",
+      "slug": "about",
+      "summary": "A short summary of who you are and what you do.",
+      "title": "About Me"
+    },
+    {
+      "body": "Describe the project here — what it does, the problem it solves, and the\nrole you played in building it.\n",
+      "path": "projects/sample-project.md",
+      "slug": "projects/sample-project",
+      "summary": "A one-line description of this project.",
+      "title": "Sample Project",
+      "url": "https://example.com"
+    }
+  ]
+}

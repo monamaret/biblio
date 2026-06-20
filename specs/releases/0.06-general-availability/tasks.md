@@ -87,14 +87,14 @@ Single Go module (`biblio-cli`) at the repository root, per plan.md:
 
 ### Tests for User Story 2
 
-- [ ] T016 [P] [US2] Write failing integration test: `biblio-cli update` succeeds against the real project-log site with content intact in `test/integration/update-three-sites/project_log_test.go`
-- [ ] T017 [P] [US2] Write failing integration test: `biblio-cli update` succeeds against the real docs site with content intact in `test/integration/update-three-sites/docs_site_test.go`
-- [ ] T018 [US2] Write failing integration test: `biblio-cli upgrade <version>` targets a specific scaffold version and succeeds across all three real site types in `test/integration/update-three-sites/upgrade_version_test.go`
+- [X] T016 [P] [US2] Write failing integration test: `biblio-cli update` succeeds against the real project-log site with content intact in `test/integration/update-three-sites/project_log_test.go`
+- [X] T017 [P] [US2] Write failing integration test: `biblio-cli update` succeeds against the real docs site with content intact in `test/integration/update-three-sites/docs_site_test.go`
+- [X] T018 [US2] Write failing integration test: `biblio-cli upgrade <version>` targets a specific scaffold version and succeeds across all three real site types in `test/integration/update-three-sites/upgrade_version_test.go`
 
 ### Implementation for User Story 2
 
-- [ ] T019 [US2] Implement the `biblio-cli upgrade` Cobra command in `internal/cli/upgrade.go`, accepting a target-version identifier and sharing the `internal/migrate` classify/merge/conflict machinery with `update` (depends on T012) — makes T018 pass
-- [ ] T020 [US2] Run quickstart.md Scenario 2's loop across all three real sites (profile/project-log/docs) in one sitting and confirm SC-001 (depends on T015, T016, T017, T019)
+- [X] T019 [US2] Implement the `biblio-cli upgrade` Cobra command in `internal/cli/upgrade.go`, accepting a target-version identifier and sharing the `internal/migrate` classify/merge/conflict machinery with `update` (depends on T012) — makes T018 pass
+- [X] T020 [US2] Run quickstart.md Scenario 2's loop across all three real sites (profile/project-log/docs) in one sitting and confirm SC-001 (depends on T015, T016, T017, T019)
 
 **Checkpoint**: Update/upgrade is proven to generalize across all three real site types, not just the first one it was validated against.
 

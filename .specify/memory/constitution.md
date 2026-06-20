@@ -1,5 +1,17 @@
 <!--
 Sync Impact Report
+Version change: 1.3.0 → 1.3.1
+Modified principles: n/a (no principle redefined)
+Corrected sections:
+  - Release Process — fixed the packaging directory pattern to match the
+    convention every release from v0.01 onward actually uses
+    (`specs/releases/X.XX-name/`, not the originally-written
+    `specs/release_X.XX/`); found via /speckit-analyze on v0.06's artifacts.
+Templates requiring updates: none — this is a wording correction, not a
+  rule change.
+Follow-up TODOs: none.
+
+Sync Impact Report (prior)
 Version change: 1.2.0 → 1.3.0
 Modified principles: n/a (no existing principle redefined)
 Added sections:
@@ -212,8 +224,9 @@ that makes their current "not yet established" sections concrete.
 
 ## Release Process
 
-Each release MUST be packaged as a numbered directory `specs/release_X.XX/`
-(e.g. `specs/release_1.00/`, `specs/release_1.01/`), containing exactly:
+Each release MUST be packaged as a directory `specs/releases/X.XX-name/`
+(e.g. `specs/releases/0.01-scaffold-and-theme/`,
+`specs/releases/0.06-general-availability/`), containing exactly:
 
 1. **Final feature list** — the definitive list of features shipped in that
    release, each entry pointing back to its `specs/features/` item (and, through
@@ -264,4 +277,4 @@ that cannot be justified against Principle I is the default reason to push
 back. Use `AGENTS.md` for day-to-day runtime development guidance; this
 constitution governs the *non-negotiable* rules beneath it.
 
-**Version**: 1.3.0 | **Ratified**: 2026-06-07 | **Last Amended**: 2026-06-07
+**Version**: 1.3.1 | **Ratified**: 2026-06-07 | **Last Amended**: 2026-06-20

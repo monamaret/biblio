@@ -70,10 +70,14 @@ internal/
 │   ├── classify.go          # scaffold-tracked vs. author-customized region classification
 │   │                        #  (derived from the single canonical scaffold-template definitions, Principle II)
 │   ├── merge.go             # diff/merge logic preserving authored content + customizations
-│   └── conflict.go          # conflict surfacing — never silent overwrite; recoverable on interruption
+│   ├── conflict.go          # conflict surfacing — never silent overwrite; recoverable on interruption
+│   └── update_run.go        # Update Run orchestration (classify → advance → preserve → surface → commit)
+│                            #  and the preserved/advanced/conflicts report, shared by `update` and `upgrade`
 └── escalation/
-    └── guidance.go          # storage-escalation threshold checks against real content-index scale,
-                             #  reporting D1/Vectorize readiness without adopting either as a dependency
+    ├── guidance.go          # storage-escalation threshold checks against real content-index scale,
+    │                        #  reporting D1/Vectorize readiness without adopting either as a dependency
+    └── ga_review.go         # GA Readiness Review artifact — aggregates Update Run + Guidance Check
+                             #  evidence by reference into the closing ga-determination record
 
 docs/
 └── storage-escalation-guide.md   # FR-004/FR-005 deliverable: documented thresholds + concretely

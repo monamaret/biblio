@@ -66,7 +66,7 @@ Single Go module (`biblio-cli`) at the repository root, per plan.md:
 ### Tests for User Story 1
 
 - [ ] T010 [P] [US1] Write failing integration test: an Update Run against one real site preserves `author-customized` regions, advances `scaffold-tracked` regions, and reports the preserved/advanced/conflicts triple (data-model.md Update Run) in `test/integration/update-three-sites/single_site_test.go`
-- [ ] T011 [P] [US1] Write failing integration test: interrupting an update mid-run (simulated cancel) leaves the site in a consistent, recoverable state with no half-migrated files (spec Edge Cases) in `test/integration/update-three-sites/interruption_test.go`
+- [ ] T011 [P] [US1] Write failing integration test: interrupting an update mid-run (simulated cancel) leaves the site in a consistent, recoverable state with no half-migrated files (spec Edge Cases), **and** a run with any unresolved Update Conflict never reaches the commit step (contracts/update-and-escalation.md Step 5) — in `test/integration/update-three-sites/interruption_test.go`
 
 ### Implementation for User Story 1
 
@@ -117,7 +117,7 @@ Single Go module (`biblio-cli`) at the repository root, per plan.md:
 - [ ] T024 [US3] Document concrete, checkable D1 (storage volume / relational-query) and Vectorize (search-quality) thresholds and their recommended escalation steps in `docs/storage-escalation-guide.md` (depends on T003)
 - [ ] T025 [US3] Dry-run/walk through the D1 escalation path's steps against a copy of real site data and record the proof of executability in `docs/storage-escalation-guide.md` (depends on T024)
 - [ ] T026 [US3] Dry-run/walk through the Vectorize escalation path's steps against a copy of real site data and record the proof of executability in `docs/storage-escalation-guide.md` (depends on T024)
-- [ ] T027 [US3] Run quickstart.md Scenario 3 against all three real sites and confirm the guidance correctly reflects each site's real, current scale (depends on T023)
+- [ ] T027 [US3] Run quickstart.md Scenario 3 against all three real sites and confirm the guidance correctly reflects each site's real, current scale (depends on T023); if any site's `threshold-status` reports `crossed`, record that finding explicitly rather than silently dropping it — it does NOT block GA on its own (spec Assumptions "What GA means here")
 
 **Checkpoint**: Storage-escalation guidance is documented and proven executable on demand, without requiring either path to actually be carried out (Principle V — never pre-built "just in case").
 
@@ -138,7 +138,7 @@ Single Go module (`biblio-cli`) at the repository root, per plan.md:
 ### Implementation for User Story 4
 
 - [ ] T029 [US4] Implement the GA Readiness Review artifact (`deliverables[]`, `update-evidence`, `escalation-evidence`, `ga-determination`) per data-model.md in `internal/escalation/ga_review.go` (depends on T020, T027) — makes T028 pass
-- [ ] T030 [US4] Cross-reference every roadmap deliverable in `specs/research/roadmap.md` §1–§10, and every release v0.01–v0.06, against this release's acceptance bar, recording each deliverable's status (depends on T029)
+- [ ] T030 [US4] Cross-reference every roadmap deliverable in `specs/research/roadmap.md` §1–§10, and every release v0.01–v0.06, against this release's acceptance bar, recording each deliverable's status (depends on T029); if T027 recorded any `crossed` threshold, confirm and document that GA still only requires the corresponding path to be `proven-executable-on-demand` — not actually carried out (spec Assumptions, FR-006) — rather than treating the crossing itself as a blocker
 - [ ] T031 [US4] Produce the closing `ga-determination: true` record once every deliverable meets its bar (depends on T030)
 
 **Checkpoint**: The platform is marked Generally Available — every roadmap deliverable is complete-and-demonstrated or proven-executable-on-demand.
@@ -150,10 +150,10 @@ Single Go module (`biblio-cli`) at the repository root, per plan.md:
 **Purpose**: Release-closing housekeeping required by the constitution's Release Process and Decision Recording workflow.
 
 - [ ] T032 [P] Record the real `go build`/`go test`/lint commands now established by this release in `AGENTS.md` (Build / Test / Lint section), keeping `CLAUDE.md` in sync per the constitution's "kept current" requirement
-- [ ] T033 [P] Assemble `specs/release_0.06/` packaging directory containing the final feature list (pointing to features 009/010), release notes, and a create/configure/update/deploy/destroy usage guide, per the constitution's Release Process
+- [ ] T033 [P] Assemble the `specs/releases/0.06-general-availability/` packaging contents — final feature list (pointing to features 009/010), release notes, and a create/configure/update/deploy/destroy usage guide — per the constitution's Release Process
 - [ ] T034 Run the complete quickstart.md validation (Scenarios 1–4) end-to-end and confirm SC-001, SC-002, and SC-003 all hold (depends on T015, T020, T027, T031)
 - [ ] T035 [P] Update the progress cursor in `specs/research/roadmap.md` marking §9 (replicate to remaining site types) and §10 (storage escalation) complete/proven-ready
-- [ ] T036 Verify the usage guide in `specs/release_0.06/` covers the full `biblio-cli` lifecycle comprehensively — create, configure, update, deploy, and destroy (constitution Release Process item 4) — **and** includes a build-from-source section (cloning the repo, toolchain prerequisites, `go build`/`go install` steps, and running the locally built binary in place of a release download), so GA does not depend on a published binary being available (depends on T032, T033)
+- [ ] T036 Verify the usage guide in `specs/releases/0.06-general-availability/` covers the full `biblio-cli` lifecycle comprehensively — create, configure, update, deploy, and destroy (constitution Release Process item 4) — **and** includes a build-from-source section (cloning the repo, toolchain prerequisites, `go build`/`go install` steps, and running the locally built binary in place of a release download), so GA does not depend on a published binary being available (depends on T032, T033)
 
 ---
 

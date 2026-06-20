@@ -31,9 +31,9 @@ Extends the v0.01/v0.02 combined site/Worker template and the existing Go CLI mo
 
 **Purpose**: Add the dependencies and Worker-entry scaffolding both the MCP surface and the negotiation layer need, before any user story work begins
 
-- [ ] T001 Add the in-Worker MCP server SDK and `md4x` to `templates/site/profile/package.json`
+- [ ] T001 Add `agents` (Cloudflare Agents SDK, `McpAgent` class), `@modelcontextprotocol/sdk`, `zod`, and `md4x` to `templates/site/profile/package.json` (research spike 002: `agents` wraps `@modelcontextprotocol/sdk`; both are required direct/transitive deps for the `McpAgent` import path used in T013)
 - [ ] T002 [P] Author the Worker entry script skeleton (no routing logic yet — just a `fetch` handler stub) in `templates/site/profile/workers/entry.ts`
-- [ ] T003 [P] Write failing test for `internal/scaffold/generator.go`'s `renderWranglerJSONC` conditionally adding `"main": "workers/entry.ts"` and an `assets.binding` of `"ASSETS"` when `mcp_enabled` is `true`, and omitting `main` entirely when `false` (FR-001, FR-002; data-model.md "MCP Server Mount" `mounted`) in `internal/scaffold/generator_test.go`
+- [ ] T003 [P] Write failing test for `internal/scaffold/generator.go`'s `renderWranglerJSONC` conditionally adding `"main": "workers/entry.ts"`, an `assets.binding` of `"ASSETS"`, a `durable_objects` binding + `migrations` entry for the `McpAgent` class, and `"compatibility_flags": ["nodejs_compat"]` when `mcp_enabled` is `true`, and omitting all of the above entirely when `false` (FR-001, FR-002; data-model.md "MCP Server Mount" `mounted`; research spike 002 — `nodejs_compat` and the DO binding/migration are both confirmed-required for `McpAgent`, not optional) in `internal/scaffold/generator_test.go`
 - [ ] T004 Implement the `renderWranglerJSONC` change to make T003 pass, in `internal/scaffold/generator.go` (depends on T003)
 
 ---
@@ -70,7 +70,7 @@ Extends the v0.01/v0.02 combined site/Worker template and the existing Go CLI mo
 
 - [ ] T011 [P] [US1] Implement the shared MCP tools (cross-site-type queries against `content-index.json`) in `templates/site/profile/app/mcp/tools/shared.ts` (depends on T005)
 - [ ] T012 [P] [US1] Implement the profile-type-specific MCP tools in `templates/site/profile/app/mcp/tools/profile.ts` (depends on T005)
-- [ ] T013 [US1] Implement the in-Worker MCP server (tool registry, `/mcp*` route handler, structured-error responses for unsupported capabilities) in `templates/site/profile/app/mcp/server.ts` (depends on T006, T011, T012; contracts/mcp-tools.md "Tool contract", "Failure-mode contract")
+- [ ] T013 [US1] Implement the in-Worker MCP server as an `agents/mcp` `McpAgent` subclass (tool registry via `McpServer.registerTool`, `/mcp*` route via `MyMCP.serve("/mcp", { binding: ... })`, structured-error responses for unsupported capabilities) in `templates/site/profile/app/mcp/server.ts` (depends on T006, T011, T012; contracts/mcp-tools.md "Tool contract", "Failure-mode contract"; research spike 002 has a working reference implementation)
 - [ ] T014 [US1] Wire the MCP server into the Worker entry script's `/mcp*` delegation in `templates/site/profile/workers/entry.ts` (depends on T006, T013)
 
 **Checkpoint**: User Story 1 is independently functional — an MCP client can connect, list tools, and call them against the deployed pilot site (SC-001)

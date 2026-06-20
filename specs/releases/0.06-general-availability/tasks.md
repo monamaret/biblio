@@ -149,11 +149,11 @@ Single Go module (`biblio-cli`) at the repository root, per plan.md:
 
 **Purpose**: Release-closing housekeeping required by the constitution's Release Process and Decision Recording workflow.
 
-- [ ] T032 [P] Record the real `go build`/`go test`/lint commands now established by this release in `AGENTS.md` (Build / Test / Lint section), keeping `CLAUDE.md` in sync per the constitution's "kept current" requirement
-- [ ] T033 [P] Assemble the `specs/releases/0.06-general-availability/` packaging contents — final feature list (pointing to features 009/010), release notes, and a create/configure/update/deploy/destroy usage guide — per the constitution's Release Process
-- [ ] T034 Run the complete quickstart.md validation (Scenarios 1–4) end-to-end and confirm SC-001, SC-002, and SC-003 all hold (depends on T015, T020, T027, T031)
-- [ ] T035 [P] Update the progress cursor in `specs/research/roadmap.md` marking §9 (replicate to remaining site types) and §10 (storage escalation) complete/proven-ready
-- [ ] T036 Verify the usage guide in `specs/releases/0.06-general-availability/` covers the full `biblio-cli` lifecycle comprehensively — create, configure, update, deploy, and destroy (constitution Release Process item 4) — **and** includes a build-from-source section (cloning the repo, toolchain prerequisites, `go build`/`go install` steps, and running the locally built binary in place of a release download), so GA does not depend on a published binary being available (depends on T032, T033)
+- [X] T032 [P] Record the real `go build`/`go test`/lint commands now established by this release in `AGENTS.md` (Build / Test / Lint section), keeping `CLAUDE.md` in sync per the constitution's "kept current" requirement
+- [X] T033 [P] Assemble the `specs/releases/0.06-general-availability/` packaging contents — final feature list (pointing to features 009/010), release notes, and a create/configure/update/deploy/destroy usage guide — per the constitution's Release Process
+- [X] T034 Run the complete quickstart.md validation (Scenarios 1–4) end-to-end and confirm SC-001, SC-002, and SC-003 all hold (depends on T015, T020, T027, T031)
+- [X] T035 [P] Update the progress cursor in `specs/research/roadmap.md` marking §9 (replicate to remaining site types) and §10 (storage escalation) complete/proven-ready
+- [X] T036 Verify the usage guide in `specs/releases/0.06-general-availability/` covers the full `biblio-cli` lifecycle comprehensively — create, configure, update, deploy, and destroy (constitution Release Process item 4) — **and** includes a build-from-source section (cloning the repo, toolchain prerequisites, `go build`/`go install` steps, and running the locally built binary in place of a release download), so GA does not depend on a published binary being available (depends on T032, T033)
 
 ---
 

@@ -4,6 +4,32 @@ All notable user-facing changes to `biblio-cli` and its generated sites are
 recorded here, release by release. See `docs/releases/v<version>/` for the
 full user guide of each release.
 
+## v0.06 — General Availability
+
+- Added `biblio-cli update` and `biblio-cli upgrade <version>`: classify
+  every region of an existing project against the scaffold-template it was
+  generated from (scaffold-tracked / author-customized / ambiguous),
+  advance scaffold-tracked regions, preserve author-customized regions
+  byte-for-byte, and surface any ambiguous region as a conflict the author
+  resolves explicitly via `--resolve <path>=keep-author|use-scaffold` —
+  never silently overwritten.
+- Extended `biblio-cli new` to write a `.biblio/scaffold-manifest.json`
+  baseline (a content hash per embedded template file) at scaffold time,
+  the 3-way-diff baseline `update`/`upgrade` need.
+- Confirmed the update/upgrade contract holds, unmodified, across all three
+  site types (profile, project log, docs).
+- Added `internal/escalation`'s Storage-Escalation Guidance Check:
+  documented, checkable entry-count thresholds for the two conditional
+  escalation paths (D1, Vectorize), reported against each site's real
+  `content-index.json` scale. Recorded real local-only dry-run proofs in
+  `docs/storage-escalation-guide.md` that both paths are executable on
+  demand, without adopting either as a running dependency.
+- Closed the GA Readiness Review (`test/integration/ga-readiness-review/
+  GA-READINESS-RECORD.md`): every roadmap deliverable §1–§10 is either
+  complete-and-demonstrated or — for the two conditional storage-escalation
+  items — proven-executable-on-demand. `ga-determination: true` —
+  **the platform is Generally Available.**
+
 ## v0.05 — Prove the platform on documentation and across all site types
 
 - Brought `templates/site/docs` up to parity with `templates/site/profile`'s

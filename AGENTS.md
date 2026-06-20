@@ -49,25 +49,34 @@ breakdown (all design questions in its §0 are now resolved).
 
 ## Build / Test / Lint
 
-Not yet established — there is no application source code, build
-system, or test suite in this repo yet (see "Project state" in
-[CLAUDE.md](CLAUDE.md)). The intended end-to-end pipeline, once
-`biblio-cli` exists, is:
+`biblio-cli` (the Go module at the repo root) is real, working source
+code as of v0.01, extended through v0.06:
 
 ```sh
-biblio-cli build   # content-index generation -> react-router build (prerender) -> wrangler bundling
-biblio-cli deploy  # wrangler deploy
-biblio-cli dev     # vite dev + wrangler dev together
+go build ./...        # build everything, including cmd/biblio-cli
+go run ./cmd/biblio-cli --help
+go test ./...          # full unit + integration suite
+./scripts/check.sh     # gofmt -l . (fails on unformatted files) + go vet ./...
 ```
 
-Update this section with real `install`/`build`/`test`/`lint`/`format`
-commands as soon as the CLI and a site scaffold land — see
-[specs/research/deployment-guide.md](specs/research/deployment-guide.md)
-for the expected end-to-end usage. Whatever test runner/framework is
-chosen for the Go side (`go test` + likely `testify`) and the TS/React
-side (e.g. Vitest + MCP tool contract tests), tests are written and
-confirmed failing *before* the corresponding implementation — see the
-test-driven development convention above.
+`go install github.com/monamaret/biblio/cmd/biblio-cli@latest` installs
+the CLI directly; prebuilt binaries are also published via `goreleaser`
+on GitHub Releases (Principle III) — see
+[docs/releases/v0.06/README.md](docs/releases/v0.06/README.md) for a
+build-from-source walkthrough.
+
+Each scaffolded site project (`templates/site/{profile,log,docs}`) is its
+own independent npm project (React + Vite + React Router v7 + Wrangler);
+once scaffolded with `biblio-cli new`, the generated project's own
+`package.json` carries its `build`/`test`/`lint`/`dev` scripts (e.g.
+`npx vitest`, `npx tsc --noEmit`) — there is no repo-root Node tooling,
+since this repo itself ships only the Go CLI and the embedded template
+sources.
+
+Tests are written and confirmed failing *before* the corresponding
+implementation, on both sides — see the test-driven development
+convention above. No change lands without a failing test demonstrating
+the gap it closes (Constitution Principle VI, NON-NEGOTIABLE).
 
 ## Subagents
 

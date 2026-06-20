@@ -31,15 +31,17 @@ One correction to plan.md's Project Structure sketch: the sketch lists `internal
 
 **Purpose**: Nothing log-specific can be built until the log template has the same React Router v7 / Vite / Worker / test scaffolding profile already has
 
-- [ ] T001 [P] Replace `templates/site/log/package.json`'s plain Vite/React deps with the profile set (`react-router`, `@react-router/dev`, `agents`, `@modelcontextprotocol/sdk`, `zod`, `md4x`, `react-markdown`, `remark-gfm`, `isbot`, vitest/testing-library devDeps) per `templates/site/profile/package.json`
-- [ ] T002 [P] Replace `templates/site/log/vite.config.ts` with the React Router v7 + `llmsTxtPlugin()` config from `templates/site/profile/vite.config.ts` (same rationale: no `@cloudflare/vite-plugin`)
-- [ ] T003 [P] Add `templates/site/log/react-router.config.ts`, `templates/site/log/tsconfig.json`, `templates/site/log/vitest.config.ts`, `templates/site/log/vitest.setup.ts` mirroring profile's (type-agnostic, no log-specific changes)
-- [ ] T004 [P] Remove the superseded v0.01 plain-Vite files `templates/site/log/src/main.tsx` and `templates/site/log/index.html`
-- [ ] T005 [P] Add `templates/site/log/.github/workflows/deploy.yml` (copy of `templates/site/profile/.github/workflows/deploy.yml` — CI/deploy contract is type-agnostic, FR-001)
-- [ ] T006 [P] Copy `templates/site/profile/app/content/load.ts` and `render.tsx` into `templates/site/log/app/content/` unchanged (Principle II — content loading/rendering is type-agnostic; data-model.md "Project-Log Entry" extends the same Authored Content Item)
-- [ ] T007 Author `templates/site/log/app/root.tsx` and `templates/site/log/app/routes.ts` (route skeleton only: `index` and a `"*"` detail splat, matching `templates/site/profile/app/routes.ts`; the filter route is added in Phase 4)
+- [X] T001 [P] Replace `templates/site/log/package.json`'s plain Vite/React deps with the profile set (`react-router`, `@react-router/dev`, `agents`, `@modelcontextprotocol/sdk`, `zod`, `md4x`, `react-markdown`, `remark-gfm`, `isbot`, vitest/testing-library devDeps) per `templates/site/profile/package.json`
+- [X] T002 [P] Replace `templates/site/log/vite.config.ts` with the React Router v7 + `llmsTxtPlugin()` config from `templates/site/profile/vite.config.ts` (same rationale: no `@cloudflare/vite-plugin`)
+- [X] T003 [P] Add `templates/site/log/react-router.config.ts`, `templates/site/log/tsconfig.json`, `templates/site/log/vitest.config.ts`, `templates/site/log/vitest.setup.ts` mirroring profile's (type-agnostic, no log-specific changes)
+- [X] T004 [P] Remove the superseded v0.01 plain-Vite files `templates/site/log/src/main.tsx` and `templates/site/log/index.html`
+- [X] T005 [P] Add `templates/site/log/.github/workflows/deploy.yml` (copy of `templates/site/profile/.github/workflows/deploy.yml` — CI/deploy contract is type-agnostic, FR-001)
+- [X] T006 [P] Copy `templates/site/profile/app/content/load.ts` and `render.tsx` into `templates/site/log/app/content/` unchanged (Principle II — content loading/rendering is type-agnostic; data-model.md "Project-Log Entry" extends the same Authored Content Item)
+- [X] T007 Author `templates/site/log/app/root.tsx` and `templates/site/log/app/routes.ts` (route skeleton only: `index` and a `"*"` detail splat, matching `templates/site/profile/app/routes.ts`; the filter route is added in Phase 4) — `routes.ts` shipped as a valid *empty* `RouteConfig` rather than one importing not-yet-existing `home.tsx`/`detail.tsx`, so it typechecks at this checkpoint; Phase 3 (T019) fills it in
 
-**Checkpoint**: `templates/site/log` builds, tests, and deploys with the same infra as `templates/site/profile` — empty of log-specific behavior, ready for Phase 2
+**Checkpoint** (verified via a real `biblio-cli new --type=log` smoke scaffold): `templates/site/log` installs, typechecks (`tsc --noEmit`), and runs its (currently single, T012-pulled-forward) vitest suite cleanly. `npm run build`'s prerender step does **not** yet succeed — `react-router.config.ts` unconditionally lists every `content-index.json` entry as a route to prerender, and no route matches until Phase 3 (T019) adds the detail route. This is expected, not a regression; tracked here so it isn't mistaken for a Phase 1 defect.
+
+**Note**: T012 (Phase 2) was pulled forward and completed here — `vite.config.ts` (T002) imports `app/discovery/llms-txt.ts` at config-eval time, so Setup couldn't build at all without it already existing. See Phase 2 below; T012 is marked done, not re-done.
 
 ---
 
@@ -51,7 +53,7 @@ One correction to plan.md's Project Structure sketch: the sketch lists `internal
 - [ ] T009 Implement the structural validation in `internal/content/schema.go`'s `ParseItem` to make T008 pass (depends on T008)
 - [ ] T010 [P] Copy `templates/site/profile/app/mcp/{agent.ts,query.ts,server.ts}` into `templates/site/log/app/mcp/`, renaming the MCP server name to `"biblio-log-site"` and replacing the `registerProfileTools` import/call with a local no-op placeholder `registerLogTools(server: McpServer) {}` in `templates/site/log/app/mcp/tools/log.ts` — so `templates/site/log` builds and typechecks cleanly at every checkpoint through Phase 5; T032 replaces the placeholder body with the real implementation, it does not introduce the function (depends on T006)
 - [ ] T011 [P] Copy `templates/site/profile/app/negotiation/{accept.ts,ansi.ts,markdown.ts,wasm.d.ts}` into `templates/site/log/app/negotiation/` unchanged (Principle II — negotiation is type-agnostic, FR-005) (depends on T006)
-- [ ] T012 [P] Copy `templates/site/profile/app/discovery/llms-txt.ts` (+ test) into `templates/site/log/app/discovery/` unchanged (depends on T006)
+- [X] T012 [P] Copy `templates/site/profile/app/discovery/llms-txt.ts` (+ test) into `templates/site/log/app/discovery/` unchanged (depends on T006) — completed early in Phase 1, see note above
 - [ ] T013 Copy `templates/site/profile/workers/entry.ts` into `templates/site/log/workers/entry.ts`, wiring it to the log site's `mcp/agent.ts` and `negotiation/accept.ts` (depends on T010, T011)
 
 **Checkpoint**: Log site has full MCP/negotiation/content-loading plumbing in place, schema validates log-specific fields; ready for entry views, filtering, and type-specific tools

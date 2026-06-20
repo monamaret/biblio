@@ -1,0 +1,12 @@
+{
+  "entries": [
+    {
+      "body": "This is the first entry in your project log. Replace it with your own\nnotes, write-ups, and progress updates.\n",
+      "date": "2026-06-01",
+      "path": "posts/2026-06-01-hello-world.md",
+      "slug": "posts/2026-06-01-hello-world",
+      "tags": ["meta"],
+      "title": "Hello, World"
+    }
+  ]
+}

@@ -129,17 +129,17 @@ One correction to plan.md's Project Structure sketch: the sketch lists `internal
 
 ### Tests for User Story 4 ⚠️
 
-- [ ] T028 [P] [US4] Write failing test for log-specific MCP tools — `list_entries` (optional date-range/tag/project args, `filterEntries()`-backed) and `get_entry` by slug — content contract in `templates/site/log/app/mcp/tools/log.test.ts`
-- [ ] T029 [P] [US4] Write failing test confirming a profile-only tool name is not registered on the log site's `McpServer` and a call returns the standard unknown-tool error, not a silent empty result (spec Edge Cases) in `templates/site/log/app/mcp/server.test.ts`
-- [ ] T030 [P] [US4] Write failing test for `Accept`/`User-Agent`-negotiated Markdown/ANSI rendering of a log entry, re-exercising the T011 negotiation logic against log content shape, in `templates/site/log/app/negotiation/accept.test.ts`
+- [X] T028 [P] [US4] Write failing test for log-specific MCP tools — `list_entries` (optional date-range/tag/project args, `filterEntries()`-backed) and `get_entry` by slug — content contract in `templates/site/log/app/mcp/tools/log.test.ts`
+- [X] T029 [P] [US4] Write failing test confirming a profile-only tool name is not registered on the log site's `McpServer` and a call returns the standard unknown-tool error, not a silent empty result (spec Edge Cases) in `templates/site/log/app/mcp/server.test.ts`
+- [X] T030 [P] [US4] Write failing test for `Accept`/`User-Agent`-negotiated Markdown/ANSI rendering of a log entry, re-exercising the T011 negotiation logic against log content shape, in `templates/site/log/app/negotiation/accept.test.ts` — the ansi tier itself is exercised generically by the unchanged, copied `ansi.test.ts` (its own mocking, content-independent); this file's job is `negotiatePageResponse` against real log content plus `negotiateVariant`'s curl→ansi selection, not re-proving WASM rendering already proven elsewhere
 
 ### Implementation for User Story 4
 
-- [ ] T031 [US4] Implement `list_entries` and `get_entry` tools in `templates/site/log/app/mcp/tools/log.ts` (depends on T025, T028)
-- [ ] T032 [US4] Replace T010's no-op `registerLogTools` placeholder body in `templates/site/log/app/mcp/tools/log.ts` with the real tool registration (`list_entries`, `get_entry`); `createServer()` in `templates/site/log/app/mcp/server.ts` already calls it from T010, no further wiring needed (depends on T010, T031)
-- [ ] T033 [US4] Verify the T012 `llms.txt` copy's output against log content (date/tags/project-aware key-page links); adjust only if T030 surfaces a real gap (depends on T012, T030)
+- [X] T031 [US4] Implement `list_entries` and `get_entry` tools in `templates/site/log/app/mcp/tools/log.ts` (depends on T025, T028)
+- [X] T032 [US4] Replace T010's no-op `registerLogTools` placeholder body in `templates/site/log/app/mcp/tools/log.ts` with the real tool registration (`list_entries`, `get_entry`); `createServer()` in `templates/site/log/app/mcp/server.ts` already calls it from T010, no further wiring needed (depends on T010, T031)
+- [X] T033 [US4] Verify the T012 `llms.txt` copy's output against log content (date/tags/project-aware key-page links); adjust only if T030 surfaces a real gap (depends on T012, T030) — verified via real build output; all 3 entries listed correctly, no gap, no change needed
 
-**Checkpoint**: All user stories independently functional — the agent/terminal layer generalizes to the project-log type (SC-001 complete via agent/terminal evidence)
+**Checkpoint** (verified via a real `biblio-cli new --type=log` smoke scaffold, including a live MCP client exchange over `InMemoryTransport`): All user stories independently functional. `npx tsc --noEmit` clean, vitest 9 files/37 tests passing, Go suite green. A real MCP client lists `list_pages, get_page, search_content, list_entries, get_entry`, successfully filters via `list_entries({tag: "shipping"})`, and a `get_profile` call (profile-only tool) correctly returns `isError: true` — the agent/terminal layer generalizes to the project-log type (SC-001 complete via agent/terminal evidence).
 
 ---
 

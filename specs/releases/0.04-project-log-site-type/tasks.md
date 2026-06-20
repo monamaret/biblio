@@ -115,9 +115,9 @@ One correction to plan.md's Project Structure sketch: the sketch lists `internal
 
 **Independent Test**: Author three consecutive dated entries one at a time, running only `biblio-cli index && build && deploy` between each, and confirm no diffs to `wrangler.jsonc`, `content/site.yaml`, or `package.json` are needed between cycles — [quickstart.md](./quickstart.md) Scenario 3
 
-- [ ] T027 [US3] Author and run an integration check that authors 3 consecutive dated entries one at a time (separate `index`/`build` cycles per entry) against a scaffolded log site, asserting zero changes to `wrangler.jsonc`/`content/site.yaml`/`package.json` between cycles, in `test/integration/pilot-site-log/` (depends on T017–T020; FR-004, SC-002)
+- [X] T027 [US3] Author and run an integration check that authors 3 consecutive dated entries one at a time (separate `index`/`build` cycles per entry) against a scaffolded log site, asserting zero changes to `wrangler.jsonc`/`content/site.yaml`/`package.json` between cycles, in `test/integration/pilot-site-log/` (depends on T017–T020; FR-004, SC-002)
 
-**Checkpoint**: User Story 3 is independently demonstrated — the authoring rhythm requires no one-off adjustments
+**Checkpoint**: `TestAuthoringRhythm_ThreeConsecutiveEntries` passes — User Story 3 is independently demonstrated. Three separate days each add one dated entry via the real `index.Generate()` → `cli.RunBuild()` path (stubbed `vite build`, matching `pilot-site`'s own convention); `wrangler.jsonc`, `content/site.yaml`, and `package.json` are confirmed byte-for-byte identical across all three cycles — zero one-off adjustments (SC-002). Full Go suite green.
 
 ---
 

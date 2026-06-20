@@ -108,16 +108,16 @@ Single Go module (`biblio-cli`) at the repository root, per plan.md:
 
 ### Tests for User Story 3
 
-- [ ] T021 [P] [US3] Write failing unit test for threshold-status computation (`not-crossed` / `crossed` for D1 volume/relational and Vectorize search-quality triggers) against `content-index.json`-derived scale in `test/unit/escalation/guidance_test.go`
-- [ ] T022 [P] [US3] Write failing integration test: the Storage-Escalation Guidance Check, run against all three real sites' actual `content-index.json` scale, reports a status consistent with their real data in `test/integration/escalation-guidance/real_sites_test.go`
+- [X] T021 [P] [US3] Write failing unit test for threshold-status computation (`not-crossed` / `crossed` for D1 volume/relational and Vectorize search-quality triggers) against `content-index.json`-derived scale in `test/unit/escalation/guidance_test.go`
+- [X] T022 [P] [US3] Write failing integration test: the Storage-Escalation Guidance Check, run against all three real sites' actual `content-index.json` scale, reports a status consistent with their real data in `test/integration/escalation-guidance/real_sites_test.go`
 
 ### Implementation for User Story 3
 
-- [ ] T023 [US3] Implement the Storage-Escalation Guidance Check (`threshold-status`, `path-executable-on-demand`) in `internal/escalation/guidance.go` — makes T021, T022 pass
-- [ ] T024 [US3] Document concrete, checkable D1 (storage volume / relational-query) and Vectorize (search-quality) thresholds and their recommended escalation steps in `docs/storage-escalation-guide.md` (depends on T003)
-- [ ] T025 [US3] Dry-run/walk through the D1 escalation path's steps against a copy of real site data and record the proof of executability in `docs/storage-escalation-guide.md` (depends on T024)
-- [ ] T026 [US3] Dry-run/walk through the Vectorize escalation path's steps against a copy of real site data and record the proof of executability in `docs/storage-escalation-guide.md` (depends on T024)
-- [ ] T027 [US3] Run quickstart.md Scenario 3 against all three real sites and confirm the guidance correctly reflects each site's real, current scale (depends on T023); if any site's `threshold-status` reports `crossed`, record that finding explicitly rather than silently dropping it — it does NOT block GA on its own (spec Assumptions "What GA means here")
+- [X] T023 [US3] Implement the Storage-Escalation Guidance Check (`threshold-status`, `path-executable-on-demand`) in `internal/escalation/guidance.go` — makes T021, T022 pass
+- [X] T024 [US3] Document concrete, checkable D1 (storage volume / relational-query) and Vectorize (search-quality) thresholds and their recommended escalation steps in `docs/storage-escalation-guide.md` (depends on T003)
+- [X] T025 [US3] Dry-run/walk through the D1 escalation path's steps against a copy of real site data and record the proof of executability in `docs/storage-escalation-guide.md` (depends on T024)
+- [X] T026 [US3] Dry-run/walk through the Vectorize escalation path's steps against a copy of real site data and record the proof of executability in `docs/storage-escalation-guide.md` (depends on T024)
+- [X] T027 [US3] Run quickstart.md Scenario 3 against all three real sites and confirm the guidance correctly reflects each site's real, current scale (depends on T023); if any site's `threshold-status` reports `crossed`, record that finding explicitly rather than silently dropping it — it does NOT block GA on its own (spec Assumptions "What GA means here")
 
 **Checkpoint**: Storage-escalation guidance is documented and proven executable on demand, without requiring either path to actually be carried out (Principle V — never pre-built "just in case").
 

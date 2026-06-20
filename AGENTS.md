@@ -109,9 +109,9 @@ reordered, or collapsed, even for small features:
 
 ## Release process
 
-Each release is packaged as a numbered directory `specs/release_X.XX/` (e.g.
-`specs/release_1.00/`) once its features have actually shipped — not drafted
-ahead of the work it documents. It MUST contain:
+Each release is packaged as a directory `specs/releases/X.XX-name/` (e.g.
+`specs/releases/0.06-general-availability/`) once its features have actually
+shipped — not drafted ahead of the work it documents. It MUST contain:
 
 - **Final feature list** — the definitive shipped-feature list, each entry
   linking back to its `specs/features/` item (and from there to the research

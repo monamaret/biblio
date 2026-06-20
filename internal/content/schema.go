@@ -51,7 +51,7 @@ func ReadSiteConfig(data []byte) (SiteConfig, error) {
 var requiredFields = map[string][]string{
 	"profile": {"title"},
 	"log":     {"title", "date"},
-	"docs":    {"title", "order"},
+	"docs":    {"title", "section", "order"},
 }
 
 // ParseItem parses and validates a single Markdown+frontmatter file.
@@ -95,6 +95,12 @@ func ParseItem(relPath string, data []byte, siteType string) (Item, error) {
 		}
 	}
 
+	if siteType == "docs" {
+		if err := validateDocsFields(relPath, fields); err != nil {
+			return Item{}, err
+		}
+	}
+
 	return Item{
 		Path:   relPath,
 		Slug:   SlugFromPath(relPath),
@@ -134,6 +140,36 @@ func validateLogFields(relPath string, fields map[string]any) error {
 	if project, ok := fields["project"]; ok {
 		if _, isString := project.(string); !isString {
 			return fmt.Errorf("content: %s: field %q must be a string", relPath, "project")
+		}
+	}
+
+	return nil
+}
+
+// validateDocsFields checks the structural shape of the documentation-type-
+// specific fields beyond mere presence (data-model.md "Documentation Page"
+// validation rules; spec Edge Cases): `section` must be a non-empty string,
+// and `order` must parse as an integer. Both are already required to be
+// present by requiredFields["docs"] — this only validates their shape once
+// present.
+func validateDocsFields(relPath string, fields map[string]any) error {
+	if section, ok := fields["section"]; ok {
+		s, isString := section.(string)
+		if !isString || s == "" {
+			return fmt.Errorf("content: %s: field %q must be a non-empty string", relPath, "section")
+		}
+	}
+
+	if order, ok := fields["order"]; ok {
+		switch v := order.(type) {
+		case int, int64:
+			// valid
+		case float64:
+			if v != float64(int(v)) {
+				return fmt.Errorf("content: %s: field %q must be an integer", relPath, "order")
+			}
+		default:
+			return fmt.Errorf("content: %s: field %q must be an integer", relPath, "order")
 		}
 	}
 

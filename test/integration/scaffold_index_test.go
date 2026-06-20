@@ -107,18 +107,36 @@ func TestScaffoldThenIndex_Log(t *testing.T) {
 }
 
 // TestScaffoldThenIndex_Docs validates the full scaffold → index path for the
-// docs site type including the order field required by that site type (SC-002).
+// docs site type including the section/order fields required by that site
+// type (SC-002), and confirms the deliberate absence of tags/project fields
+// (spec Scenario 1.2; data-model.md "Documentation Page" — no filter-relevant
+// fields by design).
 func TestScaffoldThenIndex_Docs(t *testing.T) {
 	shape, _ := scaffoldAndIndex(t, "docs")
 	entries, _ := shape["entries"].([]any)
 	if len(entries) == 0 {
 		t.Fatal("entries missing or empty in content-index.json for docs")
 	}
+	sections := map[string]bool{}
 	for _, raw := range entries {
 		e := raw.(map[string]any)
 		if e["order"] == nil {
 			t.Errorf("docs entry missing required 'order' field: %v", e)
 		}
+		section, _ := e["section"].(string)
+		if section == "" {
+			t.Errorf("docs entry missing required 'section' field: %v", e)
+		}
+		sections[section] = true
+		if _, ok := e["tags"]; ok {
+			t.Errorf("docs entry unexpectedly has a 'tags' field (not part of this site type's schema): %v", e)
+		}
+		if _, ok := e["project"]; ok {
+			t.Errorf("docs entry unexpectedly has a 'project' field (not part of this site type's schema): %v", e)
+		}
+	}
+	if len(sections) < 2 {
+		t.Errorf("expected seed content to span at least 2 sections for a real multi-section hierarchy, got %v", sections)
 	}
 }
 

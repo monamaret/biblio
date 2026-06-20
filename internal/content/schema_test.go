@@ -42,7 +42,7 @@ func TestParseItem_ValidLog(t *testing.T) {
 }
 
 func TestParseItem_ValidDocs(t *testing.T) {
-	data := []byte("---\ntitle: \"Getting Started\"\norder: 2\n---\n\nFirst steps.\n")
+	data := []byte("---\ntitle: \"Getting Started\"\nsection: \"Overview\"\norder: 2\n---\n\nFirst steps.\n")
 	item, err := content.ParseItem("getting-started.md", data, "docs")
 	if err != nil {
 		t.Fatalf("ParseItem() error = %v", err)
@@ -73,6 +73,35 @@ func TestParseItem_MissingOrder_Docs(t *testing.T) {
 	data := []byte("---\ntitle: \"Page\"\n---\n\nBody.\n")
 	if _, err := content.ParseItem("page.md", data, "docs"); err == nil {
 		t.Fatal("ParseItem(): want error for missing required field 'order' (docs), got nil")
+	}
+}
+
+// Missing 'section' (required for docs, alongside 'order') must be a clear
+// error (data-model.md "Documentation Page" validation rules; spec Edge
+// Cases).
+func TestParseItem_MissingSection_Docs(t *testing.T) {
+	data := []byte("---\ntitle: \"Page\"\norder: 1\n---\n\nBody.\n")
+	if _, err := content.ParseItem("page.md", data, "docs"); err == nil {
+		t.Fatal("ParseItem(): want error for missing required field 'section' (docs), got nil")
+	}
+}
+
+// A docs page's 'order' must parse as an integer — a non-numeric value is a
+// clear, per-file error, not silently accepted (data-model.md "Documentation
+// Page" validation rules; spec Edge Cases).
+func TestParseItem_DocsOrderNotInteger(t *testing.T) {
+	data := []byte("---\ntitle: \"Page\"\nsection: \"Overview\"\norder: \"first\"\n---\n\nBody.\n")
+	if _, err := content.ParseItem("page.md", data, "docs"); err == nil {
+		t.Fatal("ParseItem(): want error for non-integer 'order' (docs), got nil")
+	}
+}
+
+// A docs page's 'section' must be a non-empty string — a non-string value
+// is a clear, per-file error, not silently accepted.
+func TestParseItem_DocsSectionNotString(t *testing.T) {
+	data := []byte("---\ntitle: \"Page\"\nsection:\n  - not-a-string\norder: 1\n---\n\nBody.\n")
+	if _, err := content.ParseItem("page.md", data, "docs"); err == nil {
+		t.Fatal("ParseItem(): want error for 'section' that isn't a string (docs), got nil")
 	}
 }
 

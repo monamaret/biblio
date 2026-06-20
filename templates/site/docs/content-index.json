@@ -1,0 +1,28 @@
+{
+  "entries": [
+    {
+      "body": "Welcome to your documentation site. This page is the entry point — replace\nit with an overview of what you're documenting.\n",
+      "path": "index.md",
+      "slug": "index",
+      "title": "Introduction",
+      "section": "Overview",
+      "order": 1
+    },
+    {
+      "body": "Walk readers through the first steps of using whatever you're documenting\nhere.\n",
+      "path": "getting-started.md",
+      "slug": "getting-started",
+      "title": "Getting Started",
+      "section": "Overview",
+      "order": 2
+    },
+    {
+      "body": "Document the configuration options here — what each setting does and its\ndefault value.\n",
+      "path": "configuration.md",
+      "slug": "configuration",
+      "title": "Configuration",
+      "section": "Reference",
+      "order": 1
+    }
+  ]
+}

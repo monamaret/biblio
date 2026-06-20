@@ -125,6 +125,14 @@ ahead of the work it documents. It MUST contain:
   **update**, **deploy**, and **destroy** a `biblio` site with that release's
   `biblio-cli` — the full site lifecycle, end to end.
 
+Each `specs/releases/0.0X-release.md` spec carries a `**Status**` field,
+starting as `Draft`. Going forward, flip it to `Shipped` once that release's
+`tasks.md` is fully implemented (every task `[X]`) and its closing
+quickstart/integration evidence has run successfully — do this as part of
+the Polish phase's doc-update task. (v0.01–v0.03's release docs still say
+`Draft` despite having shipped; this convention starts with v0.04 rather
+than being backfilled onto those.)
+
 ## Notes
 
 - Treat [specs/research/001-static-site-platform-with-mcp.md](specs/research/001-static-site-platform-with-mcp.md)

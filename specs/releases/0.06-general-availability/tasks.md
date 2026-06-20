@@ -65,15 +65,15 @@ Single Go module (`biblio-cli`) at the repository root, per plan.md:
 
 ### Tests for User Story 1
 
-- [ ] T010 [P] [US1] Write failing integration test: an Update Run against one real site preserves `author-customized` regions, advances `scaffold-tracked` regions, and reports the preserved/advanced/conflicts triple (data-model.md Update Run) in `test/integration/update-three-sites/single_site_test.go`
-- [ ] T011 [P] [US1] Write failing integration test: interrupting an update mid-run (simulated cancel) leaves the site in a consistent, recoverable state with no half-migrated files (spec Edge Cases), **and** a run with any unresolved Update Conflict never reaches the commit step (contracts/update-and-escalation.md Step 5) — in `test/integration/update-three-sites/interruption_test.go`
+- [X] T010 [P] [US1] Write failing integration test: an Update Run against one real site preserves `author-customized` regions, advances `scaffold-tracked` regions, and reports the preserved/advanced/conflicts triple (data-model.md Update Run) in `test/integration/update-three-sites/single_site_test.go`
+- [X] T011 [P] [US1] Write failing integration test: interrupting an update mid-run (simulated cancel) leaves the site in a consistent, recoverable state with no half-migrated files (spec Edge Cases), **and** a run with any unresolved Update Conflict never reaches the commit step (contracts/update-and-escalation.md Step 5) — in `test/integration/update-three-sites/interruption_test.go`
 
 ### Implementation for User Story 1
 
-- [ ] T012 [US1] Implement Update Run orchestration (classify → advance → preserve → surface → commit, contracts/update-and-escalation.md Steps 1–5) in `internal/migrate/update_run.go` (depends on T005, T007, T009) — makes T010, T011 pass
-- [ ] T013 [US1] Wire the `biblio-cli update` Cobra command in `internal/cli/update.go`, operating on the current project directory with exit code `0` on clean completion and non-zero with state-recovery guidance on interruption/unresolved conflicts (depends on T012)
-- [ ] T014 [US1] Implement the Update Run success/failure report (preserved/advanced/conflicts output) per contracts/update-and-escalation.md "Output (success)" / "Output (failure / interruption)" in `internal/migrate/update_run.go`
-- [ ] T015 [US1] Run quickstart.md Scenario 1 against the real `my-profile-site`: confirm content intact after `biblio-cli update`, and that a `Ctrl+C` mid-run recovers cleanly
+- [X] T012 [US1] Implement Update Run orchestration (classify → advance → preserve → surface → commit, contracts/update-and-escalation.md Steps 1–5) in `internal/migrate/update_run.go` (depends on T005, T007, T009) — makes T010, T011 pass
+- [X] T013 [US1] Wire the `biblio-cli update` Cobra command in `internal/cli/update.go`, operating on the current project directory with exit code `0` on clean completion and non-zero with state-recovery guidance on interruption/unresolved conflicts (depends on T012)
+- [X] T014 [US1] Implement the Update Run success/failure report (preserved/advanced/conflicts output) per contracts/update-and-escalation.md "Output (success)" / "Output (failure / interruption)" in `internal/migrate/update_run.go`
+- [X] T015 [US1] Run quickstart.md Scenario 1 against the real `my-profile-site`: confirm content intact after `biblio-cli update`, and that a `Ctrl+C` mid-run recovers cleanly
 
 **Checkpoint**: `biblio-cli update` works end-to-end against one real site. This is the MVP — independently demoable.
 

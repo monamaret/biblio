@@ -13,9 +13,10 @@ import (
 )
 
 var (
-	newType   string
-	newDomain string
-	newTheme  string
+	newType       string
+	newDomain     string
+	newTheme      string
+	newMCPEnabled bool
 )
 
 var newCmd = &cobra.Command{
@@ -29,6 +30,7 @@ func init() {
 	newCmd.Flags().StringVar(&newType, "type", "", "site type: profile, log, or docs (prompted interactively when omitted)")
 	newCmd.Flags().StringVar(&newDomain, "domain", "", "the site's domain, used to pre-fill wrangler.jsonc routing (prompted interactively when omitted)")
 	newCmd.Flags().StringVar(&newTheme, "theme", "", "theme preset id, must match --type (prompted interactively when omitted)")
+	newCmd.Flags().BoolVar(&newMCPEnabled, "mcp-enabled", true, "whether the agent-facing MCP server is mounted on this site (v0.03 FR-002); the sole MCP-related configuration surface")
 	rootCmd.AddCommand(newCmd)
 }
 
@@ -70,6 +72,7 @@ func runNew(cmd *cobra.Command, args []string) error {
 		SiteType:    siteType,
 		Domain:      domain,
 		Theme:       themeID,
+		MCPEnabled:  newMCPEnabled,
 	})
 	if err != nil {
 		return err

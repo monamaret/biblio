@@ -22,6 +22,14 @@ type Options struct {
 	Domain string
 	// Theme is the selected preset's ID; it must belong to SiteType.
 	Theme string
+	// MCPEnabled is the sole MCP-related configuration surface
+	// (Security & Operational Posture): when true, wrangler.jsonc mounts
+	// the Worker `main` entry, its `durable_objects` binding/`migrations`
+	// for the in-Worker MCP server, and `nodejs_compat` (data-model.md
+	// "MCP Server Mount" `mounted`; research spike 002). When false, none
+	// of that is present at all — a build-time decision, not a runtime
+	// toggle (v0.03 FR-002).
+	MCPEnabled bool
 }
 
 // Generate scaffolds a new Site Project as destDir/<ProjectName>: it seeds
@@ -130,19 +138,51 @@ func renderSiteYAML(opts Options) string {
 	return fmt.Sprintf(`site_type: %s
 name: %s
 description: ""
-mcp_enabled: true
-`, opts.SiteType, opts.ProjectName)
+mcp_enabled: %t
+`, opts.SiteType, opts.ProjectName, opts.MCPEnabled)
 }
 
 // renderWranglerJSONC produces wrangler.jsonc with its route/custom-domain
-// binding pre-filled from --domain (data-model.md "Site Project").
+// binding pre-filled from --domain (data-model.md "Site Project"). When
+// opts.MCPEnabled is true, it also mounts the Worker `main` entry plus the
+// `durable_objects` binding/`migrations` and `nodejs_compat` flag the
+// in-Worker MCP server (`agents`/`McpAgent`) requires — confirmed via
+// research spike 002 — and sets `assets.run_worker_first: true`, without
+// which Workers Static Assets serves any matching prerendered page
+// directly and never invokes workers/entry.ts at all, silently breaking
+// content negotiation for every existing page (verified against a real
+// `wrangler dev` run). When MCPEnabled is false, none of this is present
+// at all: no "disabled but present" intermediate state (v0.03 FR-002;
+// data-model.md "MCP Server Mount").
 func renderWranglerJSONC(opts Options) string {
-	return fmt.Sprintf(`{
+	if !opts.MCPEnabled {
+		return fmt.Sprintf(`{
   "name": %q,
   "compatibility_date": "2026-01-01",
   "assets": {
     "directory": "./dist/client"
   },
+  "routes": [
+    { "pattern": %q, "custom_domain": true }
+  ]
+}
+`, opts.ProjectName, opts.Domain)
+	}
+
+	return fmt.Sprintf(`{
+  "name": %q,
+  "main": "workers/entry.ts",
+  "compatibility_date": "2026-01-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./dist/client",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  },
+  "durable_objects": {
+    "bindings": [{ "name": "MyMCP", "class_name": "MyMCP" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["MyMCP"] }],
   "routes": [
     { "pattern": %q, "custom_domain": true }
   ]

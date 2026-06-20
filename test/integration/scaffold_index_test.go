@@ -32,6 +32,7 @@ func scaffoldAndIndex(t *testing.T, siteType string) (map[string]any, string) {
 		SiteType:    siteType,
 		Domain:      "example.com",
 		Theme:       presets[0].ID,
+		MCPEnabled:  true,
 	})
 	if err != nil {
 		t.Fatalf("scaffold.Generate(%q): %v", siteType, err)

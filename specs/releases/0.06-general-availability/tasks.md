@@ -32,9 +32,9 @@ Single Go module (`biblio-cli`) at the repository root, per plan.md:
 
 **Purpose**: Scaffold the new packages, directories, and doc stub this release adds — no behavior yet.
 
-- [ ] T001 Create `internal/cli/update.go`, `internal/cli/upgrade.go`, `internal/migrate/classify.go`, `internal/migrate/merge.go`, `internal/migrate/conflict.go`, and `internal/escalation/guidance.go` as empty package files with package declarations, per plan.md's Project Structure
-- [ ] T002 [P] Create test directory skeletons: `test/unit/migrate/`, `test/unit/escalation/`, `test/integration/update-three-sites/`, `test/integration/escalation-guidance/`, `test/integration/ga-readiness-review/`
-- [ ] T003 [P] Create `docs/storage-escalation-guide.md` stub with section headings for Thresholds, Real-Scale Check, D1 Escalation Path, and Vectorize Escalation Path (FR-004/FR-005 deliverable, filled in by US3)
+- [X] T001 Create `internal/cli/update.go`, `internal/cli/upgrade.go`, `internal/migrate/classify.go`, `internal/migrate/merge.go`, `internal/migrate/conflict.go`, and `internal/escalation/guidance.go` as empty package files with package declarations, per plan.md's Project Structure
+- [X] T002 [P] Create test directory skeletons: `test/unit/migrate/`, `test/unit/escalation/`, `test/integration/update-three-sites/`, `test/integration/escalation-guidance/`, `test/integration/ga-readiness-review/`
+- [X] T003 [P] Create `docs/storage-escalation-guide.md` stub with section headings for Thresholds, Real-Scale Check, D1 Escalation Path, and Vectorize Escalation Path (FR-004/FR-005 deliverable, filled in by US3)
 
 **Checkpoint**: Packages and test layout exist; nothing compiles behavior yet.
 

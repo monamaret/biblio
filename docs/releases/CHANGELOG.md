@@ -4,6 +4,35 @@ All notable user-facing changes to `biblio-cli` and its generated sites are
 recorded here, release by release. See `docs/releases/v<version>/` for the
 full user guide of each release.
 
+## v0.05 — Prove the platform on documentation and across all site types
+
+- Brought `templates/site/docs` up to parity with `templates/site/profile`'s
+  React Router v7 / Worker / MCP / negotiation buildout (it had remained the
+  thin v0.01-era placeholder through v0.02–v0.04).
+- Extended `internal/content/schema.go`'s frontmatter validation with a
+  `section` requirement (alongside the existing `order`) and structural
+  checks for both, for the `docs` site type.
+- Added a TOC/hierarchy-derivation module (`toc()`) grouping pages into
+  sections ordered by their lowest-order page, with a deterministic
+  slug-based tiebreak default for pages sharing a section/order — the
+  single owner shared by the browser TOC view and the MCP tools.
+- Added a TOC/navigation home view and page-detail view for the `docs` site
+  type, with a dedicated test suite asserting the deliberate *absence* of
+  any tag/project filter UI or query surface.
+- Added docs-type-specific MCP tools (`list_sections`, `get_doc_page`),
+  registered alongside the shared tools; `get_doc_page` is named distinctly
+  from the shared `get_page` tool to avoid a duplicate-registration
+  collision. A log-shaped filter argument against `list_sections` is
+  rejected with a structured error; a profile/log-only tool against a docs
+  site returns the MCP SDK's standard "unknown tool" error.
+- Closed the cross-type consistency review now that all three site types
+  exist: confirmed each type renders its own theme with no cross-type
+  bleed-through, confirmed one shared negotiation/rendering code path
+  across all three (no per-type fork), and confirmed each type's content
+  shape is appropriate to its own model — recorded in
+  `test/integration/cross-type-review/CONSISTENCY-RECORD.md` with zero open
+  inconsistencies found.
+
 ## v0.04 — Prove the platform on the technical project log
 
 - Brought `templates/site/log` up to parity with `templates/site/profile`'s

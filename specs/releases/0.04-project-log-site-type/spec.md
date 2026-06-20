@@ -1,0 +1,63 @@
+# v0.04 — Prove the platform on the technical project log
+
+**Created**: 2026-06-07
+**Status**: Draft
+**Roadmap deliverables**: [§9 Replicate to remaining (priority) site types](../research/roadmap.md#9-replicate-to-the-remaining-priority-site-types) (project-log portion)
+**Depends on**: [v0.03](0.03-release.md) — needs the full pipeline (scaffold → build/deploy → agent/terminal layer) proven on the pilot before replicating it
+**Feature specs**: [009](../features/009-replicate-site-types.md)
+
+## Summary
+
+The author scaffolds, authors, and deploys a technical project-log site — a second, structurally different site type from the v0.01–v0.03 profile pilot — and confirms its distinctive behaviors (filtering entries by date/tag/project, and a comfortable day-to-day "write an update" authoring rhythm) all work end to end on the same platform. The roadmap names this generalization test — "validate tag/project filtering and the daily-update authoring flow" — as the explicit purpose of replicating to this site type, and prioritizes it first because its content model (a running, cross-cutting timeline) differs the most from the already-proven profile site.
+
+## User Scenarios & Acceptance Criteria
+
+### Scenario 1 — Author and publish a run of dated entries
+
+As the author, I write a sequence of dated, tagged entries and see them all correctly published.
+
+1. **Given** a freshly scaffolded project-log site, **When** the author writes and publishes a sequence of dated entries (some sharing tags or a project), **Then** every entry appears correctly in the deployed site's entry list with its date, tags, and project correctly attributed.
+
+### Scenario 2 — Filter the entry list
+
+As a visitor, I filter the entry timeline by date, tag, or project and only see genuine matches.
+
+1. **Given** a deployed project-log site with multiple entries, **When** a visitor filters the entry list by a date range, a tag, or a project, **Then** only the matching entries are shown, with no false positives or omissions.
+
+### Scenario 3 — Keep up a daily authoring rhythm
+
+As the author, I add a new day's entry the same way I added the last one, with no special-case adjustments.
+
+1. **Given** an established authoring rhythm, **When** the author adds a new day's entry using the same authoring flow used for prior entries, **Then** the new entry appears in the deployed site (after the normal build/deploy step) without any one-off adjustments to the site's structure or configuration.
+
+### Scenario 4 — The agent/terminal layer works for this site type too
+
+As an MCP client or terminal client, I get correct, type-appropriate answers from the project-log site, just as I did from the profile pilot.
+
+1. **Given** the deployed project-log site, **When** the same agent- and terminal-facing capabilities validated for the profile pilot in v0.03 are exercised against it, **Then** they behave correctly for this site type's own structured-query and terminal-rendering surface.
+
+## Functional Requirements
+
+- **FR-001**: The system MUST let the author scaffold, author content for, and deploy a technical project-log site using the same CLI surface already proven for the profile site type.
+- **FR-002**: The system MUST let a visitor browse the deployed project-log site's full entry list and open any entry's detail view, with every entry's date, tags, and project correctly displayed.
+- **FR-003**: The system MUST let a visitor filter the project-log site's entry list by date, by tag, and by project, returning only entries that genuinely match the chosen filter(s).
+- **FR-004**: The system MUST support a repeatable "author a new dated entry" workflow that, once established, requires no one-off structural changes to publish each subsequent entry.
+- **FR-005**: The system MUST extend the agent- and terminal-facing capabilities already proven for the profile pilot (structured queries, terminal/Markdown rendering) to the project-log site type's own content shape and query surface.
+
+## Edge Cases
+
+- What happens when an entry is tagged with a brand-new tag or project never seen before — does it appear correctly in filters immediately after the next build, with no extra registration step?
+- How does filtering behave when combining multiple filter dimensions at once (e.g., a date range *and* a tag) — is the result the intersection, as a visitor would expect?
+- What happens when an MCP/terminal client asks the project-log site a question whose shape only makes sense for the profile site type (e.g., "get résumé") — is it rejected clearly?
+
+## Success Criteria
+
+- **SC-001**: A real technical project-log site is live, and 100% of its authored entries are correctly discoverable through every one of its filter dimensions (date, tag, project) by a human visitor.
+- **SC-002**: The author can describe and follow the same day-to-day authoring rhythm used on this site for at least several consecutive published entries with zero one-off adjustments.
+- **SC-003**: This release is independently demonstrable purely on this one site type's evidence — it requires no documentation-site replication (that's v0.05) and no cross-type consistency check (also v0.05) to show its value.
+
+## Assumptions
+
+- **Second site, same platform, no platform changes assumed**: This release proves generalization, not redesign — it assumes the CLI, content pipeline, theming, scaffold templates, MCP server, and terminal view from v0.01–v0.03 work unchanged for a new site type, surfacing any gap found as a defect to fix rather than a sign the platform needs reshaping.
+- **No timeline commitments**: Consistent with the roadmap's explicit choice to avoid effort/timeline estimates, this spec defines what the release contains and how its completion is demonstrated, not when it ships.
+- **Cross-type consistency is checked later**: Comparing this site type's theming/terminal rendering side-by-side against the others is deliberately deferred to [v0.05](0.05-release.md), once all three site types exist to compare.

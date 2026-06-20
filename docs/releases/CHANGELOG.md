@@ -4,6 +4,28 @@ All notable user-facing changes to `biblio-cli` and its generated sites are
 recorded here, release by release. See `docs/releases/v<version>/` for the
 full user guide of each release.
 
+## v0.03 — Make the site usable by AI agents and terminal clients
+
+- Added an in-Worker MCP server (mounted on `/mcp*`, gated entirely by
+  `mcp_enabled`) exposing shared (`list_pages`, `get_page`,
+  `search_content`) and profile-type-specific (`get_profile`,
+  `list_projects`) tools, built on Cloudflare's Agents SDK (`McpAgent`).
+- Added `biblio-cli new --mcp-enabled` (default `true`) as the sole
+  configuration surface deciding whether `wrangler.jsonc` mounts the
+  Worker `main`, `durable_objects` binding, and `nodejs_compat` flag the
+  MCP server needs — a build-time decision with no "disabled but
+  present" state.
+- Added a content-negotiation layer: a page request signaling a
+  Markdown/terminal preference (`Accept: text/markdown`, or a recognized
+  terminal `User-Agent`) gets clean Markdown or ANSI-rendered output
+  (via `md4x`) instead of full browser HTML, with `Vary: Accept,
+  User-Agent` set for correct edge caching.
+- Added a small, sandboxed MCP App UI bundle (a themed chart view) for
+  `search_content` results, always paired with — never replacing — the
+  tool's plain-text answer.
+- Added build-time-generated `/llms.txt` and a per-page Markdown-discovery
+  hint, for agent/crawler discoverability.
+
 ## v0.02 — Build, deploy, and verify a real site
 
 - Added `biblio-cli build` to pre-render every content-driven page into

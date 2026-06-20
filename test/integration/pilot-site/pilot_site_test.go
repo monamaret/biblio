@@ -52,6 +52,7 @@ func TestPilotSite_ContentToBuildToDeploy(t *testing.T) {
 		SiteType:    "profile",
 		Domain:      "pilot.example.com",
 		Theme:       presets[0].ID,
+		MCPEnabled:  true,
 	})
 	if err != nil {
 		t.Fatalf("scaffold.Generate(): %v", err)

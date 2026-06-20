@@ -31,6 +31,7 @@ func TestGenerate_CreatesPopulatedProjectDirectory(t *testing.T) {
 		SiteType:    "profile",
 		Domain:      "example.com",
 		Theme:       presetIDFor(t, "profile"),
+		MCPEnabled:  true,
 	}
 
 	projectDir, err := scaffold.Generate(destDir, opts)
@@ -78,6 +79,7 @@ func TestGenerate_SeedsContentPerSiteType(t *testing.T) {
 				SiteType:    siteType,
 				Domain:      "example.com",
 				Theme:       presetIDFor(t, siteType),
+				MCPEnabled:  true,
 			}
 
 			projectDir, err := scaffold.Generate(destDir, opts)
@@ -96,6 +98,90 @@ func TestGenerate_SeedsContentPerSiteType(t *testing.T) {
 	}
 }
 
+// When MCPEnabled is true, wrangler.jsonc must mount the Worker `main`
+// entry plus the `durable_objects` binding/`migrations` and
+// `nodejs_compat` flag the in-Worker MCP server requires (v0.03 FR-001;
+// data-model.md "MCP Server Mount" `mounted`; research spike 002).
+func TestGenerate_MCPEnabledWiresWranglerJSONC(t *testing.T) {
+	destDir := t.TempDir()
+	opts := scaffold.Options{
+		ProjectName: "mcp-on",
+		SiteType:    "profile",
+		Domain:      "example.com",
+		Theme:       presetIDFor(t, "profile"),
+		MCPEnabled:  true,
+	}
+
+	projectDir, err := scaffold.Generate(destDir, opts)
+	if err != nil {
+		t.Fatalf("Generate() error = %v", err)
+	}
+
+	wrangler, err := os.ReadFile(filepath.Join(projectDir, "wrangler.jsonc"))
+	if err != nil {
+		t.Fatalf("Generate(): reading wrangler.jsonc: %v", err)
+	}
+	got := string(wrangler)
+
+	for _, want := range []string{
+		`"main": "workers/entry.ts"`,
+		`"compatibility_flags": ["nodejs_compat"]`,
+		`"durable_objects"`,
+		`"migrations"`,
+		`"binding": "ASSETS"`,
+		`"run_worker_first": true`,
+	} {
+		if !strings.Contains(got, want) {
+			t.Errorf("Generate(): wrangler.jsonc missing %q when MCPEnabled is true:\n%s", want, got)
+		}
+	}
+}
+
+// When MCPEnabled is false, wrangler.jsonc must contain zero MCP-related
+// route, artifact, or binding — no "disabled but present" intermediate
+// state (v0.03 FR-002; spec Scenario 4; data-model.md "MCP Server Mount").
+func TestGenerate_MCPDisabledOmitsAllMCPWiring(t *testing.T) {
+	destDir := t.TempDir()
+	opts := scaffold.Options{
+		ProjectName: "mcp-off",
+		SiteType:    "profile",
+		Domain:      "example.com",
+		Theme:       presetIDFor(t, "profile"),
+		MCPEnabled:  false,
+	}
+
+	projectDir, err := scaffold.Generate(destDir, opts)
+	if err != nil {
+		t.Fatalf("Generate() error = %v", err)
+	}
+
+	wrangler, err := os.ReadFile(filepath.Join(projectDir, "wrangler.jsonc"))
+	if err != nil {
+		t.Fatalf("Generate(): reading wrangler.jsonc: %v", err)
+	}
+	got := string(wrangler)
+
+	for _, mustNotContain := range []string{
+		`"main"`,
+		`nodejs_compat`,
+		`durable_objects`,
+		`migrations`,
+		`MyMCP`,
+	} {
+		if strings.Contains(got, mustNotContain) {
+			t.Errorf("Generate(): wrangler.jsonc unexpectedly contains %q when MCPEnabled is false:\n%s", mustNotContain, got)
+		}
+	}
+
+	siteYAML, err := os.ReadFile(filepath.Join(projectDir, "content", "site.yaml"))
+	if err != nil {
+		t.Fatalf("Generate(): reading content/site.yaml: %v", err)
+	}
+	if !strings.Contains(string(siteYAML), "mcp_enabled: false") {
+		t.Errorf("Generate(): content/site.yaml missing `mcp_enabled: false`:\n%s", siteYAML)
+	}
+}
+
 // A project-name colliding with an existing directory must be rejected, and
 // must never leave a partially-written project behind (contracts/cli-commands.md).
 func TestGenerate_CollisionDetection(t *testing.T) {
@@ -105,6 +191,7 @@ func TestGenerate_CollisionDetection(t *testing.T) {
 		SiteType:    "profile",
 		Domain:      "example.com",
 		Theme:       presetIDFor(t, "profile"),
+		MCPEnabled:  true,
 	}
 
 	existing := filepath.Join(destDir, opts.ProjectName)

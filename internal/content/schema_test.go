@@ -99,6 +99,52 @@ func TestParseItem_BodyPreserved(t *testing.T) {
 	}
 }
 
+// A malformed 'date' on a log entry (not a parseable YYYY-MM-DD date) must
+// be a clear, per-file error rather than silently accepted (data-model.md
+// "Project-Log Entry" validation rules; spec Edge Cases).
+func TestParseItem_LogMalformedDate(t *testing.T) {
+	data := []byte("---\ntitle: \"Post\"\ndate: \"not-a-date\"\n---\n\nBody.\n")
+	if _, err := content.ParseItem("posts/post.md", data, "log"); err == nil {
+		t.Fatal("ParseItem(): want error for malformed 'date' (log), got nil")
+	}
+}
+
+// A 'tags' field on a log entry that isn't a list of strings (e.g. a single
+// scalar) must be a clear error, not silently coerced or accepted.
+func TestParseItem_LogTagsNotAList(t *testing.T) {
+	data := []byte("---\ntitle: \"Post\"\ndate: \"2026-06-01\"\ntags: \"meta\"\n---\n\nBody.\n")
+	if _, err := content.ParseItem("posts/post.md", data, "log"); err == nil {
+		t.Fatal("ParseItem(): want error for 'tags' that isn't a list (log), got nil")
+	}
+}
+
+// A 'tags' list containing a non-string element must be a clear error.
+func TestParseItem_LogTagsElementNotString(t *testing.T) {
+	data := []byte("---\ntitle: \"Post\"\ndate: \"2026-06-01\"\ntags:\n  - 5\n---\n\nBody.\n")
+	if _, err := content.ParseItem("posts/post.md", data, "log"); err == nil {
+		t.Fatal("ParseItem(): want error for non-string 'tags' element (log), got nil")
+	}
+}
+
+// A 'project' field on a log entry that isn't a string must be a clear
+// error. 'project' itself is optional — its absence is valid (data-model.md
+// "Project-Log Entry" — project optional).
+func TestParseItem_LogProjectNotString(t *testing.T) {
+	data := []byte("---\ntitle: \"Post\"\ndate: \"2026-06-01\"\nproject:\n  - not-a-string\n---\n\nBody.\n")
+	if _, err := content.ParseItem("posts/post.md", data, "log"); err == nil {
+		t.Fatal("ParseItem(): want error for 'project' that isn't a string (log), got nil")
+	}
+}
+
+// A log entry with no 'tags' or 'project' at all is valid — both are
+// optional (data-model.md "Project-Log Entry").
+func TestParseItem_LogTagsAndProjectOptional(t *testing.T) {
+	data := []byte("---\ntitle: \"Post\"\ndate: \"2026-06-01\"\n---\n\nBody.\n")
+	if _, err := content.ParseItem("posts/post.md", data, "log"); err != nil {
+		t.Fatalf("ParseItem() error = %v, want nil (tags/project are optional)", err)
+	}
+}
+
 // Path and Slug on the returned Item must reflect the relPath argument.
 func TestParseItem_PathAndSlug(t *testing.T) {
 	data := []byte("---\ntitle: \"Project\"\n---\n\nDesc.\n")

@@ -1,7 +1,7 @@
 # v0.06 — General Availability
 
 **Created**: 2026-06-07
-**Status**: Draft
+**Status**: Shipped (2026-06-20)
 **Roadmap deliverables**: [§9 Replicate to remaining (priority) site types](../research/roadmap.md#9-replicate-to-the-remaining-priority-site-types) (`update`/`upgrade` mechanics) · [§10 Storage escalation (conditional)](../research/roadmap.md#10-storage-escalation-conditional--not-built-up-front)
 **Depends on**: [v0.04](0.04-release.md) and [v0.05](0.05-release.md) — the update/upgrade mechanics are, per the roadmap, "only answerable once more than one site exists to migrate"
 **Feature specs**: [009](../features/009-replicate-site-types.md) · [010](../features/010-storage-escalation.md)

@@ -32,9 +32,9 @@ Single Go module (`biblio-cli`) at the repository root, per plan.md:
 
 **Purpose**: Scaffold the new packages, directories, and doc stub this release adds — no behavior yet.
 
-- [ ] T001 Create `internal/cli/update.go`, `internal/cli/upgrade.go`, `internal/migrate/classify.go`, `internal/migrate/merge.go`, `internal/migrate/conflict.go`, and `internal/escalation/guidance.go` as empty package files with package declarations, per plan.md's Project Structure
-- [ ] T002 [P] Create test directory skeletons: `test/unit/migrate/`, `test/unit/escalation/`, `test/integration/update-three-sites/`, `test/integration/escalation-guidance/`, `test/integration/ga-readiness-review/`
-- [ ] T003 [P] Create `docs/storage-escalation-guide.md` stub with section headings for Thresholds, Real-Scale Check, D1 Escalation Path, and Vectorize Escalation Path (FR-004/FR-005 deliverable, filled in by US3)
+- [X] T001 Create `internal/cli/update.go`, `internal/cli/upgrade.go`, `internal/migrate/classify.go`, `internal/migrate/merge.go`, `internal/migrate/conflict.go`, and `internal/escalation/guidance.go` as empty package files with package declarations, per plan.md's Project Structure
+- [X] T002 [P] Create test directory skeletons: `test/unit/migrate/`, `test/unit/escalation/`, `test/integration/update-three-sites/`, `test/integration/escalation-guidance/`, `test/integration/ga-readiness-review/`
+- [X] T003 [P] Create `docs/storage-escalation-guide.md` stub with section headings for Thresholds, Real-Scale Check, D1 Escalation Path, and Vectorize Escalation Path (FR-004/FR-005 deliverable, filled in by US3)
 
 **Checkpoint**: Packages and test layout exist; nothing compiles behavior yet.
 
@@ -46,12 +46,12 @@ Single Go module (`biblio-cli`) at the repository root, per plan.md:
 
 **⚠️ CRITICAL**: US1 and US2 cannot begin until this phase is complete.
 
-- [ ] T004 [P] Write failing unit test for Scaffold Region Classification (`scaffold-tracked` / `author-customized` / `ambiguous`, every region classified before any write) in `test/unit/migrate/classify_test.go`
-- [ ] T005 Implement Scaffold Region Classification in `internal/migrate/classify.go`, derived from the single canonical scaffold-template definitions (Principle II) — makes T004 pass
-- [ ] T006 [P] Write failing unit test for diff/merge logic that advances `scaffold-tracked` regions and preserves `author-customized` regions byte-for-byte in `test/unit/migrate/merge_test.go`
-- [ ] T007 Implement merge logic in `internal/migrate/merge.go` (depends on T005) — makes T006 pass
-- [ ] T008 [P] Write failing unit test for conflict surfacing — every `ambiguous` classification becomes an Update Conflict that is never auto-resolved, and an interrupted run leaves the site in a consistent, recoverable state — in `test/unit/migrate/conflict_test.go`
-- [ ] T009 Implement conflict surfacing and interruption-recovery state in `internal/migrate/conflict.go` (depends on T005, T007) — makes T008 pass
+- [X] T004 [P] Write failing unit test for Scaffold Region Classification (`scaffold-tracked` / `author-customized` / `ambiguous`, every region classified before any write) in `test/unit/migrate/classify_test.go`
+- [X] T005 Implement Scaffold Region Classification in `internal/migrate/classify.go`, derived from the single canonical scaffold-template definitions (Principle II) — makes T004 pass
+- [X] T006 [P] Write failing unit test for diff/merge logic that advances `scaffold-tracked` regions and preserves `author-customized` regions byte-for-byte in `test/unit/migrate/merge_test.go`
+- [X] T007 Implement merge logic in `internal/migrate/merge.go` (depends on T005) — makes T006 pass
+- [X] T008 [P] Write failing unit test for conflict surfacing — every `ambiguous` classification becomes an Update Conflict that is never auto-resolved, and an interrupted run leaves the site in a consistent, recoverable state — in `test/unit/migrate/conflict_test.go`
+- [X] T009 Implement conflict surfacing and interruption-recovery state in `internal/migrate/conflict.go` (depends on T005, T007) — makes T008 pass
 
 **Checkpoint**: `internal/migrate` classify/merge/conflict logic is implemented and unit-tested. US1 and US2 implementation can begin.
 
@@ -65,15 +65,15 @@ Single Go module (`biblio-cli`) at the repository root, per plan.md:
 
 ### Tests for User Story 1
 
-- [ ] T010 [P] [US1] Write failing integration test: an Update Run against one real site preserves `author-customized` regions, advances `scaffold-tracked` regions, and reports the preserved/advanced/conflicts triple (data-model.md Update Run) in `test/integration/update-three-sites/single_site_test.go`
-- [ ] T011 [P] [US1] Write failing integration test: interrupting an update mid-run (simulated cancel) leaves the site in a consistent, recoverable state with no half-migrated files (spec Edge Cases), **and** a run with any unresolved Update Conflict never reaches the commit step (contracts/update-and-escalation.md Step 5) — in `test/integration/update-three-sites/interruption_test.go`
+- [X] T010 [P] [US1] Write failing integration test: an Update Run against one real site preserves `author-customized` regions, advances `scaffold-tracked` regions, and reports the preserved/advanced/conflicts triple (data-model.md Update Run) in `test/integration/update-three-sites/single_site_test.go`
+- [X] T011 [P] [US1] Write failing integration test: interrupting an update mid-run (simulated cancel) leaves the site in a consistent, recoverable state with no half-migrated files (spec Edge Cases), **and** a run with any unresolved Update Conflict never reaches the commit step (contracts/update-and-escalation.md Step 5) — in `test/integration/update-three-sites/interruption_test.go`
 
 ### Implementation for User Story 1
 
-- [ ] T012 [US1] Implement Update Run orchestration (classify → advance → preserve → surface → commit, contracts/update-and-escalation.md Steps 1–5) in `internal/migrate/update_run.go` (depends on T005, T007, T009) — makes T010, T011 pass
-- [ ] T013 [US1] Wire the `biblio-cli update` Cobra command in `internal/cli/update.go`, operating on the current project directory with exit code `0` on clean completion and non-zero with state-recovery guidance on interruption/unresolved conflicts (depends on T012)
-- [ ] T014 [US1] Implement the Update Run success/failure report (preserved/advanced/conflicts output) per contracts/update-and-escalation.md "Output (success)" / "Output (failure / interruption)" in `internal/migrate/update_run.go`
-- [ ] T015 [US1] Run quickstart.md Scenario 1 against the real `my-profile-site`: confirm content intact after `biblio-cli update`, and that a `Ctrl+C` mid-run recovers cleanly
+- [X] T012 [US1] Implement Update Run orchestration (classify → advance → preserve → surface → commit, contracts/update-and-escalation.md Steps 1–5) in `internal/migrate/update_run.go` (depends on T005, T007, T009) — makes T010, T011 pass
+- [X] T013 [US1] Wire the `biblio-cli update` Cobra command in `internal/cli/update.go`, operating on the current project directory with exit code `0` on clean completion and non-zero with state-recovery guidance on interruption/unresolved conflicts (depends on T012)
+- [X] T014 [US1] Implement the Update Run success/failure report (preserved/advanced/conflicts output) per contracts/update-and-escalation.md "Output (success)" / "Output (failure / interruption)" in `internal/migrate/update_run.go`
+- [X] T015 [US1] Run quickstart.md Scenario 1 against the real `my-profile-site`: confirm content intact after `biblio-cli update`, and that a `Ctrl+C` mid-run recovers cleanly
 
 **Checkpoint**: `biblio-cli update` works end-to-end against one real site. This is the MVP — independently demoable.
 
@@ -87,14 +87,14 @@ Single Go module (`biblio-cli`) at the repository root, per plan.md:
 
 ### Tests for User Story 2
 
-- [ ] T016 [P] [US2] Write failing integration test: `biblio-cli update` succeeds against the real project-log site with content intact in `test/integration/update-three-sites/project_log_test.go`
-- [ ] T017 [P] [US2] Write failing integration test: `biblio-cli update` succeeds against the real docs site with content intact in `test/integration/update-three-sites/docs_site_test.go`
-- [ ] T018 [US2] Write failing integration test: `biblio-cli upgrade <version>` targets a specific scaffold version and succeeds across all three real site types in `test/integration/update-three-sites/upgrade_version_test.go`
+- [X] T016 [P] [US2] Write failing integration test: `biblio-cli update` succeeds against the real project-log site with content intact in `test/integration/update-three-sites/project_log_test.go`
+- [X] T017 [P] [US2] Write failing integration test: `biblio-cli update` succeeds against the real docs site with content intact in `test/integration/update-three-sites/docs_site_test.go`
+- [X] T018 [US2] Write failing integration test: `biblio-cli upgrade <version>` targets a specific scaffold version and succeeds across all three real site types in `test/integration/update-three-sites/upgrade_version_test.go`
 
 ### Implementation for User Story 2
 
-- [ ] T019 [US2] Implement the `biblio-cli upgrade` Cobra command in `internal/cli/upgrade.go`, accepting a target-version identifier and sharing the `internal/migrate` classify/merge/conflict machinery with `update` (depends on T012) — makes T018 pass
-- [ ] T020 [US2] Run quickstart.md Scenario 2's loop across all three real sites (profile/project-log/docs) in one sitting and confirm SC-001 (depends on T015, T016, T017, T019)
+- [X] T019 [US2] Implement the `biblio-cli upgrade` Cobra command in `internal/cli/upgrade.go`, accepting a target-version identifier and sharing the `internal/migrate` classify/merge/conflict machinery with `update` (depends on T012) — makes T018 pass
+- [X] T020 [US2] Run quickstart.md Scenario 2's loop across all three real sites (profile/project-log/docs) in one sitting and confirm SC-001 (depends on T015, T016, T017, T019)
 
 **Checkpoint**: Update/upgrade is proven to generalize across all three real site types, not just the first one it was validated against.
 
@@ -108,16 +108,16 @@ Single Go module (`biblio-cli`) at the repository root, per plan.md:
 
 ### Tests for User Story 3
 
-- [ ] T021 [P] [US3] Write failing unit test for threshold-status computation (`not-crossed` / `crossed` for D1 volume/relational and Vectorize search-quality triggers) against `content-index.json`-derived scale in `test/unit/escalation/guidance_test.go`
-- [ ] T022 [P] [US3] Write failing integration test: the Storage-Escalation Guidance Check, run against all three real sites' actual `content-index.json` scale, reports a status consistent with their real data in `test/integration/escalation-guidance/real_sites_test.go`
+- [X] T021 [P] [US3] Write failing unit test for threshold-status computation (`not-crossed` / `crossed` for D1 volume/relational and Vectorize search-quality triggers) against `content-index.json`-derived scale in `test/unit/escalation/guidance_test.go`
+- [X] T022 [P] [US3] Write failing integration test: the Storage-Escalation Guidance Check, run against all three real sites' actual `content-index.json` scale, reports a status consistent with their real data in `test/integration/escalation-guidance/real_sites_test.go`
 
 ### Implementation for User Story 3
 
-- [ ] T023 [US3] Implement the Storage-Escalation Guidance Check (`threshold-status`, `path-executable-on-demand`) in `internal/escalation/guidance.go` — makes T021, T022 pass
-- [ ] T024 [US3] Document concrete, checkable D1 (storage volume / relational-query) and Vectorize (search-quality) thresholds and their recommended escalation steps in `docs/storage-escalation-guide.md` (depends on T003)
-- [ ] T025 [US3] Dry-run/walk through the D1 escalation path's steps against a copy of real site data and record the proof of executability in `docs/storage-escalation-guide.md` (depends on T024)
-- [ ] T026 [US3] Dry-run/walk through the Vectorize escalation path's steps against a copy of real site data and record the proof of executability in `docs/storage-escalation-guide.md` (depends on T024)
-- [ ] T027 [US3] Run quickstart.md Scenario 3 against all three real sites and confirm the guidance correctly reflects each site's real, current scale (depends on T023); if any site's `threshold-status` reports `crossed`, record that finding explicitly rather than silently dropping it — it does NOT block GA on its own (spec Assumptions "What GA means here")
+- [X] T023 [US3] Implement the Storage-Escalation Guidance Check (`threshold-status`, `path-executable-on-demand`) in `internal/escalation/guidance.go` — makes T021, T022 pass
+- [X] T024 [US3] Document concrete, checkable D1 (storage volume / relational-query) and Vectorize (search-quality) thresholds and their recommended escalation steps in `docs/storage-escalation-guide.md` (depends on T003)
+- [X] T025 [US3] Dry-run/walk through the D1 escalation path's steps against a copy of real site data and record the proof of executability in `docs/storage-escalation-guide.md` (depends on T024)
+- [X] T026 [US3] Dry-run/walk through the Vectorize escalation path's steps against a copy of real site data and record the proof of executability in `docs/storage-escalation-guide.md` (depends on T024)
+- [X] T027 [US3] Run quickstart.md Scenario 3 against all three real sites and confirm the guidance correctly reflects each site's real, current scale (depends on T023); if any site's `threshold-status` reports `crossed`, record that finding explicitly rather than silently dropping it — it does NOT block GA on its own (spec Assumptions "What GA means here")
 
 **Checkpoint**: Storage-escalation guidance is documented and proven executable on demand, without requiring either path to actually be carried out (Principle V — never pre-built "just in case").
 
@@ -133,13 +133,13 @@ Single Go module (`biblio-cli`) at the repository root, per plan.md:
 
 ### Tests for User Story 4
 
-- [ ] T028 [US4] Write failing integration test: the GA Readiness Review aggregates the Update Run suite (US1/US2) and Storage-Escalation Guidance Checks (US3) by reference, without re-running v0.01–v0.05's already-closed evidence (SC-003) in `test/integration/ga-readiness-review/aggregate_test.go`
+- [X] T028 [US4] Write failing integration test: the GA Readiness Review aggregates the Update Run suite (US1/US2) and Storage-Escalation Guidance Checks (US3) by reference, without re-running v0.01–v0.05's already-closed evidence (SC-003) in `test/integration/ga-readiness-review/aggregate_test.go`
 
 ### Implementation for User Story 4
 
-- [ ] T029 [US4] Implement the GA Readiness Review artifact (`deliverables[]`, `update-evidence`, `escalation-evidence`, `ga-determination`) per data-model.md in `internal/escalation/ga_review.go` (depends on T020, T027) — makes T028 pass
-- [ ] T030 [US4] Cross-reference every roadmap deliverable in `specs/research/roadmap.md` §1–§10, and every release v0.01–v0.06, against this release's acceptance bar, recording each deliverable's status (depends on T029); if T027 recorded any `crossed` threshold, confirm and document that GA still only requires the corresponding path to be `proven-executable-on-demand` — not actually carried out (spec Assumptions, FR-006) — rather than treating the crossing itself as a blocker
-- [ ] T031 [US4] Produce the closing `ga-determination: true` record once every deliverable meets its bar (depends on T030)
+- [X] T029 [US4] Implement the GA Readiness Review artifact (`deliverables[]`, `update-evidence`, `escalation-evidence`, `ga-determination`) per data-model.md in `internal/escalation/ga_review.go` (depends on T020, T027) — makes T028 pass
+- [X] T030 [US4] Cross-reference every roadmap deliverable in `specs/research/roadmap.md` §1–§10, and every release v0.01–v0.06, against this release's acceptance bar, recording each deliverable's status (depends on T029); if T027 recorded any `crossed` threshold, confirm and document that GA still only requires the corresponding path to be `proven-executable-on-demand` — not actually carried out (spec Assumptions, FR-006) — rather than treating the crossing itself as a blocker
+- [X] T031 [US4] Produce the closing `ga-determination: true` record once every deliverable meets its bar (depends on T030)
 
 **Checkpoint**: The platform is marked Generally Available — every roadmap deliverable is complete-and-demonstrated or proven-executable-on-demand.
 
@@ -149,11 +149,11 @@ Single Go module (`biblio-cli`) at the repository root, per plan.md:
 
 **Purpose**: Release-closing housekeeping required by the constitution's Release Process and Decision Recording workflow.
 
-- [ ] T032 [P] Record the real `go build`/`go test`/lint commands now established by this release in `AGENTS.md` (Build / Test / Lint section), keeping `CLAUDE.md` in sync per the constitution's "kept current" requirement
-- [ ] T033 [P] Assemble the `specs/releases/0.06-general-availability/` packaging contents — final feature list (pointing to features 009/010), release notes, and a create/configure/update/deploy/destroy usage guide — per the constitution's Release Process
-- [ ] T034 Run the complete quickstart.md validation (Scenarios 1–4) end-to-end and confirm SC-001, SC-002, and SC-003 all hold (depends on T015, T020, T027, T031)
-- [ ] T035 [P] Update the progress cursor in `specs/research/roadmap.md` marking §9 (replicate to remaining site types) and §10 (storage escalation) complete/proven-ready
-- [ ] T036 Verify the usage guide in `specs/releases/0.06-general-availability/` covers the full `biblio-cli` lifecycle comprehensively — create, configure, update, deploy, and destroy (constitution Release Process item 4) — **and** includes a build-from-source section (cloning the repo, toolchain prerequisites, `go build`/`go install` steps, and running the locally built binary in place of a release download), so GA does not depend on a published binary being available (depends on T032, T033)
+- [X] T032 [P] Record the real `go build`/`go test`/lint commands now established by this release in `AGENTS.md` (Build / Test / Lint section), keeping `CLAUDE.md` in sync per the constitution's "kept current" requirement
+- [X] T033 [P] Assemble the `specs/releases/0.06-general-availability/` packaging contents — final feature list (pointing to features 009/010), release notes, and a create/configure/update/deploy/destroy usage guide — per the constitution's Release Process
+- [X] T034 Run the complete quickstart.md validation (Scenarios 1–4) end-to-end and confirm SC-001, SC-002, and SC-003 all hold (depends on T015, T020, T027, T031)
+- [X] T035 [P] Update the progress cursor in `specs/research/roadmap.md` marking §9 (replicate to remaining site types) and §10 (storage escalation) complete/proven-ready
+- [X] T036 Verify the usage guide in `specs/releases/0.06-general-availability/` covers the full `biblio-cli` lifecycle comprehensively — create, configure, update, deploy, and destroy (constitution Release Process item 4) — **and** includes a build-from-source section (cloning the repo, toolchain prerequisites, `go build`/`go install` steps, and running the locally built binary in place of a release download), so GA does not depend on a published binary being available (depends on T032, T033)
 
 ---
 

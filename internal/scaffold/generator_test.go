@@ -215,3 +215,57 @@ func TestGenerate_CollisionDetection(t *testing.T) {
 		t.Errorf("Generate(): colliding directory was modified on collision (want untouched): had %d entries, now %d", len(preexisting), len(after))
 	}
 }
+
+// Generate must also record a scaffold manifest (.biblio/scaffold-manifest.json)
+// capturing the site type and a content hash for every embedded template
+// file outside content/ (content/ is the author's domain from the moment
+// it's scaffolded — Principle II — and is never part of the diffable
+// baseline). internal/migrate's update flow uses this manifest as its
+// 3-way-diff baseline (data-model.md "Scaffold Region Classification"
+// classification source).
+func TestGenerate_WritesScaffoldManifest(t *testing.T) {
+	destDir := t.TempDir()
+	opts := scaffold.Options{
+		ProjectName: "my-site",
+		SiteType:    "profile",
+		Domain:      "example.com",
+		Theme:       presetIDFor(t, "profile"),
+		MCPEnabled:  true,
+	}
+
+	projectDir, err := scaffold.Generate(destDir, opts)
+	if err != nil {
+		t.Fatalf("Generate() error = %v", err)
+	}
+
+	manifest, err := scaffold.ReadManifest(projectDir)
+	if err != nil {
+		t.Fatalf("ReadManifest() error = %v", err)
+	}
+
+	if manifest.SiteType != "profile" {
+		t.Errorf("manifest.SiteType = %q, want %q", manifest.SiteType, "profile")
+	}
+	if len(manifest.Files) == 0 {
+		t.Fatal("manifest.Files: want at least one entry, got none")
+	}
+	for path := range manifest.Files {
+		if strings.HasPrefix(path, "content/") {
+			t.Errorf("manifest.Files contains %q: content/ paths must never be part of the baseline", path)
+		}
+	}
+	if _, ok := manifest.Files["package.json"]; !ok {
+		t.Error(`manifest.Files["package.json"]: want an entry, got none`)
+	}
+
+	// The hash must match the file actually written to disk, so a later
+	// diff against a freshly-embedded template is meaningful.
+	data, err := os.ReadFile(filepath.Join(projectDir, "package.json"))
+	if err != nil {
+		t.Fatalf("reading written package.json: %v", err)
+	}
+	gotHash := scaffold.HashBytes(data)
+	if manifest.Files["package.json"] != gotHash {
+		t.Errorf("manifest.Files[%q] = %q, want %q (hash of the file actually written)", "package.json", manifest.Files["package.json"], gotHash)
+	}
+}

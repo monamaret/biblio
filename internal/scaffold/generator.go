@@ -89,6 +89,14 @@ func Generate(destDir string, opts Options) (string, error) {
 		return "", fmt.Errorf("scaffold: writing tokens.css: %w", err)
 	}
 
+	manifest, err := BuildManifest(opts.SiteType)
+	if err != nil {
+		return "", err
+	}
+	if err := WriteManifest(projectDir, manifest); err != nil {
+		return "", err
+	}
+
 	wrote = true
 	return projectDir, nil
 }

@@ -49,7 +49,7 @@ One correction to plan.md's Project Structure sketch: the sketch lists `internal
 
 - [ ] T008 [P] Write failing test for `date` (parseable date string), `tags` (array of strings if present), and `project` (string if present) structural validation for site type `"log"` — malformed values rejected with a clear, per-file error, not silently accepted — in `internal/content/schema_test.go` (data-model.md "Project-Log Entry" validation rules; spec Edge Cases)
 - [ ] T009 Implement the structural validation in `internal/content/schema.go`'s `ParseItem` to make T008 pass (depends on T008)
-- [ ] T010 [P] Copy `templates/site/profile/app/mcp/{agent.ts,query.ts,server.ts}` into `templates/site/log/app/mcp/`, renaming the `registerProfileTools` import/call to a not-yet-implemented `registerLogTools` (Phase 6, T031/T032) and the MCP server name to `"biblio-log-site"` (depends on T006)
+- [ ] T010 [P] Copy `templates/site/profile/app/mcp/{agent.ts,query.ts,server.ts}` into `templates/site/log/app/mcp/`, renaming the MCP server name to `"biblio-log-site"` and replacing the `registerProfileTools` import/call with a local no-op placeholder `registerLogTools(server: McpServer) {}` in `templates/site/log/app/mcp/tools/log.ts` — so `templates/site/log` builds and typechecks cleanly at every checkpoint through Phase 5; T032 replaces the placeholder body with the real implementation, it does not introduce the function (depends on T006)
 - [ ] T011 [P] Copy `templates/site/profile/app/negotiation/{accept.ts,ansi.ts,markdown.ts,wasm.d.ts}` into `templates/site/log/app/negotiation/` unchanged (Principle II — negotiation is type-agnostic, FR-005) (depends on T006)
 - [ ] T012 [P] Copy `templates/site/profile/app/discovery/llms-txt.ts` (+ test) into `templates/site/log/app/discovery/` unchanged (depends on T006)
 - [ ] T013 Copy `templates/site/profile/workers/entry.ts` into `templates/site/log/workers/entry.ts`, wiring it to the log site's `mcp/agent.ts` and `negotiation/accept.ts` (depends on T010, T011)
@@ -130,7 +130,7 @@ One correction to plan.md's Project Structure sketch: the sketch lists `internal
 ### Implementation for User Story 4
 
 - [ ] T031 [US4] Implement `list_entries` and `get_entry` tools in `templates/site/log/app/mcp/tools/log.ts` (depends on T025, T028)
-- [ ] T032 [US4] Implement `registerLogTools` and wire it into `templates/site/log/app/mcp/server.ts`'s `createServer()` (depends on T010, T031)
+- [ ] T032 [US4] Replace T010's no-op `registerLogTools` placeholder body in `templates/site/log/app/mcp/tools/log.ts` with the real tool registration (`list_entries`, `get_entry`); `createServer()` in `templates/site/log/app/mcp/server.ts` already calls it from T010, no further wiring needed (depends on T010, T031)
 - [ ] T033 [US4] Verify the T012 `llms.txt` copy's output against log content (date/tags/project-aware key-page links); adjust only if T030 surfaces a real gap (depends on T012, T030)
 
 **Checkpoint**: All user stories independently functional — the agent/terminal layer generalizes to the project-log type (SC-001 complete via agent/terminal evidence)

@@ -93,17 +93,19 @@ One correction to plan.md's Project Structure sketch: the sketch lists `internal
 
 ### Tests for User Story 2 ⚠️
 
-- [ ] T021 [P] [US2] Write failing test for `filterEntries()` single-dimension filters (date-range only, tag only, project only) in `templates/site/log/app/content/filters.test.ts`
-- [ ] T022 [P] [US2] Write failing test for `filterEntries()` combined date-range + tag intersection semantics — no false positives, no omissions (spec Edge Cases) in the same file
-- [ ] T023 [P] [US2] Write failing test confirming a brand-new tag/project value present in `content-index.json` after a rebuild is immediately filterable with no separate registration step (spec Edge Cases) in the same file
-- [ ] T024 [P] [US2] Write failing test for the filter UI reflecting selected date-range/tag/project state and rendering only matching entries in `templates/site/log/app/routes/home.test.tsx`
+- [X] T021 [P] [US2] Write failing test for `filterEntries()` single-dimension filters (date-range only, tag only, project only) in `templates/site/log/app/content/filters.test.ts`
+- [X] T022 [P] [US2] Write failing test for `filterEntries()` combined date-range + tag intersection semantics — no false positives, no omissions (spec Edge Cases) in the same file
+- [X] T023 [P] [US2] Write failing test confirming a brand-new tag/project value present in `content-index.json` after a rebuild is immediately filterable with no separate registration step (spec Edge Cases) in the same file
+- [X] T024 [P] [US2] Write failing test for the filter UI reflecting selected date-range/tag/project state and rendering only matching entries in `templates/site/log/app/routes/home.test.tsx`
 
 ### Implementation for User Story 2
 
-- [ ] T025 [US2] Implement `filterEntries(entries, query)` — date-range ∩ tag ∩ project intersection over `content-index.json` entries — in `templates/site/log/app/content/filters.ts` (depends on T021, T022, T023; this is the canonical filter-computation module shared by the UI (T026) and the MCP tools (Phase 6, T031))
-- [ ] T026 [US2] Add date-range/tag/project filter controls to `templates/site/log/app/routes/home.tsx`, wired to `filterEntries()` (depends on T017, T024, T025)
+- [X] T025 [US2] Implement `filterEntries(entries, query)` — date-range ∩ tag ∩ project intersection over `content-index.json` entries — in `templates/site/log/app/content/filters.ts` (depends on T021, T022, T023; this is the canonical filter-computation module shared by the UI (T026) and the MCP tools (Phase 6, T031))
+- [X] T026 [US2] Add date-range/tag/project filter controls to `templates/site/log/app/routes/home.tsx`, wired to `filterEntries()` (depends on T017, T024, T025)
 
-**Checkpoint**: User Story 2 is independently functional — filtering works correctly across all dimensions and combinations (SC-001 complete)
+**Note**: T024 surfaced a real test-isolation bug — `vitest.setup.ts` (copied unchanged from profile in Phase 1) never called `@testing-library/react`'s `cleanup()` between tests. With only one `render()` per test file this was latent; `home.test.tsx`'s new multi-test filter-control suite (multiple `render()` calls in one file) made it produce false "multiple elements found" failures. Fixed by adding `afterEach(cleanup)` to `vitest.setup.ts`. Worth carrying back to `templates/site/profile/vitest.setup.ts` at some point, but that's outside this release's scope.
+
+**Checkpoint** (verified via a real `biblio-cli new --type=log` smoke scaffold, full `npm run build`): User Story 2 is independently functional — filtering works correctly across all dimensions and combinations. `npx tsc --noEmit` clean, vitest 6 files/24 tests passing, Go suite green, full build (including the filter UI bundle) prerenders all 3 entries successfully (SC-001 complete).
 
 ---
 

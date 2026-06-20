@@ -1,6 +1,6 @@
 # Quickstart Validation: v0.04 — Prove the platform on the technical project log
 
-Validates spec Success Criteria SC-001..SC-003, demonstrable purely on this site type's own evidence — no documentation-site replication or cross-type consistency check required (those are [v0.05](../0.05-docs-site-and-consistency/quickstart.md)). Reuses the v0.01–v0.03 CLI/quickstart flows verbatim, exercised against `--type=log`.
+Validates spec Success Criteria SC-001..SC-003, demonstrable purely on this site type's own evidence — no documentation-site replication or cross-type consistency check required (those are [v0.05](../0.05-release.md)). Reuses the v0.01–v0.03 CLI/quickstart flows verbatim, exercised against `--type=log`.
 
 ## Prerequisites
 
@@ -52,4 +52,4 @@ On the deployed site, filter the entry timeline by:
 
 - **SC-001**: A real technical project-log site is live, and 100% of its authored entries are correctly discoverable through every filter dimension (date, tag, project) by a human visitor (Scenario 1–2).
 - **SC-002**: The author follows the same day-to-day authoring rhythm for at least several consecutive published entries with zero one-off adjustments (Scenario 3).
-- **SC-003**: All of the above is demonstrable purely on this one site type's evidence — no documentation-site replication or cross-type consistency check (both [v0.05](../0.05-docs-site-and-consistency/quickstart.md)) is required to show this release's value.
+- **SC-003**: All of the above is demonstrable purely on this one site type's evidence — no documentation-site replication or cross-type consistency check (both [v0.05](../0.05-release.md)) is required to show this release's value.

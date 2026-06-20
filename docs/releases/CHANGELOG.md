@@ -4,6 +4,27 @@ All notable user-facing changes to `biblio-cli` and its generated sites are
 recorded here, release by release. See `docs/releases/v<version>/` for the
 full user guide of each release.
 
+## v0.04 — Prove the platform on the technical project log
+
+- Brought `templates/site/log` up to parity with `templates/site/profile`'s
+  React Router v7 / Worker / MCP / negotiation buildout (it had remained
+  the thin v0.01-era placeholder through v0.02–v0.03).
+- Added an entry-list view (chronological, with date/tags/project) and a
+  detail view for the `log` site type, plus date-range/tag/project filter
+  controls with intersection semantics over the bundled
+  `content-index.json`.
+- Extended `internal/content/schema.go`'s frontmatter validation with
+  structural checks for `log`-type `date` (parseable YYYY-MM-DD), `tags`
+  (list of strings if present), and `project` (string if present) —
+  `tags`/`project` remain optional.
+- Added log-type-specific MCP tools (`list_entries`, `get_entry`),
+  registered alongside the shared tools; a profile-shaped query against a
+  log site returns the MCP SDK's standard "unknown tool" error.
+- Proved the daily-authoring-rhythm claim with an integration test
+  authoring three consecutive dated entries one at a time, confirming
+  `wrangler.jsonc`, `content/site.yaml`, and `package.json` never change
+  between cycles.
+
 ## v0.03 — Make the site usable by AI agents and terminal clients
 
 - Added an in-Worker MCP server (mounted on `/mcp*`, gated entirely by

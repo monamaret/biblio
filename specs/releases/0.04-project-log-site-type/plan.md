@@ -61,36 +61,44 @@ specs/releases/0.04-project-log-site-type/
 ### Source Code (repository root)
 
 ```text
-# extensions to the existing biblio-cli content/scaffold packages (Go) — no new commands
-internal/
-├── content/
-│   └── log/                 # project-log frontmatter schema (date, tags[], project) + slug rules
-├── scaffold/
-│   └── log/                 # project-log seed-content templates and structure
-└── index/
-    └── filters.go           # date/tag/project filter computation over content-index.json entries
+# extension to the existing biblio-cli content schema (Go) — no new commands, no new subpackage
+internal/content/
+├── schema.go               # extended in place: date/tags[]/project structural validation for
+│                           #  site type "log" (one schema owner, Principle II — no internal/content/log/
+│                           #  subpackage; "log"'s required-field set already lives in this file's map)
+└── schema_test.go          # failing tests for the above, written first (Principle VI)
 
-# project-log-specific additions to the combined site/Worker template (TypeScript/React)
+# project-log-specific additions to the combined site/Worker template (TypeScript/React) —
+# templates/site/log/ starts from the v0.01-era thin Vite placeholder and is brought up to the
+# same React Router v7 / Worker / MCP / negotiation structure templates/site/profile/ already has
 templates/site/log/
 ├── app/
+│   ├── content/
+│   │   ├── load.ts          # copied from templates/site/profile/ unchanged (type-agnostic)
+│   │   ├── render.tsx       # copied from templates/site/profile/ unchanged (type-agnostic)
+│   │   └── filters.ts       # date/tag/project filter computation over content-index.json entries —
+│   │                       #  the canonical, single owner (Principle II), shared by the entry-list
+│   │                       #  UI and the log-specific MCP tools below; no Go-side equivalent
 │   ├── routes/
-│   │   ├── entries/         # entry list (filterable) + entry detail views
-│   │   └── filters/         # date-range / tag / project filter UI (intersection semantics)
-│   └── mcp/
-│       └── tools/           # project-log-specific structured-query tools
-│           #                  (extending the v0.03 tool registry; rejects profile-shaped queries)
-└── app/negotiation/         # reuses v0.03 negotiation/rendering, exercised against log content shape
+│   │   ├── home.tsx         # entry list (filterable) per date/tag/project
+│   │   └── detail.tsx       # entry detail view
+│   ├── mcp/
+│   │   ├── agent.ts, query.ts, server.ts   # copied from templates/site/profile/, re-targeted
+│   │   └── tools/log.ts     # project-log-specific structured-query tools (list_entries, get_entry);
+│   │                       #  a profile-shaped query is simply never registered here, so the MCP
+│   │                       #  SDK's standard "unknown tool" error covers the rejection contract
+│   ├── negotiation/         # copied from templates/site/profile/ unchanged (type-agnostic, FR-005)
+│   └── discovery/           # copied from templates/site/profile/ unchanged (llms.txt generation)
+└── workers/entry.ts         # copied from templates/site/profile/, re-targeted
 
-test/
-├── unit/
-│   ├── content-log/         # schema, slug, filter-computation unit tests
-│   └── mcp-tools-log/       # project-log tool content-contract tests
-└── integration/
-    └── pilot-site-log/      # scaffold → author a run of dated entries → deploy →
+test/integration/
+├── scaffold_index_test.go   # extended with a log-type case (content-index.json carries
+│                           #  date/tags/project correctly)
+└── pilot-site-log/          # scaffold → author a run of dated entries → deploy →
                              #  filter → agent/terminal query, end-to-end (FR-001..FR-005)
 ```
 
-**Structure Decision**: Purely additive, type-scoped extensions to the existing `biblio-cli` packages and combined site/Worker template — no new top-level project, command, host, or service. The project-log site type slots into the same `internal/content`, `internal/scaffold`, `internal/index`, and `templates/site/<type>` structure already established in v0.01, and reuses the v0.03 MCP/negotiation layer with type-specific tools/schemas only. Any structural mismatch this surfaces is fixed in the shared platform code, not worked around with a parallel path.
+**Structure Decision**: Purely additive, type-scoped extensions to the existing `biblio-cli` packages and combined site/Worker template — no new top-level project, command, host, or service. The project-log site type slots into the same `internal/content` and `templates/site/<type>` structure already established in v0.01, and reuses the v0.03 MCP/negotiation layer with type-specific tools/schemas only. Filtering and schema validation each get exactly one owner (Principle II): filtering is TS-only (`app/content/filters.ts`, consumed by both the UI and the MCP tools — no Go-side `internal/index/filters.go`, which would otherwise duplicate the same logic); schema validation extends the existing shared `internal/content/schema.go` directly rather than a new `internal/content/log/` subpackage. Any structural mismatch this surfaces (e.g. `templates/site/log/` having lagged behind `templates/site/profile/` since v0.01) is fixed in the shared platform code, not worked around with a parallel path.
 
 ## Complexity Tracking
 

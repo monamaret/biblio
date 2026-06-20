@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"go.yaml.in/yaml/v3"
 )
@@ -88,12 +89,55 @@ func ParseItem(relPath string, data []byte, siteType string) (Item, error) {
 		}
 	}
 
+	if siteType == "log" {
+		if err := validateLogFields(relPath, fields); err != nil {
+			return Item{}, err
+		}
+	}
+
 	return Item{
 		Path:   relPath,
 		Slug:   SlugFromPath(relPath),
 		Fields: fields,
 		Body:   body,
 	}, nil
+}
+
+// validateLogFields checks the structural shape of the project-log-specific
+// fields beyond mere presence (data-model.md "Project-Log Entry" validation
+// rules; spec Edge Cases): `date` must parse as YYYY-MM-DD, `tags` (if
+// present) must be a list of strings, and `project` (if present) must be a
+// string. `tags` and `project` are both optional — their absence is valid.
+func validateLogFields(relPath string, fields map[string]any) error {
+	if date, ok := fields["date"]; ok {
+		s, isString := date.(string)
+		if !isString {
+			return fmt.Errorf("content: %s: field %q must be a date string (YYYY-MM-DD)", relPath, "date")
+		}
+		if _, err := time.Parse("2006-01-02", s); err != nil {
+			return fmt.Errorf("content: %s: field %q is not a valid date (want YYYY-MM-DD): %w", relPath, "date", err)
+		}
+	}
+
+	if tags, ok := fields["tags"]; ok {
+		list, isList := tags.([]any)
+		if !isList {
+			return fmt.Errorf("content: %s: field %q must be a list of strings", relPath, "tags")
+		}
+		for _, tag := range list {
+			if _, isString := tag.(string); !isString {
+				return fmt.Errorf("content: %s: field %q contains a non-string element %v", relPath, "tags", tag)
+			}
+		}
+	}
+
+	if project, ok := fields["project"]; ok {
+		if _, isString := project.(string); !isString {
+			return fmt.Errorf("content: %s: field %q must be a string", relPath, "project")
+		}
+	}
+
+	return nil
 }
 
 // splitFrontmatter splits a Markdown file's raw bytes into YAML frontmatter

@@ -50,5 +50,5 @@ commands and architecture.
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan:
-`specs/releases/0.02-build-deploy-verify/plan.md`
+`specs/releases/0.03-agent-terminal-layer/plan.md`
 <!-- SPECKIT END -->

@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -38,6 +39,18 @@ func runDev(cmd *cobra.Command, _ []string) error {
 		return fmt.Errorf("dev: wrangler.jsonc not found in %s — run `biblio-cli new` first to scaffold a project", cwd)
 	}
 
+	// wrangler dev requires its assets directory (wrangler.jsonc
+	// `assets.directory`) to exist at startup, before any build has ever
+	// run — `biblio-cli new` doesn't create it (dist/ is generated, not
+	// scaffolded), and it's also gitignored, so a fresh clone of an
+	// already-scaffolded project hits the same gap on a clean checkout,
+	// not just right after `new`. Ensuring it here, right before
+	// launching, covers both cases at the one point that actually needs
+	// it to exist (issue #194).
+	if err := ensureAssetsDirectory(cwd, wranglerConfig); err != nil {
+		return fmt.Errorf("dev: %w", err)
+	}
+
 	fmt.Fprintln(cmd.OutOrStdout(), "Starting local preview (vite dev + wrangler dev)…")
 	fmt.Fprintln(cmd.OutOrStdout(), "Press Ctrl+C to stop.")
 
@@ -48,4 +61,29 @@ func runDev(cmd *cobra.Command, _ []string) error {
 	})
 
 	return s.Run(cmd.Context())
+}
+
+// ensureAssetsDirectory creates wrangler.jsonc's configured
+// `assets.directory` (relative to cwd) if it doesn't already exist,
+// defaulting to "dist/client" — the scaffolded default — when the field is
+// missing or unparseable, rather than failing dev over a config-reading
+// detail unrelated to its actual purpose.
+func ensureAssetsDirectory(cwd, wranglerConfig string) error {
+	dir := filepath.Join(cwd, "dist", "client")
+
+	if data, err := os.ReadFile(wranglerConfig); err == nil {
+		var cfg struct {
+			Assets struct {
+				Directory string `json:"directory"`
+			} `json:"assets"`
+		}
+		if json.Unmarshal(data, &cfg) == nil && cfg.Assets.Directory != "" {
+			dir = filepath.Join(cwd, filepath.FromSlash(cfg.Assets.Directory))
+		}
+	}
+
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		return fmt.Errorf("creating assets directory %s: %w", dir, err)
+	}
+	return nil
 }

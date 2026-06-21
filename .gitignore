@@ -20,3 +20,11 @@ build/
 Thumbs.db
 *.tmp
 *.swp
+
+# Personal/machine-specific agent config — never project-level (issue #199).
+# Shared workflow tooling (.specify/, .claude/skills/, .opencode/agents/)
+# is tracked deliberately and is NOT covered by this section.
+.claude/settings.local.json
+.cursor/
+.windsurf/
+.clinerules/

@@ -57,7 +57,7 @@ func (s *Supervisor) Run(ctx context.Context) error {
 	}
 	wranglerCmd, err := s.startProcess(ctx, "wrangler", s.cfg.WranglerCmd)
 	if err != nil {
-		_ = viteCmd.Process.Kill()
+		killProcessGroup(viteCmd)
 		_ = viteCmd.Wait()
 		return err
 	}
@@ -76,17 +76,17 @@ func (s *Supervisor) Run(ctx context.Context) error {
 					firstErr = fmt.Errorf("devserver: vite exited unexpectedly: %w", err)
 				}
 			})
-			_ = wranglerCmd.Process.Kill()
+			killProcessGroup(wranglerCmd)
 		case err := <-wranglerErr:
 			once.Do(func() {
 				if err != nil {
 					firstErr = fmt.Errorf("devserver: wrangler exited unexpectedly: %w", err)
 				}
 			})
-			_ = viteCmd.Process.Kill()
+			killProcessGroup(viteCmd)
 		case <-ctx.Done():
-			_ = viteCmd.Process.Kill()
-			_ = wranglerCmd.Process.Kill()
+			killProcessGroup(viteCmd)
+			killProcessGroup(wranglerCmd)
 			<-viteErr
 			<-wranglerErr
 			return nil
@@ -105,6 +105,15 @@ func (s *Supervisor) startProcess(ctx context.Context, name string, argv []strin
 	cmd := exec.CommandContext(ctx, argv[0], argv[1:]...)
 	cmd.Stdout = s.cfg.Output
 	cmd.Stderr = s.cfg.Output
+	setProcessGroup(cmd)
+	// exec.CommandContext's default Cancel hook kills only cmd's own
+	// process when ctx is done — overriding it to group-kill closes the
+	// same race for context cancellation that the explicit kills in Run()
+	// close for the "other process exited" paths (issue #192).
+	cmd.Cancel = func() error {
+		killProcessGroup(cmd)
+		return nil
+	}
 	if err := cmd.Start(); err != nil {
 		return nil, fmt.Errorf("devserver: starting %s: %w", name, err)
 	}

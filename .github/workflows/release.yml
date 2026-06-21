@@ -1,0 +1,37 @@
+name: Release
+
+# Builds and publishes biblio-cli's release binaries via goreleaser
+# (.goreleaser.yaml) whenever a version tag is pushed. README.md and
+# docs/releases/*/README.md already tell users to "download a prebuilt
+# binary" from GitHub Releases — this is what actually produces those
+# artifacts (issue #196).
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  goreleaser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+
+      - name: Test
+        run: go test ./...
+
+      - uses: goreleaser/goreleaser-action@v6
+        with:
+          version: "~> v2"
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

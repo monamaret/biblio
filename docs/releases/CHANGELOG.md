@@ -4,6 +4,39 @@ All notable user-facing changes to `biblio-cli` and its generated sites are
 recorded here, release by release. See `docs/releases/v<version>/` for the
 full user guide of each release.
 
+## v0.07 — Bug-fix release
+
+- Fixed `tokens.css` being silently dropped from production builds: the
+  scaffold generator now writes it to `public/` (where `vite build` picks
+  it up) instead of the project root (#191).
+- Fixed `biblio-cli dev` orphaning `vite`/`wrangler` processes (and
+  sometimes hanging itself) on exit by group-killing each wrapped process
+  instead of only its top-level `npx` leader (#192).
+- Fixed `biblio-cli -v` always printing `dev`: goreleaser now stamps the
+  release tag into release binaries via `-ldflags`, and `go install
+  .../biblio-cli@latest` now falls back to `runtime/debug.ReadBuildInfo()`
+  (#193).
+- Fixed `biblio-cli dev` failing on its very first run by creating the
+  configured assets directory (e.g. `dist/client`) before launching,
+  rather than requiring a prior build to have created it (#194).
+- Fixed `wrangler.jsonc` getting an invalid Workers script name from
+  project names containing dots/spaces (e.g. a domain-shaped name) — `new`
+  now derives a sanitized slug for that field only, leaving the project
+  directory and `content/site.yaml`'s `name` untouched (#195).
+- Added `.github/workflows/release.yml` — the first workflow to actually
+  build and publish `biblio-cli`'s `goreleaser` binaries on a `v*` tag
+  push; this release is the first to use it (#196).
+- Rewrote `README.md`: clearer framing of what this scaffolds, plus new
+  local-dev, troubleshooting, testing, MCP-App-UI-bundle, and
+  deployed-site-testing sections (#197).
+- Added `docs/agent-integration-guide.md`, documenting how the Spec Kit
+  workflow, opencode, and Claude Code plugin config fit together, linked
+  from the README (#198).
+- Corrected `CLAUDE.md`'s inaccurate description of `.claude/settings.json`
+  and added `.gitignore` entries for personal/editor-specific agent config
+  (`.claude/settings.local.json`, `.cursor/`, `.windsurf/`, `.clinerules/`)
+  so it can't be committed by accident (#199).
+
 ## v0.06 — General Availability
 
 - Added `biblio-cli update` and `biblio-cli upgrade <version>`: classify

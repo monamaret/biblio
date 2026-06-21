@@ -56,15 +56,16 @@ options to draw from when there's reason to, not a queue.
 
 ## New candidates (not yet flagged anywhere in-repo)
 
-- **Wire real version info into `biblio-cli` builds, and improve `-h` output.**
-  `internal/cli/root.go` hardcodes `var version = "dev"`, and `.goreleaser.yaml`'s
-  `builds` block has no `ldflags` to inject the actual tag/commit at build
-  time — so `biblio-cli -h`/`--version` reports `dev` even in the prebuilt
-  GitHub Releases binaries the [confirmed distribution decision](001-static-site-platform-with-mcp.md#decision-log)
-  relies on. Fix is mechanical (goreleaser's standard `-X main.version={{.Version}}`
-  pattern), but bundle it with a pass over `-h` help text/examples across all
-  commands (`new`, `dev`, `build`, `deploy`, `update`/`upgrade`, `index`)
-  while touching this, since both are "polish the CLI's first impression."
+- **Improve `-h` output across all commands.** ~~Wire real version info
+  into `biblio-cli` builds~~ — the version-string half shipped in
+  [v0.07](../releases/0.07-release.md) (#193: goreleaser now sets
+  `-ldflags`, and `go install .../biblio-cli@latest` falls back to
+  `runtime/debug.ReadBuildInfo()`), as part of that release's post-GA
+  bug-fix triage rather than a formal promotion through this doc — so it's
+  struck through here instead of marked `Promoted →`. The other half is
+  still open: a pass over `-h` help text/examples across all commands
+  (`new`, `dev`, `build`, `deploy`, `update`/`upgrade`, `index`) — "polish
+  the CLI's first impression."
 
 
 - **A fourth site type.** The platform supports exactly three site types

@@ -44,6 +44,8 @@ Or install it onto your `$GOPATH/bin` for use from anywhere:
 go install github.com/monamaret/biblio/cmd/biblio-cli@latest
 ```
 
+(Note the `/cmd/biblio-cli` suffix — the module root itself has no Go package. If `biblio-cli` isn't found afterward, `$(go env GOPATH)/bin` likely isn't on your `PATH` yet — see the root [README.md](../../../README.md#troubleshooting).)
+
 Prebuilt binaries are also published via `goreleaser` on GitHub Releases
 (Principle III) — use whichever path is more convenient; all three produce
 the same CLI.

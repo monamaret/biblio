@@ -54,6 +54,8 @@ Starts `vite dev` and `wrangler dev` together as one supervised pair — the for
 
 ## Troubleshooting
 
+- **`go install github.com/monamaret/biblio@latest` fails with "does not contain package"** — install the CLI's package specifically, not the module root (there's no Go package at the module root): `go install github.com/monamaret/biblio/cmd/biblio-cli@latest`.
+- **`go install` succeeds but `biblio-cli` isn't found afterward** — it installed correctly into `$(go env GOPATH)/bin` (or `$GOBIN` if you've set that); that directory just isn't on your `PATH` yet. Add it, e.g. in `~/.bashrc`/`~/.zshrc`: `export PATH="$(go env GOPATH)/bin:$PATH"`, then open a new shell or `source` the file.
 - **`wrangler.jsonc not found`** from `build`/`dev`/`deploy` — you're not in a scaffolded project directory; run `biblio-cli new` first.
 - **`wrangler dev` fails on the very first run** — `dist/client` (wrangler's assets directory) doesn't exist yet on a brand-new scaffold or a fresh clone; `biblio-cli dev` creates it automatically before launching, so this should only surface if you're invoking `wrangler dev`/`vite build` directly instead of through `biblio-cli`.
 - **A project named after its domain (e.g. `my-site.example.com`) won't deploy** — Cloudflare Workers script names only allow lowercase letters, digits, and hyphens. `biblio-cli new` derives a sanitized name for `wrangler.jsonc`'s `"name"` field automatically and prints it when it differs from the literal project name you typed; the directory name and `content/site.yaml`'s `name` are unaffected.

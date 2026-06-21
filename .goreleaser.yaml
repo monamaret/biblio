@@ -15,6 +15,13 @@ builds:
     goarch:
       - amd64
       - arm64
+    # Stamps the release tag into the version `-v`/`--version` reports
+    # (internal/cli.version) — without this, goreleaser-built binaries
+    # report the source's "dev" default (issue #193). This is separate
+    # from `go install .../biblio-cli@latest`'s version, which Go stamps
+    # automatically via build info rather than ldflags.
+    ldflags:
+      - -s -w -X github.com/monamaret/biblio/internal/cli.version={{.Version}}
 
 archives:
   - id: biblio-cli

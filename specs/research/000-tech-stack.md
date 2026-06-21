@@ -2,7 +2,7 @@
 
 **Status:** Complete
 **Date:** 2026-06-07
-**Owner:** admin@vixandel.com
+**Owner:** Project owner
 
 ## Problem Statement
 
@@ -18,7 +18,7 @@ Establish which of the already-paid-for platforms/services should be used — an
 
 - **Relevant prior work:** [001-static-site-platform-with-mcp.md](001-static-site-platform-with-mcp.md) defines the target system this stack must support.
 - **Domain assumptions:** All listed services are already being paid for; incremental usage is expected to add little additional cost; the project should draw from this list rather than introduce new paid dependencies.
-- **Stakeholders:** Project owner/admin (admin@vixandel.com), sole developer and user.
+- **Stakeholders:** Project owner/admin, sole developer and user.
 
 ## Libraries & Stack
 
@@ -71,19 +71,19 @@ Establish which of the already-paid-for platforms/services should be used — an
 
 | Risk | Likelihood | Impact | Mitigation | Owner |
 | --- | --- | --- | --- | --- |
-| Concentrating on Cloudflare + GitHub creates a single-vendor dependency for hosting/compute | Low | Low | Acceptable given personal/portfolio scale and the operational-simplicity payoff; revisit only if Cloudflare-specific limits become a real constraint | admin@vixandel.com |
-| Service choice locks in assumptions that don't fit later site types (project log, docs) | Low | Medium | Validate stack choice against all three intended site types before broad rollout | admin@vixandel.com |
+| Concentrating on Cloudflare + GitHub creates a single-vendor dependency for hosting/compute | Low | Low | Acceptable given personal/portfolio scale and the operational-simplicity payoff; revisit only if Cloudflare-specific limits become a real constraint | Owner |
+| Service choice locks in assumptions that don't fit later site types (project log, docs) | Low | Medium | Validate stack choice against all three intended site types before broad rollout | Owner |
 
 ## Open Questions
 
-- [x] ~~If the Vectorize semantic-search escalation in [001](001-static-site-platform-with-mcp.md) is ever built, should it use OpenRouter or Deepseek for build-time embedding generation?~~ — **Resolved by research 2026-06-07: OpenRouter, decisively.** DeepSeek's official API has no embeddings endpoint at all (chat/reasoning models only — confirmed via `api-docs.deepseek.com`); OpenRouter ships a unified, OpenAI-compatible embeddings endpoint spanning many providers' models. The narrower follow-on question — *which* embedding model to use within OpenRouter — is deferred and now tracked in [roadmap.md §0](roadmap.md#0-outstanding-design-questions), since it only matters if/when the Vectorize escalation is actually built — admin@vixandel.com
+- [x] ~~If the Vectorize semantic-search escalation in [001](001-static-site-platform-with-mcp.md) is ever built, should it use OpenRouter or Deepseek for build-time embedding generation?~~ — **Resolved by research 2026-06-07: OpenRouter, decisively.** DeepSeek's official API has no embeddings endpoint at all (chat/reasoning models only — confirmed via `api-docs.deepseek.com`); OpenRouter ships a unified, OpenAI-compatible embeddings endpoint spanning many providers' models. The narrower follow-on question — *which* embedding model to use within OpenRouter — is deferred and now tracked in [roadmap.md §0](roadmap.md#0-outstanding-design-questions), since it only matters if/when the Vectorize escalation is actually built — Owner
 
 ## Decision Log
 
-- **2026-06-07** — Drop Supabase from the candidate stack; `biblio` will build and host its own MCP server rather than use any third-party/managed MCP or BaaS offering — Owner's stated decision (see [001-static-site-platform-with-mcp.md](001-static-site-platform-with-mcp.md) Decision Log) — admin@vixandel.com
-- **2026-06-07** — Finalize the platform → responsibility mapping: **Cloudflare Workers and GitHub are the only load-bearing services** (hosting/MCP/storage and source-control/CI respectively); **OpenRouter and Deepseek remain conditional candidates** for build-time embedding generation, contingent on the Vectorize semantic-search escalation actually being built; **GCP (Cloud Run, Vertex, committed-use Kubernetes), Vercel, and Ragflow are dropped from active consideration** — Owner confirmed this mapping is correct. Rationale: Cloud Run/Vertex were evaluated and deprioritized as an MCP-hosting backend with no AI/ML need identified for `biblio`; Vercel was already ruled out by the same-domain/no-CORS decision; Ragflow is a full RAG platform, heavier than the lightweight build-time-embeddings → Vectorize → in-Worker-similarity-query approach already sketched in [001](001-static-site-platform-with-mcp.md), which already covers the one plausible semantic-search use case — admin@vixandel.com
+- **2026-06-07** — Drop Supabase from the candidate stack; `biblio` will build and host its own MCP server rather than use any third-party/managed MCP or BaaS offering — Owner's stated decision (see [001-static-site-platform-with-mcp.md](001-static-site-platform-with-mcp.md) Decision Log) — Owner
+- **2026-06-07** — Finalize the platform → responsibility mapping: **Cloudflare Workers and GitHub are the only load-bearing services** (hosting/MCP/storage and source-control/CI respectively); **OpenRouter and Deepseek remain conditional candidates** for build-time embedding generation, contingent on the Vectorize semantic-search escalation actually being built; **GCP (Cloud Run, Vertex, committed-use Kubernetes), Vercel, and Ragflow are dropped from active consideration** — Owner confirmed this mapping is correct. Rationale: Cloud Run/Vertex were evaluated and deprioritized as an MCP-hosting backend with no AI/ML need identified for `biblio`; Vercel was already ruled out by the same-domain/no-CORS decision; Ragflow is a full RAG platform, heavier than the lightweight build-time-embeddings → Vectorize → in-Worker-similarity-query approach already sketched in [001](001-static-site-platform-with-mcp.md), which already covers the one plausible semantic-search use case — Owner
 
-- **2026-06-07** — Resolve the conditional embedding-provider question in favor of **OpenRouter over DeepSeek**, should the Vectorize semantic-search escalation in [001-static-site-platform-with-mcp.md](001-static-site-platform-with-mcp.md) ever be built — Resolved by direct research rather than a stated preference: DeepSeek's official API (confirmed via `api-docs.deepseek.com`) offers **no embeddings endpoint at all** — chat/reasoning models only — corroborated by open feature-request issues on the `deepseek-ai` GitHub repos asking for one. OpenRouter, by contrast, ships a unified, OpenAI-compatible `/embeddings` endpoint spanning many providers' models (OpenAI, Google Gemini, BGE-M3, Qwen3, etc.), which is exactly the thin, build-time-only dependency `biblio` would need. DeepSeek remains listed only as a general (non-embedding) LLM candidate, now effectively moot since `biblio` has no other identified LLM use — admin@vixandel.com
+- **2026-06-07** — Resolve the conditional embedding-provider question in favor of **OpenRouter over DeepSeek**, should the Vectorize semantic-search escalation in [001-static-site-platform-with-mcp.md](001-static-site-platform-with-mcp.md) ever be built — Resolved by direct research rather than a stated preference: DeepSeek's official API (confirmed via `api-docs.deepseek.com`) offers **no embeddings endpoint at all** — chat/reasoning models only — corroborated by open feature-request issues on the `deepseek-ai` GitHub repos asking for one. OpenRouter, by contrast, ships a unified, OpenAI-compatible `/embeddings` endpoint spanning many providers' models (OpenAI, Google Gemini, BGE-M3, Qwen3, etc.), which is exactly the thin, build-time-only dependency `biblio` would need. DeepSeek remains listed only as a general (non-embedding) LLM candidate, now effectively moot since `biblio` has no other identified LLM use — Owner
 
 ## References
 

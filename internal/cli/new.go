@@ -79,6 +79,12 @@ func runNew(cmd *cobra.Command, args []string) error {
 	}
 
 	fmt.Fprintf(cmd.OutOrStdout(), "Scaffolded %q (%s, theme %s) at %s\n", projectName, siteType, themeID, projectDir)
+	// wrangler.jsonc's "name" is a separate, Workers-safe slug derived from
+	// projectName (issue #195) — surface it whenever it differs from the
+	// literal project name, so the substitution is never a silent surprise.
+	if workerName := scaffold.WorkerName(projectName); workerName != projectName {
+		fmt.Fprintf(cmd.OutOrStdout(), "Workers script name set to %q in wrangler.jsonc (derived from the project name, which contains characters not valid in a Workers script name)\n", workerName)
+	}
 	return nil
 }
 

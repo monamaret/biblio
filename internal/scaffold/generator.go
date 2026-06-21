@@ -5,6 +5,8 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"regexp"
+	"strings"
 
 	"github.com/monamaret/biblio/internal/theme"
 )
@@ -139,6 +141,34 @@ func copyTemplateTree(dir, siteType string) error {
 	})
 }
 
+var nonWorkerNameChars = regexp.MustCompile(`[^a-z0-9-]+`)
+
+// WorkerName derives a Cloudflare Workers-safe script name from
+// projectName, for use in wrangler.jsonc's top-level "name" field only —
+// it must be lowercase letters, digits, and hyphens, while projectName
+// itself is otherwise unconstrained. People naturally name a project after
+// the domain it'll back (e.g. "notebook.monamaret.com"), which isn't a
+// valid Workers name as-is; without this, wrangler dev/deploy fails on the
+// very first run until someone manually edits wrangler.jsonc's "name"
+// field afterward (issue #195). The project directory name and
+// content/site.yaml's `name` are unaffected — neither has this
+// constraint, so both keep projectName exactly as given.
+func WorkerName(projectName string) string {
+	name := nonWorkerNameChars.ReplaceAllString(strings.ToLower(projectName), "-")
+	name = strings.Trim(name, "-")
+	if name == "" {
+		name = "site"
+	}
+	// Cloudflare Workers script names are capped at 63 characters (the
+	// same limit as a DNS label, which is exactly the kind of input
+	// likely to hit it here).
+	const maxLen = 63
+	if len(name) > maxLen {
+		name = strings.Trim(name[:maxLen], "-")
+	}
+	return name
+}
+
 // renderSiteYAML produces content/site.yaml: the site's declared type,
 // name/description, and the sole MCP config surface, mcp_enabled (default
 // true; data-model.md "Site Project"; Security & Operational Posture).
@@ -163,6 +193,8 @@ mcp_enabled: %t
 // at all: no "disabled but present" intermediate state (v0.03 FR-002;
 // data-model.md "MCP Server Mount").
 func renderWranglerJSONC(opts Options) string {
+	workerName := WorkerName(opts.ProjectName)
+
 	if !opts.MCPEnabled {
 		return fmt.Sprintf(`{
   "name": %q,
@@ -174,7 +206,7 @@ func renderWranglerJSONC(opts Options) string {
     { "pattern": %q, "custom_domain": true }
   ]
 }
-`, opts.ProjectName, opts.Domain)
+`, workerName, opts.Domain)
 	}
 
 	return fmt.Sprintf(`{
@@ -195,5 +227,5 @@ func renderWranglerJSONC(opts Options) string {
     { "pattern": %q, "custom_domain": true }
   ]
 }
-`, opts.ProjectName, opts.Domain)
+`, workerName, opts.Domain)
 }

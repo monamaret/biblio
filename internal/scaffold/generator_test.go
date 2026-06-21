@@ -277,3 +277,93 @@ func TestGenerate_WritesScaffoldManifest(t *testing.T) {
 		t.Errorf("manifest.Files[%q] = %q, want %q (hash of the file actually written)", "package.json", manifest.Files["package.json"], gotHash)
 	}
 }
+
+// WorkerName must produce a valid Cloudflare Workers script name (lowercase
+// letters, digits, hyphens only) from any project name, including the
+// domain-shaped names people naturally pick (issue #195).
+func TestWorkerName(t *testing.T) {
+	validName := func(t *testing.T, name string) {
+		t.Helper()
+		if name == "" {
+			t.Error("WorkerName(): want non-empty result")
+		}
+		for _, r := range name {
+			isLower := r >= 'a' && r <= 'z'
+			isDigit := r >= '0' && r <= '9'
+			if !isLower && !isDigit && r != '-' {
+				t.Errorf("WorkerName() = %q: contains invalid character %q", name, r)
+			}
+		}
+		if strings.HasPrefix(name, "-") || strings.HasSuffix(name, "-") {
+			t.Errorf("WorkerName() = %q: must not start or end with a hyphen", name)
+		}
+	}
+
+	tests := []struct {
+		projectName string
+		want        string
+	}{
+		// The real-world case this issue was filed against: a project
+		// named after the domain it backs.
+		{"notebook.monamaret.com", "notebook-monamaret-com"},
+		{"notebook-monamaret.com", "notebook-monamaret-com"},
+		{"My Cool Site", "my-cool-site"},
+		{"already-valid-name", "already-valid-name"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.projectName, func(t *testing.T) {
+			got := scaffold.WorkerName(tt.projectName)
+			validName(t, got)
+			if got != tt.want {
+				t.Errorf("WorkerName(%q) = %q, want %q", tt.projectName, got, tt.want)
+			}
+		})
+	}
+}
+
+// A project name containing characters invalid for a Workers script name
+// (e.g. dots, as in a domain-shaped name) must still scaffold successfully,
+// with wrangler.jsonc's "name" sanitized but the directory name and
+// content/site.yaml's `name` left exactly as given — neither of those has
+// the Workers naming constraint (issue #195).
+func TestGenerate_SanitizesWranglerNameButNotDirectoryOrSiteYAML(t *testing.T) {
+	destDir := t.TempDir()
+	opts := scaffold.Options{
+		ProjectName: "notebook.monamaret.com",
+		SiteType:    "log",
+		Domain:      "notebook.monamaret.com",
+		Theme:       presetIDFor(t, "log"),
+		MCPEnabled:  true,
+	}
+
+	projectDir, err := scaffold.Generate(destDir, opts)
+	if err != nil {
+		t.Fatalf("Generate() error = %v", err)
+	}
+
+	wantDir := filepath.Join(destDir, "notebook.monamaret.com")
+	if projectDir != wantDir {
+		t.Errorf("Generate() project dir = %q, want %q (directory name must be unaffected by Workers-name sanitization)", projectDir, wantDir)
+	}
+
+	siteYAML, err := os.ReadFile(filepath.Join(projectDir, "content", "site.yaml"))
+	if err != nil {
+		t.Fatalf("Generate(): reading content/site.yaml: %v", err)
+	}
+	if !strings.Contains(string(siteYAML), "name: notebook.monamaret.com") {
+		t.Errorf("Generate(): content/site.yaml name must keep the literal project name:\n%s", siteYAML)
+	}
+
+	wrangler, err := os.ReadFile(filepath.Join(projectDir, "wrangler.jsonc"))
+	if err != nil {
+		t.Fatalf("Generate(): reading wrangler.jsonc: %v", err)
+	}
+	got := string(wrangler)
+	if !strings.Contains(got, `"name": "notebook-monamaret-com"`) {
+		t.Errorf("Generate(): wrangler.jsonc \"name\" must be the sanitized Workers-safe slug:\n%s", got)
+	}
+	if strings.Contains(got, `"name": "notebook.monamaret.com"`) {
+		t.Errorf("Generate(): wrangler.jsonc \"name\" must not be the unsanitized project name:\n%s", got)
+	}
+}

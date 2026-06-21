@@ -36,9 +36,9 @@ func scaffoldTokensCSS(t *testing.T, siteType string) string {
 		t.Fatalf("scaffold.Generate(%q): %v", siteType, err)
 	}
 
-	data, err := os.ReadFile(filepath.Join(projectDir, "tokens.css"))
+	data, err := os.ReadFile(filepath.Join(projectDir, "public", "tokens.css"))
 	if err != nil {
-		t.Fatalf("reading tokens.css for %q: %v", siteType, err)
+		t.Fatalf("reading public/tokens.css for %q: %v", siteType, err)
 	}
 	return string(data)
 }

@@ -23,7 +23,7 @@ func presetIDFor(t *testing.T, siteType string) string {
 
 // Generate must produce the populated project directory described in
 // data-model.md "Site Project": content/, content/site.yaml (mcp_enabled:
-// true), wrangler.jsonc (route from --domain), and tokens.css.
+// true), wrangler.jsonc (route from --domain), and public/tokens.css.
 func TestGenerate_CreatesPopulatedProjectDirectory(t *testing.T) {
 	destDir := t.TempDir()
 	opts := scaffold.Options{
@@ -64,8 +64,16 @@ func TestGenerate_CreatesPopulatedProjectDirectory(t *testing.T) {
 		t.Errorf("Generate(): wrangler.jsonc missing routing for domain %q:\n%s", opts.Domain, wrangler)
 	}
 
-	if _, err := os.Stat(filepath.Join(projectDir, "tokens.css")); err != nil {
-		t.Errorf("Generate(): tokens.css missing: %v", err)
+	if _, err := os.Stat(filepath.Join(projectDir, "public", "tokens.css")); err != nil {
+		t.Errorf("Generate(): public/tokens.css missing: %v", err)
+	}
+
+	// tokens.css must live under public/, not the project root — `vite
+	// build` only copies publicDir into the output directory, so a
+	// root-level tokens.css is silently dropped from production builds
+	// (issue #191).
+	if _, err := os.Stat(filepath.Join(projectDir, "tokens.css")); err == nil {
+		t.Error("Generate(): tokens.css also written at the project root — it must only exist under public/")
 	}
 }
 

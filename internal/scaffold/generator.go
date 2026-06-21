@@ -85,7 +85,18 @@ func Generate(destDir string, opts Options) (string, error) {
 	if err := os.WriteFile(filepath.Join(projectDir, "wrangler.jsonc"), []byte(renderWranglerJSONC(opts)), 0o644); err != nil {
 		return "", fmt.Errorf("scaffold: writing wrangler.jsonc: %w", err)
 	}
-	if err := os.WriteFile(filepath.Join(projectDir, "tokens.css"), []byte(tokensCSS), 0o644); err != nil {
+	// tokens.css lives under public/, not the project root: Vite's build
+	// only copies publicDir (default "public/") into the output directory,
+	// so a root-level tokens.css is served correctly by `vite dev` (which
+	// serves arbitrary root-relative static files) but silently dropped by
+	// `vite build` — the deployed site ends up with no theme CSS at all.
+	// The served URL stays "/tokens.css" either way, since Vite serves
+	// publicDir contents at the root URL in both dev and build.
+	publicDir := filepath.Join(projectDir, "public")
+	if err := os.MkdirAll(publicDir, 0o755); err != nil {
+		return "", fmt.Errorf("scaffold: creating public directory: %w", err)
+	}
+	if err := os.WriteFile(filepath.Join(publicDir, "tokens.css"), []byte(tokensCSS), 0o644); err != nil {
 		return "", fmt.Errorf("scaffold: writing tokens.css: %w", err)
 	}
 

@@ -149,7 +149,7 @@ func TestScaffoldedProject_RequiredFiles(t *testing.T) {
 			for _, rel := range []string{
 				filepath.Join("content", "site.yaml"),
 				"wrangler.jsonc",
-				"tokens.css",
+				filepath.Join("public", "tokens.css"),
 			} {
 				path := filepath.Join(projectDir, rel)
 				if _, err := os.Stat(path); err != nil {
@@ -171,9 +171,9 @@ func TestScaffoldedProject_TokensCSS(t *testing.T) {
 	for _, siteType := range scaffold.SiteTypes {
 		t.Run(siteType, func(t *testing.T) {
 			_, projectDir := scaffoldAndIndex(t, siteType)
-			tokensCSS, err := os.ReadFile(filepath.Join(projectDir, "tokens.css"))
+			tokensCSS, err := os.ReadFile(filepath.Join(projectDir, "public", "tokens.css"))
 			if err != nil {
-				t.Fatalf("scaffold(%q): tokens.css: %v", siteType, err)
+				t.Fatalf("scaffold(%q): public/tokens.css: %v", siteType, err)
 			}
 			if !strings.Contains(string(tokensCSS), ":root") {
 				t.Errorf("scaffold(%q): tokens.css missing :root block", siteType)

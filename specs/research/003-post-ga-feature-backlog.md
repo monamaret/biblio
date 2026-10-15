@@ -75,7 +75,11 @@ options to draw from when there's reason to, not a queue.
   type) would need its own content schema, MCP tool surface, theme preset,
   and scaffold templates — essentially repeating §3/§4/§6/§9 of the roadmap
   for one more type. Needs a real driving use case before it's worth a
-  research doc.
+  research doc. **Promoted →** [004-quarterly-site-type.md](004-quarterly-site-type.md)
+  (2026-10-15: `quarterly`, an issue-based magazine in a 1970s
+  academic-book style), with follow-on PDF output in
+  [005-pdf-output-quarterly.md](005-pdf-output-quarterly.md). Feature spec
+  not yet written; both docs are parked for follow-up.
 - **Multi-site management from a single `biblio-cli` install.** Today each
   `biblio-cli new` produces one independent project; there's no concept of
   "my sites" across projects. Could matter if the author (or any future user)

@@ -13,6 +13,7 @@ vi.mock("../content/load", async (importOriginal) => {
     currentIssue: vi.fn(actual.currentIssue),
     getIssue: vi.fn(actual.getIssue),
     articlesInIssue: vi.fn(actual.articlesInIssue),
+    typesetting: vi.fn(actual.typesetting),
   };
 });
 
@@ -93,6 +94,16 @@ describe("Contents", () => {
     expect(screen.getByText("No articles in this issue yet.")).toBeDefined();
     expect(container.querySelector(".contents-item")).toBeNull();
     expect(screen.getByRole("link", { name: /Previous issues/ })).toBeDefined();
+  });
+
+  it("numbers articles 1, 2, 3 when typesetting.numerals is arabic", () => {
+    vi.mocked(load.typesetting).mockReturnValueOnce({ margin_notes: true, numerals: "arabic" });
+    const { container } = renderAt("/");
+    expect(Array.from(container.querySelectorAll(".contents-item .numeral")).map((n) => n.textContent)).toEqual([
+      "1.",
+      "2.",
+      "3.",
+    ]);
   });
 
   it("renders a not-found view for an unknown issue", () => {

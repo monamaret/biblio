@@ -156,3 +156,91 @@ func TestRun_NoSiteYAMLIsSkipped(t *testing.T) {
 		t.Error("content-index.json written for a directory with no content/site.yaml")
 	}
 }
+
+// writeTypesetting appends a typesetting block to dir's site.yaml.
+func writeTypesetting(t *testing.T, dir, block string) {
+	t.Helper()
+	path := filepath.Join(dir, "content", "site.yaml")
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(path, append(data, []byte("typesetting:\n"+block)...), 0o644); err != nil {
+		t.Fatal(err)
+	}
+}
+
+// For quarterly, the step regenerates tokens.css from the preset plus the
+// site.yaml overrides, and writes the structural switches into the index
+// (specs/004 FR-024; research.md R3, R8).
+func TestRun_QuarterlyRegeneratesTokensAndSwitches(t *testing.T) {
+	dir := scaffoldSite(t, "quarterly")
+	writeTypesetting(t, dir, "  accent: \"#1e4fd7\"\n  margin_notes: false\n  numerals: arabic\n")
+
+	report, err := prebuild.Run(dir, prebuild.Build)
+	if err != nil {
+		t.Fatalf("Run() error = %v", err)
+	}
+	if !slices.Contains(report.Steps, "tokens") {
+		t.Errorf("report.Steps = %v, want a tokens step", report.Steps)
+	}
+	tokens, _ := os.ReadFile(filepath.Join(dir, "public", "tokens.css"))
+	if !strings.Contains(string(tokens), "--color-accent: #1e4fd7;") || !strings.Contains(string(tokens), "--ts-numerals: decimal;") {
+		t.Errorf("tokens.css did not apply the overrides:\n%s", tokens)
+	}
+	if !strings.Contains(strings.Join(report.Lines(), "\n"), "Generating public/tokens.css (quarterly-default + 3 overrides)… ok") {
+		t.Errorf("report lines = %v, want the tokens line", report.Lines())
+	}
+
+	idxData, _ := os.ReadFile(filepath.Join(dir, "content-index.json"))
+	var idx struct {
+		Typesetting struct {
+			MarginNotes bool   `json:"margin_notes"`
+			Numerals    string `json:"numerals"`
+		} `json:"typesetting"`
+	}
+	if err := json.Unmarshal(idxData, &idx); err != nil {
+		t.Fatal(err)
+	}
+	if idx.Typesetting.MarginNotes || idx.Typesetting.Numerals != "arabic" {
+		t.Errorf("index typesetting = %+v, want margin_notes false, numerals arabic", idx.Typesetting)
+	}
+}
+
+// A configured font family with no matching file warns but does not fail;
+// the bundled faces are found (file names compared ignoring case and
+// punctuation) (FR-025; research.md R9).
+func TestRun_QuarterlyFontFileWarning(t *testing.T) {
+	dir := scaffoldSite(t, "quarterly")
+	report, err := prebuild.Run(dir, prebuild.Build)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(report.Warnings) != 0 {
+		t.Errorf("bundled fonts produced warnings: %v", report.Warnings)
+	}
+
+	writeTypesetting(t, dir, "  font_body: \"Söhne\"\n")
+	report, err = prebuild.Run(dir, prebuild.Build)
+	if err != nil {
+		t.Fatalf("Run() error = %v, want only a warning", err)
+	}
+	joined := strings.Join(report.Warnings, "\n")
+	if !strings.Contains(joined, `typesetting.font_body: no file for "Söhne" in public/fonts/`) {
+		t.Errorf("warnings = %q, want the missing-font warning", joined)
+	}
+}
+
+// A fresh quarterly scaffold's tokens.css is exactly what its first build
+// writes, so `new` and `build` never disagree (tasks.md T062/T067).
+func TestRun_QuarterlyScaffoldTokensParity(t *testing.T) {
+	dir := scaffoldSite(t, "quarterly")
+	before, _ := os.ReadFile(filepath.Join(dir, "public", "tokens.css"))
+	if _, err := prebuild.Run(dir, prebuild.Build); err != nil {
+		t.Fatal(err)
+	}
+	after, _ := os.ReadFile(filepath.Join(dir, "public", "tokens.css"))
+	if string(before) != string(after) {
+		t.Errorf("scaffolded tokens.css differs from the first build's.\nscaffold:\n%s\nbuild:\n%s", before, after)
+	}
+}

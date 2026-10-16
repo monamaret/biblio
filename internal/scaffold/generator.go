@@ -58,7 +58,7 @@ func Generate(destDir string, opts Options) (string, error) {
 		return "", fmt.Errorf("scaffold: checking project directory %q: %w", opts.ProjectName, err)
 	}
 
-	tokensCSS, err := theme.GenerateTokensCSS(preset)
+	tokensCSS, err := tokensFor(preset)
 	if err != nil {
 		return "", fmt.Errorf("scaffold: generating tokens.css: %w", err)
 	}
@@ -239,4 +239,19 @@ func renderWranglerJSONC(opts Options) string {
   ]
 }
 `, workerName, opts.Domain)
+}
+
+// tokensFor renders a new project's tokens.css. Quarterly presets go
+// through the same typesetting resolver the pre-build step uses, with no
+// overrides (a fresh site.yaml has none), so `new` and the first `build`
+// write byte-identical files (specs/004-quarterly-site-type tasks.md T067).
+func tokensFor(preset theme.Preset) (string, error) {
+	if preset.SiteType != "quarterly" {
+		return theme.GenerateTokensCSS(preset)
+	}
+	eff, err := theme.Resolve(preset, theme.Typesetting{})
+	if err != nil {
+		return "", err
+	}
+	return theme.GenerateQuarterlyTokensCSS(preset, eff)
 }

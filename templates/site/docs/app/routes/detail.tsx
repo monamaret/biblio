@@ -8,7 +8,10 @@ import { ContentBody } from "../content/render";
 // rendered Markdown body.
 export default function Detail() {
   const params = useParams();
-  const slug = params["*"] ?? "";
+  // Cloudflare's static-asset serving redirects "/foo" to "/foo/" for
+  // directory-style prerendered output, so a hard refresh's splat param
+  // can carry a trailing slash that no content-index.json slug has.
+  const slug = (params["*"] ?? "").replace(/\/+$/, "");
   const entry = getEntryBySlug(slug);
 
   if (!entry) {

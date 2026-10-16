@@ -35,6 +35,11 @@ full user guide of each release.
 - The quarterly deploy workflow now uses Node.js 22, and every site type's
   deploy workflow gains a `workflow_dispatch` trigger for manual redeploys
   (#218).
+- Docs sites now ship a `package-lock.json` like the other site types, so
+  `npm install` on a fresh docs site no longer fails with an `ERESOLVE`
+  conflict on `ai@7` (and `tsc` no longer trips over a duplicated MCP SDK).
+  `biblio-cli update` adds the lockfile to existing docs sites; if a site
+  already has its own, `update` flags it for review instead (#223).
 
 ## v0.07 — Bug-fix release
 

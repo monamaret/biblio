@@ -36,6 +36,7 @@ content/configuration.md
 content/getting-started.md
 content/index.md
 content/site.yaml
+package-lock.json
 package.json
 public/tokens.css
 react-router.config.ts

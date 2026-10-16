@@ -101,5 +101,5 @@ Quarterly's content shape — `kind`, `issue`, `category`, `footnotes`,
   hydrated. Fixed for quarterly (`templates/site/quarterly/app/routes/detail.tsx`).
   The profile, log and docs detail routes
   (`templates/site/{profile,log,docs}/app/routes/detail.tsx`) read the splat
-  the same way and are likely affected too; not changed here, since they
-  are outside this feature's scope — flagged for follow-up.
+  the same way and have the same bug; it is fixed separately in PR #212
+  (`fix/detail-trailing-slash-templates`), so they are not changed here.

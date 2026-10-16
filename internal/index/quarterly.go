@@ -214,7 +214,8 @@ func generateQuarterly(contentDir string, cfg content.SiteConfig, opts Options) 
 			if plate := plateFor(opts.Plates, a.Path, fields["image"]); plate != "" {
 				fields["plate"] = plate
 			}
-			footnotes, marginNotes, warnings := content.ExtractNotes(a.Body)
+			body := content.RewriteImages(a.Body, path.Dir(a.Path), opts.Plates)
+			footnotes, marginNotes, warnings := content.ExtractNotes(body)
 			if footnotes == nil {
 				footnotes = []content.Note{}
 			}
@@ -223,11 +224,11 @@ func generateQuarterly(contentDir string, cfg content.SiteConfig, opts Options) 
 			}
 			fields["footnotes"] = footnotes
 			fields["margin_notes"] = marginNotes
-			fields["markdown_body"] = content.MarkdownBody(a.Body, marginNotes)
+			fields["markdown_body"] = content.MarkdownBody(body, marginNotes)
 			for _, w := range warnings {
 				idx.Warnings = append(idx.Warnings, a.Path+": "+w)
 			}
-			idx.Entries = append(idx.Entries, Entry{Slug: a.Slug, Path: a.Path, Body: a.Body, Fields: fields})
+			idx.Entries = append(idx.Entries, Entry{Slug: a.Slug, Path: a.Path, Body: body, Fields: fields})
 
 			if i, seen := catIndex[key]; seen {
 				idx.Categories[i].ArticleCount++

@@ -48,6 +48,21 @@ describe("Detail", () => {
     expect(screen.getByText(`Fig. 1 — ${entry.image_caption!}`)).toBeDefined();
   });
 
+  it("never points an image at content/ or a relative path — plates only", () => {
+    const entry: load.Article = {
+      ...(load.getEntryBySlug("issues/02-autumn-2026/on-margins") as load.Article),
+      plate: "/plates/fedcba9876543210.jpg",
+      body: "Inline: ![a plate](/plates/0123456789abcdef.png)",
+    };
+    vi.mocked(load.getEntryBySlug).mockReturnValueOnce(entry);
+    const { container } = renderAt("/issues/02-autumn-2026/on-margins");
+    const srcs = Array.from(container.querySelectorAll("img")).map((img) => img.getAttribute("src") ?? "");
+    expect(srcs).toHaveLength(2);
+    for (const src of srcs) {
+      expect(src.startsWith("/plates/"), src).toBe(true);
+    }
+  });
+
   it("renders no lead image when the article has no plate yet", () => {
     const { container } = renderAt("/issues/02-autumn-2026/on-margins");
     expect(container.querySelector("figure.lead-plate")).toBeNull();

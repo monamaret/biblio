@@ -8,6 +8,8 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"slices"
+	"strings"
 	"testing"
 
 	"github.com/monamaret/biblio/internal/index"
@@ -93,5 +95,52 @@ func TestPilotQuarterly_ShippedIndexMatchesIndexCommand(t *testing.T) {
 	}
 	if string(got) != string(wantData) {
 		t.Error("templates/site/quarterly/content-index.json is stale; regenerate it with `go run ./cmd/biblio-cli index templates/site/quarterly/content`")
+	}
+}
+
+// After a build, every image the sample content references is a plate
+// that exists in public/plates/, and nothing in the index points into
+// content/ (specs/004 SC-004; tasks.md T075).
+func TestPilotQuarterly_EveryImageIsAPlate(t *testing.T) {
+	dir := scaffoldQuarterly(t)
+	report, err := prebuild.Run(dir, prebuild.Build)
+	if err != nil {
+		t.Fatalf("prebuild.Run: %v", err)
+	}
+	if !slices.Contains(report.Steps, "plates") {
+		t.Errorf("report.Steps = %v, want a plates step", report.Steps)
+	}
+
+	data, _ := os.ReadFile(filepath.Join(dir, "content-index.json"))
+	var idx struct {
+		Entries []map[string]any `json:"entries"`
+	}
+	if err := json.Unmarshal(data, &idx); err != nil {
+		t.Fatal(err)
+	}
+	urls := 0
+	for _, e := range idx.Entries {
+		for _, field := range []string{"plate", "cover_plate"} {
+			if url, ok := e[field].(string); ok {
+				urls++
+				if _, err := os.Stat(filepath.Join(dir, "public", url)); err != nil {
+					t.Errorf("%s %s: %v", e["slug"], field, err)
+				}
+			}
+		}
+		for _, field := range []string{"image", "cover"} {
+			if src, ok := e[field].(string); ok {
+				plateField := map[string]string{"image": "plate", "cover": "cover_plate"}[field]
+				if _, has := e[plateField]; !has {
+					t.Errorf("%s: %s %q has no %s", e["slug"], field, src, plateField)
+				}
+			}
+		}
+		if body, ok := e["body"].(string); ok && strings.Contains(body, "](img/") {
+			t.Errorf("%s: body still links an unconverted image", e["slug"])
+		}
+	}
+	if urls < 2 {
+		t.Errorf("found %d plate URLs, want at least the sample cover and lead image", urls)
 	}
 }

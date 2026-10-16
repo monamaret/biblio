@@ -330,3 +330,45 @@ func TestQuarterly_NoteWarnings(t *testing.T) {
 		t.Error("warnings leaked into content-index.json")
 	}
 }
+
+// With a plate map, the lead image and cover get plate URLs, and inline
+// image destinations that resolve to a plate are rewritten in body and
+// markdown_body; external URLs, unconverted paths and code are left alone
+// (specs/004 FR-028; research.md R5).
+func TestQuarterly_PlateRewriting(t *testing.T) {
+	dir := copyFixture(t)
+	codeArticle := "---\ntitle: Code\ncategory: Design\n---\n\nShown: `![x](img/alpha.png)` and\n\n```\n![y](img/alpha.png)\n```\n"
+	if err := os.WriteFile(filepath.Join(dir, "issues", "02-summer-2026", "code.md"), []byte(codeArticle), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	opts := index.Options{Plates: map[string]string{
+		"issues/01-spring-2026/cover.jpg":      "/plates/dddddddddddddddd.jpg",
+		"issues/02-summer-2026/img/color.jpg":  "/plates/aaaaaaaaaaaaaaaa.jpg",
+		"issues/02-summer-2026/img/alpha.png":  "/plates/bbbbbbbbbbbbbbbb.png",
+		"issues/02-summer-2026/img/photo.webp": "/plates/cccccccccccccccc.jpg",
+	}}
+	idx := generate(t, dir, opts)
+
+	plates := entryBySlug(t, idx, "issues/02-summer-2026/plates")
+	if plates.Fields["plate"] != "/plates/aaaaaaaaaaaaaaaa.jpg" {
+		t.Errorf("plate = %v", plates.Fields["plate"])
+	}
+	for _, body := range []string{plates.Body, plates.Fields["markdown_body"].(string)} {
+		for _, want := range []string{"](/plates/bbbbbbbbbbbbbbbb.png)", "](/plates/cccccccccccccccc.jpg)", "](img/alpha.webp)", "](https://example.com/remote.jpg)"} {
+			if !strings.Contains(body, want) {
+				t.Errorf("body missing %q:\n%s", want, body)
+			}
+		}
+	}
+	code := entryBySlug(t, idx, "issues/02-summer-2026/code")
+	if strings.Contains(code.Body, "/plates/") {
+		t.Errorf("image syntax inside code was rewritten:\n%s", code.Body)
+	}
+
+	if idx.Issues[1].CoverPlate != "/plates/dddddddddddddddd.jpg" {
+		t.Errorf("issue 01 cover_plate = %q", idx.Issues[1].CoverPlate)
+	}
+	if entryBySlug(t, idx, "issues/01-spring-2026").Fields["cover_plate"] != "/plates/dddddddddddddddd.jpg" {
+		t.Error("issue entry missing cover_plate")
+	}
+}

@@ -17,6 +17,7 @@ import (
 
 	"github.com/monamaret/biblio/internal/content"
 	"github.com/monamaret/biblio/internal/index"
+	"github.com/monamaret/biblio/internal/plates"
 	"github.com/monamaret/biblio/internal/theme"
 )
 
@@ -43,6 +44,8 @@ type Report struct {
 	// and how many typesetting keys site.yaml overrides.
 	Preset    string
 	Overrides int
+	// Plates counts the images step's work.
+	Plates plates.Stats
 	// Indexed is the number of entries written to content-index.json.
 	Indexed int
 	// DraftIssuesExcluded counts draft issues left out (Build mode only).
@@ -64,6 +67,8 @@ func (r Report) Lines() []string {
 			lines = append(lines, "Validating content/site.yaml… ok")
 		case "tokens":
 			lines = append(lines, fmt.Sprintf("Generating public/tokens.css (%s + %d overrides)… ok", r.Preset, r.Overrides))
+		case "plates":
+			lines = append(lines, fmt.Sprintf("Converting images: %d converted, %d skipped, %d removed → public/plates/", r.Plates.Converted, r.Plates.Skipped, r.Plates.Removed))
 		case "index":
 			line := fmt.Sprintf("Indexing: %d item(s)", r.Indexed)
 			if r.DraftIssuesExcluded > 0 {
@@ -111,6 +116,17 @@ func Run(projectDir string, mode Mode) (Report, error) {
 		report.Preset, report.Overrides = preset, len(eff.Overridden)
 		report.Warnings = append(report.Warnings, missingFontWarnings(projectDir, eff)...)
 		opts.Typesetting = &index.IndexTypesetting{MarginNotes: eff.MarginNotes, Numerals: eff.Numerals}
+
+		// 3. Convert images to plates, and give the index their URLs.
+		settings := plates.DefaultSettings
+		settings.Grayscale = eff.GrayscaleImages
+		urls, stats, err := plates.Convert(contentDir, filepath.Join(projectDir, "public", "plates"), settings)
+		if err != nil {
+			return Report{}, err
+		}
+		report.Steps = append(report.Steps, "plates")
+		report.Plates = stats
+		opts.Plates = urls
 	}
 
 	// 4. Index (all types).

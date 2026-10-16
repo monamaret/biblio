@@ -1,5 +1,6 @@
 .biblio/scaffold-manifest.json
 .github/workflows/deploy.yml
+.gitignore
 app/content/load.ts
 app/content/render.tsx
 app/discovery/llms-txt.test.ts

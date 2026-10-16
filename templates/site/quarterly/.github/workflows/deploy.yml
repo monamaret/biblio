@@ -9,6 +9,8 @@ name: Deploy
 on:
   push:
     branches: [main]
+  # Lets the Actions tab redeploy without a new commit (#218).
+  workflow_dispatch: {}
 
 jobs:
   deploy:
@@ -18,7 +20,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - uses: actions/setup-go@v5
         with:

@@ -17,6 +17,11 @@ describe("buildLlmsTxt (quarterly)", () => {
     expect(txt).toContain(index.site!.description);
   });
 
+  it("omits the description paragraph when the description is empty", () => {
+    const blank: QuarterlyIndex = { ...index, site: { name: "502.io", description: "" } };
+    expect(buildLlmsTxt(blank).startsWith("# 502.io\n\n## Current issue\n")).toBe(true);
+  });
+
   it("lists the current issue, every issue, current articles and the colophon", () => {
     expect(txt).toContain("## Current issue\n\n- No. 2 · Autumn 2026: /issues/02-autumn-2026\n");
     expect(txt).toContain("## Issues\n\n- No. 2 · Autumn 2026: /issues/02-autumn-2026\n- No. 1 · Spring 2026: /issues/01-spring-2026\n");

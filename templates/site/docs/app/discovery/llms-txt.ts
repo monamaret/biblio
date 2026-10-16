@@ -8,7 +8,13 @@ import type { ContentEntry } from "../content/load";
 // directly from content-index.json — not a fuller `llms-full.txt`-style
 // content dump (research.md "llms.txt investment level"; FR-005).
 export function buildLlmsTxt(siteName: string, description: string, entries: ContentEntry[]): string {
-  const lines = [`# ${siteName}`, "", description, "", "## Pages", ""];
+  // An empty description (what `biblio-cli new` writes) gets no paragraph
+  // at all rather than a blank one (#217).
+  const lines = [`# ${siteName}`, ""];
+  if (description.trim() !== "") {
+    lines.push(description, "");
+  }
+  lines.push("## Pages", "");
   for (const entry of entries) {
     const title = typeof entry.title === "string" ? entry.title : entry.slug;
     lines.push(`- [${title}](/${entry.slug})`);

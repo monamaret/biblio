@@ -9,6 +9,8 @@ name: Deploy
 on:
   push:
     branches: [main]
+  # Lets the Actions tab redeploy without a new commit (#218).
+  workflow_dispatch: {}
 
 jobs:
   deploy:

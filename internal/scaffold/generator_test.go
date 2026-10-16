@@ -1,6 +1,8 @@
 package scaffold_test
 
 import (
+	"bytes"
+	"encoding/json"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -9,6 +11,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/monamaret/biblio/internal/prebuild"
 	"github.com/monamaret/biblio/internal/scaffold"
 	"github.com/monamaret/biblio/internal/theme"
 )
@@ -456,7 +459,8 @@ func TestGenerate_NeverCopiesNodeModules(t *testing.T) {
 
 // Narrowing Walk's dotfile skip must not change what profile, log, or docs
 // scaffold: the file lists are pinned to the output recorded before the
-// change (testdata/scaffold-files-<type>.txt; spec FR-036).
+// change (testdata/scaffold-files-<type>.txt; spec FR-036), plus the
+// baseline .gitignore every type now ships (#219).
 func TestGenerate_ExistingTypesFileListsUnchanged(t *testing.T) {
 	for _, siteType := range []string{"profile", "log", "docs"} {
 		t.Run(siteType, func(t *testing.T) {
@@ -477,6 +481,87 @@ func TestGenerate_ExistingTypesFileListsUnchanged(t *testing.T) {
 			got := strings.Join(scaffoldedPaths(t, projectDir), "\n") + "\n"
 			if got != string(want) {
 				t.Errorf("scaffolded file list for %q changed.\ngot:\n%s\nwant:\n%s", siteType, got, want)
+			}
+		})
+	}
+}
+
+// Every site type ships the same baseline .gitignore, so wrangler's local
+// secrets and .env files can't be committed by accident (#219).
+func TestGenerate_EveryTypeShipsBaselineGitignore(t *testing.T) {
+	baseline := []string{"node_modules/", "dist/", ".wrangler/", ".react-router/", "coverage/", ".dev.vars", ".env", ".env.*", "!.env.example", "*.log"}
+	for _, siteType := range scaffold.SiteTypes {
+		t.Run(siteType, func(t *testing.T) {
+			projectDir, err := scaffold.Generate(t.TempDir(), scaffold.Options{
+				ProjectName: "p",
+				SiteType:    siteType,
+				Domain:      "example.com",
+				Theme:       presetIDFor(t, siteType),
+				MCPEnabled:  true,
+			})
+			if err != nil {
+				t.Fatalf("Generate() error = %v", err)
+			}
+			data, err := os.ReadFile(filepath.Join(projectDir, ".gitignore"))
+			if err != nil {
+				t.Fatalf(".gitignore missing: %v", err)
+			}
+			lines := strings.Split(string(data), "\n")
+			for _, want := range baseline {
+				if !slices.Contains(lines, want) {
+					t.Errorf(".gitignore has no %q line", want)
+				}
+			}
+		})
+	}
+}
+
+// A new project's content-index.json is built from its own site.yaml, not
+// shipped from the template's demo, so it names the project and the first
+// `biblio-cli build` leaves it byte-identical (#216).
+func TestGenerate_IndexMatchesFirstBuild(t *testing.T) {
+	for _, siteType := range scaffold.SiteTypes {
+		t.Run(siteType, func(t *testing.T) {
+			projectDir, err := scaffold.Generate(t.TempDir(), scaffold.Options{
+				ProjectName: "502.io",
+				SiteType:    siteType,
+				Domain:      "502.io",
+				Theme:       presetIDFor(t, siteType),
+				MCPEnabled:  true,
+			})
+			if err != nil {
+				t.Fatalf("Generate() error = %v", err)
+			}
+			indexPath := filepath.Join(projectDir, "content-index.json")
+			scaffolded, err := os.ReadFile(indexPath)
+			if err != nil {
+				t.Fatalf("reading content-index.json: %v", err)
+			}
+
+			if siteType == "quarterly" {
+				var idx struct {
+					Site struct {
+						Name        string `json:"name"`
+						Description string `json:"description"`
+					} `json:"site"`
+				}
+				if err := json.Unmarshal(scaffolded, &idx); err != nil {
+					t.Fatalf("decoding content-index.json: %v", err)
+				}
+				if idx.Site.Name != "502.io" || idx.Site.Description != "" {
+					t.Errorf("index site = %+v, want name %q and an empty description", idx.Site, "502.io")
+				}
+			}
+
+			if _, err := prebuild.Run(projectDir, prebuild.Build); err != nil {
+				t.Fatalf("prebuild.Run() error = %v", err)
+			}
+			built, err := os.ReadFile(indexPath)
+			if err != nil {
+				t.Fatalf("reading rebuilt content-index.json: %v", err)
+			}
+			if !bytes.Equal(scaffolded, built) {
+				t.Errorf("first build changed content-index.json")
 			}
 		})
 	}

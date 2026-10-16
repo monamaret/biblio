@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 package scaffold_test
 
 import (

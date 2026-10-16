@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 // conflict_test exercises internal/migrate's conflict surfacing: every
 // ambiguous region becomes an Update Conflict that is never auto-resolved
 // (data-model.md "Update Conflict"; FR-002), and Apply only ever commits

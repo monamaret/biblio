@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 // Package pilotsitequarterly proves a freshly scaffolded quarterly site's
 // own sample content goes through the pre-build step cleanly, and keeps the
 // template's shipped content-index.json honest (specs/004-quarterly-site-type

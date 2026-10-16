@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 // Package scaffold generates new Site Project directories from the embedded
 // template assets under templates/site/.
 package scaffold

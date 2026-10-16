@@ -1,5 +1,10 @@
 import type { ReactNode } from "react";
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, type MetaFunction } from "react-router";
+import { pageTitle } from "./content/title";
+
+// The fallback <title> for any route without its own meta: the site name
+// from content-index.json, never a hard-coded string (#215).
+export const meta: MetaFunction = () => [{ title: pageTitle() }];
 
 // Layout applies the unchanged v0.01-generated tokens.css theme to every
 // route — the one styling path every view renders through (data-model.md
@@ -20,7 +25,6 @@ export function Layout({ children }: { children: ReactNode }) {
         <link rel="help" type="text/plain" href="/llms.txt" title="Site summary for agents/crawlers" />
         <Meta />
         <Links />
-        <title>biblio quarterly site</title>
       </head>
       <body>
         {children}

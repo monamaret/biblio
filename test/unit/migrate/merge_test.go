@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 // merge_test exercises internal/migrate's diff/merge logic: advancing
 // scaffold-tracked regions and preserving author-customized regions
 // byte-for-byte (contracts/update-and-escalation.md Steps 2-3).

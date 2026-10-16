@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 // Package migrate carries an existing deployed Site Project forward to a
 // newer scaffold-template version: classifying each region as
 // scaffold-tracked, author-customized, or ambiguous, advancing or

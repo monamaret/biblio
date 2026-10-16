@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 // Package content owns the canonical Go-side frontmatter schema
 // parser/validator and slug derivation (Principle II — this logic must not be
 // duplicated on the TypeScript side; data-model.md "Authored Content Item").

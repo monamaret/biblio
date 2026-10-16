@@ -4,6 +4,8 @@
 app/content/load.ts
 app/content/no-filter-surface.test.ts
 app/content/render.tsx
+app/content/title.test.ts
+app/content/title.ts
 app/content/toc.test.ts
 app/content/toc.ts
 app/discovery/llms-txt.test.ts
@@ -28,6 +30,7 @@ app/routes/detail.test.tsx
 app/routes/detail.tsx
 app/routes/home.test.tsx
 app/routes/home.tsx
+app/routes/meta.test.ts
 content-index.json
 content/configuration.md
 content/getting-started.md

@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Copyright 2026 Mona Maret
+# SPDX-License-Identifier: Apache-2.0
 # Format and vet the biblio-cli Go module. Run before committing.
 set -euo pipefail
 cd "$(dirname "$0")/.."

@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 // Package index owns the canonical content-index.json generation step
 // (FR-003; data-model.md "Content Index"; Principle II — biblio-cli is the
 // sole producer; the generated JSON is consumed unchanged by the React Router
@@ -39,11 +42,11 @@ func (e Entry) MarshalJSON() ([]byte, error) {
 	return json.Marshal(merged)
 }
 
-// Index is the content-index.json artifact produced by Generate. Profile,
-// log, and docs indexes carry only Entries; the quarterly-only fields are
-// omitted from JSON when empty, so those types' content-index.json is
-// unchanged (specs/004-quarterly-site-type data-model.md
-// "content-index.json shape").
+// Index is the content-index.json artifact produced by Generate. Every
+// type carries Site (the page <title> comes from it, #215) and Entries;
+// profile, log, and docs indexes carry nothing else, since the
+// quarterly-only fields are omitted from JSON when empty
+// (specs/004-quarterly-site-type data-model.md "content-index.json shape").
 type Index struct {
 	Site         *SiteMeta         `json:"site,omitempty"`
 	Entries      []Entry           `json:"entries"`
@@ -174,7 +177,7 @@ func GenerateWithOptions(contentDir string, opts Options) (Index, []error) {
 		errs = append(errs, fmt.Errorf("index: walking content directory: %w", walkErr))
 	}
 
-	return Index{Entries: entries}, errs
+	return Index{Site: &SiteMeta{Name: cfg.Name, Description: cfg.Description}, Entries: entries}, errs
 }
 
 // WriteFile writes idx to path exactly as `biblio-cli index` always has

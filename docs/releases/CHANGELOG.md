@@ -17,6 +17,11 @@ full user guide of each release.
 - `update`/`upgrade` no longer treat `content-index.json`,
   `public/tokens.css` or `public/plates/` as template files, so regenerated
   build output can't cause update conflicts.
+- Every page now has its own `<title>` built from the site name in
+  `content/site.yaml` — e.g. `On Margins · 502.io`, or just the site name
+  on the home page — instead of a hard-coded `biblio … site` on every page,
+  for every site type. `content-index.json` now carries a `site` object
+  (name and description) for profile, log, and docs sites too (#215).
 - `biblio-cli new` now builds `content-index.json` from the new project's
   own `site.yaml`, so a fresh quarterly site no longer carries the demo
   name "The Quarterly", and the first `build` leaves the index unchanged

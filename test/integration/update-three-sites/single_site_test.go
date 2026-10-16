@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 // Package update_three_sites exercises `biblio-cli update`'s Update Run
 // against real scaffolded sites end to end — first a single site (FR-001,
 // FR-002, Scenario 1; this file), then all three site types (FR-003,

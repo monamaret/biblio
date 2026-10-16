@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 // Package escalation checks a deployed Site Project's real, current scale
 // against the documented D1 (storage volume / relational-query) and
 // Vectorize (search-quality) escalation thresholds (FR-004, FR-005),

@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 // Package ga_readiness_review exercises the closing GA Readiness Review
 // artifact: cross-referencing every roadmap deliverable §1-§10 against
 // this release's acceptance bar, aggregating the Update Run suite

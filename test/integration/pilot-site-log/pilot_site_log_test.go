@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 // Package pilot_site_log proves the project-log site type's central
 // generalization claim: adding a new day's entry uses the exact same
 // authoring flow as the previous one, with zero one-off structural or

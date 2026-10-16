@@ -107,3 +107,7 @@ For agent/crawler discovery, check `https://my-site.example.com/llms.txt` — a 
 ## Further reading
 
 - [docs/agent-integration-guide.md](docs/agent-integration-guide.md) — how this repo's coding-agent tooling (Spec Kit workflow, opencode, Claude Code plugin config) fits together.
+
+## License
+
+Licensed under the [Apache License, Version 2.0](LICENSE).

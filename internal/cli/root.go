@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 // Package cli wires the biblio-cli Cobra command tree (new, index, dev) and
 // the shared Viper configuration loaded from a project's content/site.yaml.
 package cli

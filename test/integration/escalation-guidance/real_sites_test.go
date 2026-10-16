@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 // Package escalation_guidance runs the documented storage-escalation
 // thresholds against real scaffolded sites' actual content-index.json
 // scale (FR-004, FR-005, Scenario 3).

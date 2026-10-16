@@ -1,8 +1,11 @@
 package scaffold_test
 
 import (
+	"io/fs"
 	"os"
 	"path/filepath"
+	"slices"
+	"sort"
 	"strings"
 	"testing"
 
@@ -365,5 +368,116 @@ func TestGenerate_SanitizesWranglerNameButNotDirectoryOrSiteYAML(t *testing.T) {
 	}
 	if strings.Contains(got, `"name": "notebook.monamaret.com"`) {
 		t.Errorf("Generate(): wrangler.jsonc \"name\" must not be the unsanitized project name:\n%s", got)
+	}
+}
+
+// scaffoldedPaths returns every file path (slash-separated, relative to
+// projectDir) a scaffold wrote, sorted.
+func scaffoldedPaths(t *testing.T, projectDir string) []string {
+	t.Helper()
+	var paths []string
+	err := filepath.WalkDir(projectDir, func(p string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if !d.IsDir() {
+			rel, err := filepath.Rel(projectDir, p)
+			if err != nil {
+				return err
+			}
+			paths = append(paths, filepath.ToSlash(rel))
+		}
+		return nil
+	})
+	if err != nil {
+		t.Fatalf("walking scaffolded project: %v", err)
+	}
+	sort.Strings(paths)
+	return paths
+}
+
+// quarterly is a registered site type, and its scaffold ships the
+// template's .gitignore — which the old "skip every dotfile" Walk rule
+// would have silently dropped (specs/004-quarterly-site-type research.md
+// R11; contracts/cli.md `new`).
+func TestGenerate_QuarterlyRegisteredAndShipsGitignore(t *testing.T) {
+	if !slices.Contains(scaffold.SiteTypes, "quarterly") {
+		t.Fatalf("scaffold.SiteTypes = %v, want it to include %q", scaffold.SiteTypes, "quarterly")
+	}
+
+	projectDir, err := scaffold.Generate(t.TempDir(), scaffold.Options{
+		ProjectName: "field-notes",
+		SiteType:    "quarterly",
+		Domain:      "example.com",
+		Theme:       "quarterly-default",
+		MCPEnabled:  true,
+	})
+	if err != nil {
+		t.Fatalf("Generate(quarterly) error = %v", err)
+	}
+
+	data, err := os.ReadFile(filepath.Join(projectDir, ".gitignore"))
+	if err != nil {
+		t.Fatalf("Generate(quarterly): .gitignore missing: %v", err)
+	}
+	if !strings.Contains(string(data), "public/plates/") {
+		t.Errorf(".gitignore = %q, want it to ignore public/plates/", data)
+	}
+	if strings.Contains(string(data), ".biblio") {
+		t.Errorf(".gitignore = %q, must not ignore .biblio/ (it holds the scaffold manifest update/upgrade need)", data)
+	}
+}
+
+// No scaffold ever copies a template's locally-installed node_modules/ or
+// React Router's generated .react-router/ — go:embed all:site embeds
+// whatever is on disk, so running a template's own tests would otherwise
+// leak tens of thousands of files into every new project.
+func TestGenerate_NeverCopiesNodeModules(t *testing.T) {
+	for _, siteType := range scaffold.SiteTypes {
+		t.Run(siteType, func(t *testing.T) {
+			projectDir, err := scaffold.Generate(t.TempDir(), scaffold.Options{
+				ProjectName: "site-" + siteType,
+				SiteType:    siteType,
+				Domain:      "example.com",
+				Theme:       presetIDFor(t, siteType),
+				MCPEnabled:  true,
+			})
+			if err != nil {
+				t.Fatalf("Generate() error = %v", err)
+			}
+			for _, p := range scaffoldedPaths(t, projectDir) {
+				if strings.HasPrefix(p, "node_modules/") || strings.HasPrefix(p, ".react-router/") {
+					t.Fatalf("scaffold contains %q; node_modules/ and .react-router/ must never be copied", p)
+				}
+			}
+		})
+	}
+}
+
+// Narrowing Walk's dotfile skip must not change what profile, log, or docs
+// scaffold: the file lists are pinned to the output recorded before the
+// change (testdata/scaffold-files-<type>.txt; spec FR-036).
+func TestGenerate_ExistingTypesFileListsUnchanged(t *testing.T) {
+	for _, siteType := range []string{"profile", "log", "docs"} {
+		t.Run(siteType, func(t *testing.T) {
+			want, err := os.ReadFile(filepath.Join("testdata", "scaffold-files-"+siteType+".txt"))
+			if err != nil {
+				t.Fatalf("reading golden list: %v", err)
+			}
+			projectDir, err := scaffold.Generate(t.TempDir(), scaffold.Options{
+				ProjectName: "p",
+				SiteType:    siteType,
+				Domain:      "example.com",
+				Theme:       presetIDFor(t, siteType),
+				MCPEnabled:  true,
+			})
+			if err != nil {
+				t.Fatalf("Generate() error = %v", err)
+			}
+			got := strings.Join(scaffoldedPaths(t, projectDir), "\n") + "\n"
+			if got != string(want) {
+				t.Errorf("scaffolded file list for %q changed.\ngot:\n%s\nwant:\n%s", siteType, got, want)
+			}
+		})
 	}
 }

@@ -9,10 +9,11 @@ exist and there are real build/test/lint commands to record.
 
 `biblio` is a private, single-author platform for standing up React +
 Vite static sites (personal profile/CV, technical project log, project
-documentation) on Cloudflare Workers, each with a custom-built `/mcp`
-endpoint served from the same Worker. A Go-based CLI (`biblio-cli`)
-scaffolds, develops, builds, deploys, and updates these sites end to
-end. It is not a product for external users — see
+documentation, and an issue-based `quarterly` magazine) on Cloudflare
+Workers, each with a custom-built `/mcp` endpoint served from the same
+Worker. A Go-based CLI (`biblio-cli`) scaffolds, develops, builds,
+deploys, and updates these sites end to end. It is not a product for
+external users — see
 [specs/research/001-static-site-platform-with-mcp.md](specs/research/001-static-site-platform-with-mcp.md)
 for the full research and confirmed-decision record, and
 [specs/research/roadmap.md](specs/research/roadmap.md) for the task
@@ -65,13 +66,32 @@ on GitHub Releases (Principle III) — see
 [docs/releases/v0.06/README.md](docs/releases/v0.06/README.md) for a
 build-from-source walkthrough.
 
-Each scaffolded site project (`templates/site/{profile,log,docs}`) is its
+Each scaffolded site project (`templates/site/{profile,log,docs,quarterly}`) is its
 own independent npm project (React + Vite + React Router v7 + Wrangler);
 once scaffolded with `biblio-cli new`, the generated project's own
 `package.json` carries its `build`/`test`/`lint`/`dev` scripts (e.g.
 `npx vitest`, `npx tsc --noEmit`) — there is no repo-root Node tooling,
 since this repo itself ships only the Go CLI and the embedded template
 sources.
+
+**Never leave `node_modules/` inside `templates/site/<type>/`.** The
+templates are embedded with `go:embed all:site`, which embeds whatever is
+on disk: an installed `node_modules/` (~550 MB) gets compiled into every
+Go test binary and can fill `/tmp` mid-link. To run a template's own
+tests, mirror it elsewhere (e.g. `rsync -a --exclude node_modules
+templates/site/quarterly/ <scratch>/` and `npm install` there).
+`scaffold.Walk` also skips `node_modules/` and `.react-router/`, so a
+stray install never reaches a scaffolded project.
+
+`biblio-cli build` and `biblio-cli dev` run a pre-build step
+(`internal/prebuild`) before Vite for every site type: validate
+`content/site.yaml`, then regenerate `content-index.json` — so
+`biblio-cli index` no longer needs to be run by hand. Quarterly sites
+also regenerate `public/tokens.css` from their `typesetting:` block and
+convert content images to grayscale plates (`internal/plates`) in
+`public/plates/`. `content-index.json`, `public/tokens.css` and
+`public/plates/` are build output (`scaffold.IsGenerated`): `update`/
+`upgrade` never treat them as template regions.
 
 Tests are written and confirmed failing *before* the corresponding
 implementation, on both sides — see the test-driven development

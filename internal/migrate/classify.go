@@ -69,7 +69,7 @@ func ClassifySite(projectDir, siteType string) ([]Region, error) {
 		if err != nil {
 			return err
 		}
-		if d.IsDir() || strings.HasPrefix(path, "content/") {
+		if d.IsDir() || strings.HasPrefix(path, "content/") || scaffold.IsGenerated(path) {
 			return nil
 		}
 		data, err := fs.ReadFile(assets, path)
@@ -154,6 +154,10 @@ func ClassifySite(projectDir, siteType string) ([]Region, error) {
 
 	for path := range manifest.Files {
 		seen[path] = true
+		if scaffold.IsGenerated(path) {
+			// Build output recorded by an older manifest — never a region.
+			continue
+		}
 		region, err := classifyOne(path)
 		if err != nil {
 			return nil, err

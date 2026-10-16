@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -35,7 +34,9 @@ func runIndex(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	idx, errs := index.Generate(contentDir)
+	// No plates and no drafts, ever: the index command's output is what a
+	// fresh quarterly scaffold ships (contracts/cli.md "biblio-cli index").
+	idx, errs := index.GenerateWithOptions(contentDir, index.Options{})
 	if len(errs) > 0 {
 		var sb strings.Builder
 		fmt.Fprintf(&sb, "index: %d file(s) failed schema validation:\n", len(errs))
@@ -46,15 +47,15 @@ func runIndex(cmd *cobra.Command, args []string) error {
 	}
 
 	outPath := filepath.Join(filepath.Dir(contentDir), "content-index.json")
-	data, err := json.MarshalIndent(idx, "", "  ")
-	if err != nil {
-		return fmt.Errorf("index: serialising content-index.json: %w", err)
-	}
-	if err := os.WriteFile(outPath, data, 0o644); err != nil {
-		return fmt.Errorf("index: writing content-index.json: %w", err)
+	if err := index.WriteFile(outPath, idx); err != nil {
+		return err
 	}
 
-	fmt.Fprintf(cmd.OutOrStdout(), "Indexed %d item(s) → %s\n", len(idx.Entries), outPath)
+	drafts := ""
+	if idx.DraftIssuesExcluded > 0 {
+		drafts = fmt.Sprintf(", %d draft issue(s) excluded", idx.DraftIssuesExcluded)
+	}
+	fmt.Fprintf(cmd.OutOrStdout(), "Indexed %d item(s)%s → %s\n", len(idx.Entries), drafts, outPath)
 	return nil
 }
 

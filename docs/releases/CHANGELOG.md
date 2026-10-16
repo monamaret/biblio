@@ -4,6 +4,20 @@ All notable user-facing changes to `biblio-cli` and its generated sites are
 recorded here, release by release. See `docs/releases/v<version>/` for the
 full user guide of each release.
 
+## v0.08 — The `quarterly` site type (unreleased draft)
+
+- Added a fourth site type, `quarterly`: numbered issues, category pages,
+  footnotes and margin notes (CSS-only sidenotes on wide screens),
+  configurable typesetting in `content/site.yaml`, grayscale image plates,
+  issue drafts, and four MCP tools (`list_issues`, `get_issue`,
+  `list_articles`, `get_article`). See [docs/releases/v0.08](v0.08/README.md).
+- `biblio-cli build` and `dev` now validate `content/site.yaml` and
+  regenerate `content-index.json` automatically for every site type; running
+  `biblio-cli index` by hand is no longer needed.
+- `update`/`upgrade` no longer treat `content-index.json`,
+  `public/tokens.css` or `public/plates/` as template files, so regenerated
+  build output can't cause update conflicts.
+
 ## v0.07 — Bug-fix release
 
 - Fixed `tokens.css` being silently dropped from production builds: the

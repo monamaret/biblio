@@ -1,7 +1,7 @@
 # Roadmap: `biblio` implementation plan
 
 **Status:** Draft — tentative, ordered by dependency rather than effort.
-**Progress cursor:** → **§1–§10 all complete or proven-ready as of v0.06 (2026-06-20) — General Availability.** §1–§9 are complete-and-demonstrated; §10's two conditional storage-escalation items (D1, Vectorize) are proven-executable-on-demand per their own conditional bar, with neither actually adopted (see `test/integration/ga-readiness-review/GA-READINESS-RECORD.md` for the full cross-reference against every release v0.01–v0.06). The per-section checkboxes below were corrected during v0.06's Polish phase to reflect actual shipped evidence — several had gone stale across v0.01–v0.05 despite the underlying work landing. *(Move this pointer forward as new roadmap sections are added post-GA.)*
+**Progress cursor:** → **§11 (quarterly site type) implemented on branch `monamaret/004-quarterly-site-type` as of 2026-10-15** — every §11 item done with unit and integration tests (see `specs/004-quarterly-site-type/tasks.md`); ships with the v0.08 release. Before that: **§1–§10 all complete or proven-ready as of v0.06 (2026-06-20) — General Availability.** §1–§9 are complete-and-demonstrated; §10's two conditional storage-escalation items (D1, Vectorize) are proven-executable-on-demand per their own conditional bar, with neither actually adopted (see `test/integration/ga-readiness-review/GA-READINESS-RECORD.md` for the full cross-reference against every release v0.01–v0.06). The per-section checkboxes below were corrected during v0.06's Polish phase to reflect actual shipped evidence — several had gone stale across v0.01–v0.05 despite the underlying work landing. *(Move this pointer forward as new roadmap sections are added post-GA.)*
 
 This roadmap intentionally **makes no assumptions about timelines, developer hours, or any other "real world" delivery metric** — none of those have been discussed or decided anywhere in the research (see the non-goals in [001-static-site-platform-with-mcp.md](001-static-site-platform-with-mcp.md)), and `biblio` is a sole-developer, personal-scale project where such estimates would be guesswork. Every task below is tied to a deliverable that is already defined by the confirmed decisions and completed research in [001](001-static-site-platform-with-mcp.md), [000-tech-stack.md](000-tech-stack.md), and [architecture.md](architecture.md) — nothing here is speculative scope.
 
@@ -38,6 +38,15 @@ This section is now the **single tracked location for every open research/design
 *(Moved here from a stale "Open questions" note in [000-tech-stack.md](000-tech-stack.md) — that doc's embedding-provider question is resolved; only this narrower follow-on remains, and only matters if the Vectorize escalation in §10 is ever actually built.)*
 
 - [ ] **Which embedding model to use within OpenRouter** for build-time embedding generation (e.g. `text-embedding-3-small` vs. `text-embedding-3-large` vs. BGE-M3 vs. Qwen3 Embedding) — the *provider* choice (OpenRouter over DeepSeek) is already decided (see [000-tech-stack.md → Decision Log](000-tech-stack.md#decision-log)); only the specific model is open, and only matters if/when §10 (Vectorize escalation) is actually built.
+
+### 0.5 Quarterly site type
+
+*(Open items from [004-quarterly-site-type.md → Open Questions](004-quarterly-site-type.md#open-questions) that shape §11. None blocks the spec; all are settled during planning.)*
+
+- [x] ~~**Default text face** — Archivo or Inter Tight.~~ Archivo. **Resolved 2026-10-15** — see [specs/004-quarterly-site-type/research.md](../004-quarterly-site-type/research.md) R1.
+- [x] ~~**Structured notes** — Go at index time or TS at request time.~~ Go, at index time. **Resolved 2026-10-15** — see [specs/004-quarterly-site-type/research.md](../004-quarterly-site-type/research.md) R2.
+- [x] ~~**Ornament toggles** — `:root` properties or generated `[data-…]` rules.~~ `:root` properties only; structural switches in the index. **Resolved 2026-10-15** — see [specs/004-quarterly-site-type/research.md](../004-quarterly-site-type/research.md) R3.
+- [x] ~~**Image output** — format and maximum width.~~ Keep JPEG/PNG, WebP → PNG/JPEG, 1600 px, 40 MP cap. **Resolved 2026-10-15** — see [specs/004-quarterly-site-type/research.md](../004-quarterly-site-type/research.md) R4.
 
 ## 1. `biblio-cli` foundations
 
@@ -163,10 +172,26 @@ Deliverable: the D1 and Vectorize escalation paths described in the [progressive
 - [ ] *(Conditional — bundled JSON index outgrows comfortable in-memory handling)* Provision a D1 database, add the binding, and switch content-index population to populate D1 from the same content directory at build time — steps proven executable via a local `wrangler d1 execute --local` dry-run (docs/storage-escalation-guide.md); not actually provisioned, no real site has crossed the documented threshold
 - [ ] *(Conditional — real-usage signals show keyword search underperforming on conceptual queries, most likely on a docs site)* Wire OpenRouter build-time embedding generation (per [000-tech-stack.md](000-tech-stack.md)), provision a Vectorize index, and switch `search_docs`/`search_entries` to query it — steps proven executable via a local embed/index/query dry-run (docs/storage-escalation-guide.md); not actually provisioned, no real site has crossed the documented threshold
 
+## 11. Quarterly site type
+
+Deliverable: a fourth site type, `quarterly`, an issue-based magazine in an early-1970s academic-book style, promoted from the [003 backlog](003-post-ga-feature-backlog.md) and researched in [004-quarterly-site-type.md](004-quarterly-site-type.md). Depends on §6 (theming) and §9 (the three existing types, `update`/`upgrade`, the cross-type review). PDF output ([005](005-pdf-output-quarterly.md)) is a later follow-on and not part of this section.
+**Feature spec:** [specs/features/011-quarterly-site-type.md](../features/011-quarterly-site-type.md) · **Spec Kit:** [specs/004-quarterly-site-type/spec.md](../004-quarterly-site-type/spec.md)
+
+- [x] Scaffold the `quarterly` template and register the type (flags and TUI)
+- [x] Issue/article/colophon content schemas, derived issue fields, and `draft: true` issues (hidden from published output, shown in `dev`)
+- [x] Contents, archive, category, article and colophon routes
+- [x] Footnotes and margin notes across HTML (wide and narrow), Markdown and ANSI views
+- [x] `quarterly-default` preset, the validated `typesetting:` block, and a template stylesheet that reads tokens only
+- [x] Build-time grayscale plates
+- [x] Automatic pre-build step in `build`/`dev`: settings validation and `index` for all four types; tokens and plates for quarterly only
+- [x] Quarterly MCP tools (`list_issues`, `get_issue`, `list_articles`, `get_article` with structured notes)
+- [x] `update`/`upgrade` support and a four-type cross-type consistency review
+
 ## References
 
 - [001-static-site-platform-with-mcp.md](001-static-site-platform-with-mcp.md) — the research and confirmed decisions every task above is derived from
 - [architecture.md](architecture.md) — diagrams of the system these tasks build out
 - [deployment-guide.md](deployment-guide.md) — the usage guide that documents the result; its open questions are tracked in §0 here rather than duplicated there
 - [000-tech-stack.md](000-tech-stack.md) — the platform/service responsibility mapping this plan builds on
-- [../features/](../features/) — feature item specs (one per §1–§10 deliverable above, from [../features/TEMPLATE.md](../features/TEMPLATE.md)), referenced when development on each begins
+- [004-quarterly-site-type.md](004-quarterly-site-type.md) — research and decisions behind §11
+- [../features/](../features/) — feature item specs (one per §1–§11 deliverable above, from [../features/TEMPLATE.md](../features/TEMPLATE.md)), referenced when development on each begins

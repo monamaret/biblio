@@ -11,7 +11,7 @@ import (
 
 // SiteTypes are the supported scaffold template trees, matching the
 // directories embedded under templates/site/.
-var SiteTypes = []string{"profile", "log", "docs"}
+var SiteTypes = []string{"profile", "log", "docs", "quarterly"}
 
 // Assets returns the embedded template tree for the given site type, rooted
 // so that paths inside it are relative to the type's own directory (e.g.
@@ -20,9 +20,16 @@ func Assets(siteType string) (fs.FS, error) {
 	return fs.Sub(templates.SiteFS, "site/"+siteType)
 }
 
+// skippedDirs are directories never copied from a template tree. go:embed
+// all:site embeds whatever is on disk, so a template whose own tests were
+// run locally carries an installed node_modules/ (and React Router's
+// generated .react-router/) that must not leak into new projects.
+var skippedDirs = map[string]bool{"node_modules": true, ".react-router": true}
+
 // Walk visits every real template file for the given site type, skipping
-// VCS placeholders such as .gitkeep that stand in for not-yet-authored
-// directories.
+// .gitkeep VCS placeholders that stand in for not-yet-authored directories
+// and the skippedDirs above. Other dotfiles (e.g. quarterly's .gitignore)
+// are real template files and are visited.
 func Walk(siteType string, fn fs.WalkDirFunc) error {
 	assets, err := Assets(siteType)
 	if err != nil {
@@ -32,9 +39,22 @@ func Walk(siteType string, fn fs.WalkDirFunc) error {
 		if err != nil {
 			return err
 		}
-		if !d.IsDir() && strings.HasPrefix(d.Name(), ".") {
+		if d.IsDir() && skippedDirs[d.Name()] {
+			return fs.SkipDir
+		}
+		if !d.IsDir() && d.Name() == ".gitkeep" {
 			return nil
 		}
 		return fn(path, d, err)
 	})
+}
+
+// IsGenerated reports whether a project-relative path is a file
+// `biblio-cli build`/`dev` regenerate on every run — the content index,
+// the design tokens, and quarterly plates. Such files are build output, not
+// template regions: `update`/`upgrade` never classify, advance, or report
+// them as conflicts, even when a template ships a starter copy
+// (specs/004-quarterly-site-type tasks.md T090).
+func IsGenerated(path string) bool {
+	return path == "content-index.json" || path == "public/tokens.css" || strings.HasPrefix(path, "public/plates/")
 }

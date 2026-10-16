@@ -1,0 +1,4 @@
+site_type: quarterly
+name: Fixture Quarterly
+description: "A test fixture for the quarterly site type."
+mcp_enabled: true

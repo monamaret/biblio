@@ -52,9 +52,7 @@ func scaffoldTokensCSS(t *testing.T, siteType string) string {
 // (e.g. profile/log/docs all use the same `font-heading`), and that
 // overlap is a legitimate design choice, not bleed-through.
 func TestCrossTypeTheming_EachSiteRendersItsOwnPreset(t *testing.T) {
-	siteTypes := []string{"profile", "log", "docs"}
-
-	for _, siteType := range siteTypes {
+	for _, siteType := range scaffold.SiteTypes {
 		siteType := siteType
 		t.Run(siteType, func(t *testing.T) {
 			css := scaffoldTokensCSS(t, siteType)
@@ -86,16 +84,15 @@ func TestCrossTypeTheming_EachSiteRendersItsOwnPreset(t *testing.T) {
 // value), not bleed-through. Asserting it must differ here would be a false
 // positive against a real design decision, not a defect.
 func TestCrossTypeTheming_NoBleedThrough(t *testing.T) {
-	css := map[string]string{
-		"profile": scaffoldTokensCSS(t, "profile"),
-		"log":     scaffoldTokensCSS(t, "log"),
-		"docs":    scaffoldTokensCSS(t, "docs"),
+	css := map[string]string{}
+	for _, siteType := range scaffold.SiteTypes {
+		css[siteType] = scaffoldTokensCSS(t, siteType)
 	}
 
 	distinguishing := []string{"color-fg", "color-accent"}
 	for _, token := range distinguishing {
 		seen := map[string]string{} // value -> first site type that had it
-		for _, siteType := range []string{"profile", "log", "docs"} {
+		for _, siteType := range scaffold.SiteTypes {
 			preset := theme.PresetsForType(siteType)[0]
 			want := preset.Tokens[token]
 			if other, ok := seen[want]; ok {
@@ -108,5 +105,21 @@ func TestCrossTypeTheming_NoBleedThrough(t *testing.T) {
 				t.Errorf("tokens.css for %q: token %q does not match its own preset (want %q); got:\n%s", siteType, token, want, css[siteType])
 			}
 		}
+	}
+}
+
+// TestCrossTypeTheming_QuarterlyCarriesTypesetting: the fourth type's
+// tokens.css also carries its typesetting properties, and is still a single
+// :root block of custom properties like the other three
+// (specs/004-quarterly-site-type FR-021, US6).
+func TestCrossTypeTheming_QuarterlyCarriesTypesetting(t *testing.T) {
+	css := scaffoldTokensCSS(t, "quarterly")
+	for _, want := range []string{"--ts-base-size:", "--ts-measure:", "--ts-grid-columns:", "--ts-numerals: upper-roman;", "--font-mono:"} {
+		if !strings.Contains(css, want) {
+			t.Errorf("quarterly tokens.css missing %q:\n%s", want, css)
+		}
+	}
+	if strings.Count(css, "{") != 1 || strings.Count(css, "}") != 1 {
+		t.Errorf("quarterly tokens.css must be a single :root block:\n%s", css)
 	}
 }

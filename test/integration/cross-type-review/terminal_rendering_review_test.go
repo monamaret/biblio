@@ -55,7 +55,7 @@ func scaffoldProject(t *testing.T, siteType string) string {
 // being a property of the shared code rather than something that could
 // silently diverge between types.
 func TestCrossTypeTerminalRendering_OneSharedNegotiationOwner(t *testing.T) {
-	siteTypes := []string{"profile", "log", "docs"}
+	siteTypes := scaffold.SiteTypes
 	files := []string{
 		filepath.Join("app", "negotiation", "accept.ts"),
 		filepath.Join("app", "negotiation", "ansi.ts"),
@@ -101,6 +101,10 @@ func TestCrossTypeTerminalRendering_ContentShapeIsAppropriatePerType(t *testing.
 		{siteType: "profile", wantFields: []string{"role", "summary"}, forbidFields: []string{"date", "section", "order"}},
 		{siteType: "log", wantFields: []string{"date", "tags"}, forbidFields: []string{"section", "order"}},
 		{siteType: "docs", wantFields: []string{"section", "order"}, forbidFields: []string{"date", "tags", "project"}},
+		{siteType: "quarterly", wantFields: []string{"kind", "issue", "category", "footnotes", "margin_notes", "markdown_body"}, forbidFields: []string{"section", "project", "role"}},
+	}
+	if len(cases) != len(scaffold.SiteTypes) {
+		t.Fatalf("content-shape cases cover %d site types, scaffold.SiteTypes has %d — add the new type's expected shape", len(cases), len(scaffold.SiteTypes))
 	}
 
 	for _, c := range cases {

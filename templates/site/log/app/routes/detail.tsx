@@ -1,6 +1,14 @@
-import { Link, useParams } from "react-router";
+import { Link, useParams, type MetaFunction } from "react-router";
 import { getEntryBySlug } from "../content/load";
 import { ContentBody } from "../content/render";
+import { pageTitle } from "../content/title";
+
+// The page title is the entry's title, then the site name (#215).
+export const meta: MetaFunction = ({ params }) => {
+  const entry = getEntryBySlug((params["*"] ?? "").replace(/\/+$/, ""));
+  const title = entry ? (typeof entry.title === "string" ? entry.title : entry.slug) : "Not found";
+  return [{ title: pageTitle(title) }];
+};
 
 // Detail is the per-entry view, displaying date/tags/project (project
 // omitted when absent — it's optional, data-model.md "Project-Log Entry")

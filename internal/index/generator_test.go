@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/monamaret/biblio/internal/index"
@@ -52,6 +53,29 @@ func TestGenerate_OneEntryPerItem(t *testing.T) {
 	}
 	if len(idx.Entries) != 2 {
 		t.Errorf("Generate() len(entries) = %d, want 2", len(idx.Entries))
+	}
+}
+
+// Every site type's index carries site.yaml's name and description, which
+// the templates use for page titles (#215).
+func TestGenerate_CarriesSiteMeta(t *testing.T) {
+	for _, siteType := range []string{"profile", "log", "docs"} {
+		t.Run(siteType, func(t *testing.T) {
+			idx, errs := index.Generate(writeTempContent(t, siteType, nil))
+			if len(errs) > 0 {
+				t.Fatalf("Generate() errors = %v", errs)
+			}
+			if idx.Site == nil || idx.Site.Name != "test" || idx.Site.Description != "" {
+				t.Errorf("Generate() Site = %+v, want name %q and an empty description", idx.Site, "test")
+			}
+			data, err := json.Marshal(idx)
+			if err != nil {
+				t.Fatalf("json.Marshal() error = %v", err)
+			}
+			if !strings.HasPrefix(string(data), `{"site":{"name":"test","description":""},"entries":`) {
+				t.Errorf("content-index.json = %s, want it to start with the site object", data)
+			}
+		})
 	}
 }
 

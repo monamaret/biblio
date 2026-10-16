@@ -1,7 +1,11 @@
-import { Link } from "react-router";
+import { Link, type MetaFunction } from "react-router";
 import { listIssues } from "../content/load";
 import { Masthead } from "../content/masthead";
 import { issueLine } from "../content/numerals";
+import { pageTitle } from "../content/title";
+
+// The archive is titled "Issues · <site name>" (#215).
+export const meta: MetaFunction = () => [{ title: pageTitle("Issues") }];
 
 // Archive lists every published issue, newest first (contracts/site-surface.md
 // "Routes" `/issues`).

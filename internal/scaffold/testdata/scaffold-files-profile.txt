@@ -2,6 +2,8 @@
 .github/workflows/deploy.yml
 app/content/load.ts
 app/content/render.tsx
+app/content/title.test.ts
+app/content/title.ts
 app/discovery/llms-txt.test.ts
 app/discovery/llms-txt.ts
 app/mcp/agent.ts
@@ -26,6 +28,7 @@ app/routes/detail.test.tsx
 app/routes/detail.tsx
 app/routes/home.test.tsx
 app/routes/home.tsx
+app/routes/meta.test.ts
 app/routes/theme.test.tsx
 content-index.json
 content/about.md

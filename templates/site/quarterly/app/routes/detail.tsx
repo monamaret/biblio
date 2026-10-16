@@ -1,8 +1,15 @@
-import { Link, useParams } from "react-router";
+import { Link, useParams, type MetaFunction } from "react-router";
 import { getEntryBySlug, getIssue, type Article } from "../content/load";
 import { ContentBody } from "../content/render";
 import { Masthead, NotFound } from "../content/masthead";
 import { issueLine } from "../content/numerals";
+import { pageTitle } from "../content/title";
+
+// The page title is the article's (or colophon's) title, then the site name (#215).
+export const meta: MetaFunction = ({ params }) => {
+  const entry = getEntryBySlug((params["*"] ?? "").replace(/\/+$/, ""));
+  return [{ title: pageTitle(entry && entry.kind !== "issue" ? entry.title : "Not found") }];
+};
 
 // Detail renders an article or the colophon (contracts/site-surface.md
 // "Article page"): category label, title, author, dek, the lead plate as

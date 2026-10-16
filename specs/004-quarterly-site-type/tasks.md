@@ -227,15 +227,15 @@ description: "Task list for the quarterly site type"
 
 ### Tests for User Story 6 (write first, confirm they fail)
 
-- [ ] T087 [P] [US6] Extend `test/integration/cross-type-review/theming_review_test.go` and `test/integration/cross-type-review/terminal_rendering_review_test.go` to iterate over all four `scaffold.SiteTypes`, with any quarterly-specific expectations (extra tokens) asserted explicitly
-- [ ] T088 [P] [US6] Create `test/integration/update-three-sites/quarterly_site_test.go` following `project_log_test.go`: scaffold quarterly, author an issue and change `site.yaml` typesetting, simulate a template change, run update/upgrade, assert template files advance and `content/` plus `content/site.yaml` are byte-identical; generated files (`public/tokens.css`, `public/plates/`, `content-index.json`) are not reported as conflicts
-- [ ] T089 [P] [US6] Add a TUI test in `internal/tui/` (new `new_flow_test.go` if none exists) asserting the type step lists profile, log, docs, quarterly and the theme step for quarterly offers `quarterly-default`
+- [X] T087 [P] [US6] Extend `test/integration/cross-type-review/theming_review_test.go` and `test/integration/cross-type-review/terminal_rendering_review_test.go` to iterate over all four `scaffold.SiteTypes`, with any quarterly-specific expectations (extra tokens) asserted explicitly
+- [X] T088 [P] [US6] Create `test/integration/update-three-sites/quarterly_site_test.go` following `project_log_test.go`: scaffold quarterly, author an issue and change `site.yaml` typesetting, simulate a template change, run update/upgrade, assert template files advance and `content/` plus `content/site.yaml` are byte-identical; generated files (`public/tokens.css`, `public/plates/`, `content-index.json`) are not reported as conflicts
+- [X] T089 [P] [US6] Add a TUI test in `internal/tui/` (new `new_flow_test.go` if none exists) asserting the type step lists profile, log, docs, quarterly and the theme step for quarterly offers `quarterly-default`
 
 ### Implementation for User Story 6
 
-- [ ] T090 [US6] Fix whatever T087–T089 expose in `internal/migrate/` (e.g. excluding `public/plates/` from classification in `internal/migrate/classify.go`) and `internal/scaffold/manifest.go`
-- [ ] T091 [US6] Update `test/integration/cross-type-review/CONSISTENCY-RECORD.md` with the four-type review results
-- [ ] T092 [US6] Run `go test ./...`, `./scripts/check.sh`, `npm test` in all four templates, and quickstart.md scenario 7
+- [X] T090 [US6] Fix whatever T087–T089 expose in `internal/migrate/` (e.g. excluding `public/plates/` from classification in `internal/migrate/classify.go`) and `internal/scaffold/manifest.go`
+- [X] T091 [US6] Update `test/integration/cross-type-review/CONSISTENCY-RECORD.md` with the four-type review results
+- [X] T092 [US6] Run `go test ./...`, `./scripts/check.sh`, `npm test` in all four templates, and quickstart.md scenario 7
 
 **Checkpoint**: four types consistent; nothing regressed.
 

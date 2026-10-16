@@ -4,6 +4,7 @@ package scaffold
 
 import (
 	"io/fs"
+	"strings"
 
 	"github.com/monamaret/biblio/templates"
 )
@@ -46,4 +47,14 @@ func Walk(siteType string, fn fs.WalkDirFunc) error {
 		}
 		return fn(path, d, err)
 	})
+}
+
+// IsGenerated reports whether a project-relative path is a file
+// `biblio-cli build`/`dev` regenerate on every run — the content index,
+// the design tokens, and quarterly plates. Such files are build output, not
+// template regions: `update`/`upgrade` never classify, advance, or report
+// them as conflicts, even when a template ships a starter copy
+// (specs/004-quarterly-site-type tasks.md T090).
+func IsGenerated(path string) bool {
+	return path == "content-index.json" || path == "public/tokens.css" || strings.HasPrefix(path, "public/plates/")
 }

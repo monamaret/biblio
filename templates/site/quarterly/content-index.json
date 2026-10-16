@@ -22,6 +22,29 @@
       "category": "Essays",
       "category_key": "essays",
       "dek": "The margin is where the book talks back.",
+      "footnotes": [
+        {
+          "id": "fn-1",
+          "label": "1",
+          "number": 1,
+          "text": "Brno, 1971.",
+          "ref_offset": 46
+        },
+        {
+          "id": "fn-2",
+          "label": "2",
+          "number": 2,
+          "text": "Like this one.",
+          "ref_offset": 257
+        },
+        {
+          "id": "fn-3",
+          "label": "3",
+          "number": 3,
+          "text": "\"Too yellow a horse moaned devilish odes.\"",
+          "ref_offset": 487
+        }
+      ],
       "image": "img/margins.jpg",
       "image_alt": "A page with a wide outer margin holding three short red notes",
       "image_caption": "A page from a 1971 catalogue, redrawn",
@@ -29,6 +52,24 @@
       "issue_date": "2026-10-01",
       "issue_number": 2,
       "kind": "article",
+      "margin_notes": [
+        {
+          "id": "m1",
+          "text": "cf. Gerstner, *Designing Programmes*, 1964",
+          "ref_offset": 121
+        },
+        {
+          "id": "m2",
+          "text": "Tufte's sidenotes are the modern descendant.",
+          "ref_offset": 312
+        },
+        {
+          "id": "m3",
+          "text": "Polish specimens did the same with *Zażółć gęślą jaźń*.",
+          "ref_offset": 629
+        }
+      ],
+      "markdown_body": "The grid was rigid, and the margins were wide.[^1] Every page of the 1971 Brno catalogue left a third of its width empty,[^m1] and the emptiness was not waste.\n\nA footnote sends the reader down and back up again.[^2] A margin note stays beside the line it belongs to,[^m2] so the eye only moves sideways.\n\nPříliš žluťoučký kůň úpěl ďábelské ódy, as the type specimens of the period liked to say.[^3] The sentence tests every diacritic a Czech text needs, and it tested the margins too: a long accented line is the first to run into them.[^m3]\n\n[^1]: Brno, 1971.\n[^2]: Like this one.\n[^3]: \"Too yellow a horse moaned devilish odes.\"\n\n[^m1]: cf. Gerstner, *Designing Programmes*, 1964\n[^m2]: Tufte's sidenotes are the modern descendant.\n[^m3]: Polish specimens did the same with *Zażółć gęślą jaźń*.\n",
       "order": 1,
       "path": "issues/02-autumn-2026/on-margins.md",
       "position": 1,
@@ -45,10 +86,21 @@
       "category": "Essays",
       "category_key": "essays",
       "dek": "A correspondence about type, kept between two cities.",
+      "footnotes": [
+        {
+          "id": "fn-1",
+          "label": "1",
+          "number": 1,
+          "text": "The machine survives; the ribbon does not.",
+          "ref_offset": 122
+        }
+      ],
       "issue": "02-autumn-2026",
       "issue_date": "2026-10-01",
       "issue_number": 2,
       "kind": "article",
+      "margin_notes": [],
+      "markdown_body": "The letters arrived on thin blue paper, typed on a machine whose *ł* was always a little higher than the rest of the line.[^1]\n\n[^1]: The machine survives; the ribbon does not.\n",
       "order": 2,
       "path": "issues/02-autumn-2026/letters-from-lodz.md",
       "position": 2,
@@ -61,10 +113,13 @@
       "category": "Design",
       "category_key": "design",
       "dek": "A short walk through the city's printing houses.",
+      "footnotes": [],
       "issue": "02-autumn-2026",
       "issue_date": "2026-10-01",
       "issue_number": 2,
       "kind": "article",
+      "margin_notes": [],
+      "markdown_body": "Brno's printers set catalogues for the trade fairs, and the fairs wanted modern pages: grotesk type, a strict grid, and one colour to carry the eye.\n",
       "order": 3,
       "path": "issues/02-autumn-2026/type-in-brno.md",
       "position": 3,
@@ -94,10 +149,21 @@
       "category": "Essays",
       "category_key": "essays",
       "dek": "A defence of the long line and the patient reader.",
+      "footnotes": [
+        {
+          "id": "fn-1",
+          "label": "1",
+          "number": 1,
+          "text": "The same is true on a screen, though screens rarely admit it.",
+          "ref_offset": 152
+        }
+      ],
       "issue": "01-spring-2026",
       "issue_date": "2026-04-01",
       "issue_number": 1,
       "kind": "article",
+      "margin_notes": [],
+      "markdown_body": "A printed page asks to be read at its own pace. The measure, the leading and the width of the margin all set a tempo before a single word is understood.[^1]\n\nThe scholarly books of the early seventies knew this. They gave the text room, and they trusted the reader to stay.\n\n[^1]: The same is true on a screen, though screens rarely admit it.\n",
       "order": 1,
       "path": "issues/01-spring-2026/on-reading-slowly.md",
       "position": 1,
@@ -113,10 +179,13 @@
       "category": "Design",
       "category_key": "design",
       "dek": "Why a strict grid frees the designer instead of binding them.",
+      "footnotes": [],
       "issue": "01-spring-2026",
       "issue_date": "2026-04-01",
       "issue_number": 1,
       "kind": "article",
+      "margin_notes": [],
+      "markdown_body": "A grid is a promise made to the reader: things of the same kind will be found in the same place. Keep the promise and the reader stops searching and starts reading.\n",
       "order": 2,
       "path": "issues/01-spring-2026/the-rigid-grid.md",
       "position": 2,

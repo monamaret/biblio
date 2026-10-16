@@ -9,6 +9,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/monamaret/biblio/internal/content"
 	"github.com/monamaret/biblio/internal/index"
 )
 
@@ -265,5 +266,67 @@ func TestQuarterly_OtherTypesJSONUnchanged(t *testing.T) {
 		if strings.Contains(string(data), `"`+key+`"`) {
 			t.Errorf("profile index JSON contains %q: %s", key, data)
 		}
+	}
+}
+
+// Articles carry their notes as structured data plus a Markdown-view body
+// with margin notes rewritten as footnotes; issues and the colophon carry
+// neither (specs/004 FR-019, FR-033; research.md R2, R6).
+func TestQuarterly_ArticleNotes(t *testing.T) {
+	idx := generate(t, fixtureDir, index.Options{})
+	dense := entryBySlug(t, idx, "issues/02-summer-2026/dense-notes")
+
+	footnotes, ok := dense.Fields["footnotes"].([]content.Note)
+	if !ok || len(footnotes) != 10 {
+		t.Fatalf("footnotes = %#v, want 10 notes", dense.Fields["footnotes"])
+	}
+	if footnotes[1].Label != "gerstner" || footnotes[1].Number != 2 {
+		t.Errorf("footnotes[1] = %+v, want label gerstner, number 2", footnotes[1])
+	}
+	margin, ok := dense.Fields["margin_notes"].([]content.Note)
+	if !ok || len(margin) != 4 || margin[0].Text != "cf. Gerstner, 1964" {
+		t.Fatalf("margin_notes = %#v, want 4 notes starting with the Gerstner aside", dense.Fields["margin_notes"])
+	}
+	md, _ := dense.Fields["markdown_body"].(string)
+	if strings.Contains(md, "{>> cf.") || strings.Contains(md, "{>> m-four") || !strings.Contains(md, "rigid,[^m1]") {
+		t.Errorf("markdown_body did not rewrite margin notes:\n%s", md)
+	}
+	if !strings.Contains(md, "`{>> not a note <<}`") {
+		t.Errorf("markdown_body rewrote a code span:\n%s", md)
+	}
+
+	plain := entryBySlug(t, idx, "issues/02-summer-2026/unordered")
+	if fn, _ := plain.Fields["footnotes"].([]content.Note); fn == nil || len(fn) != 0 {
+		t.Errorf("an article with no notes must carry empty (not missing) footnotes, got %#v", plain.Fields["footnotes"])
+	}
+
+	for _, slug := range []string{"issues/02-summer-2026", "colophon"} {
+		e := entryBySlug(t, idx, slug)
+		for _, key := range []string{"markdown_body", "footnotes", "margin_notes"} {
+			if _, has := e.Fields[key]; has {
+				t.Errorf("%s carries %q; only articles do", slug, key)
+			}
+		}
+	}
+}
+
+// Note problems are warnings that name the article, never errors, and
+// never reach the JSON.
+func TestQuarterly_NoteWarnings(t *testing.T) {
+	dir := copyFixture(t)
+	bad := "---\ntitle: Bad Notes\ncategory: Essays\n---\n\nText.[^nope] And {>> unclosed.\n"
+	if err := os.WriteFile(filepath.Join(dir, "issues", "02-summer-2026", "bad-notes.md"), []byte(bad), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	idx := generate(t, dir, index.Options{})
+	joined := strings.Join(idx.Warnings, "\n")
+	for _, want := range []string{"issues/02-summer-2026/bad-notes.md", "[^nope]", "unclosed margin note"} {
+		if !strings.Contains(joined, want) {
+			t.Errorf("warnings %q missing %q", joined, want)
+		}
+	}
+	data, _ := json.Marshal(idx)
+	if strings.Contains(string(data), "unclosed margin note") {
+		t.Error("warnings leaked into content-index.json")
 	}
 }

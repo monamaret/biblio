@@ -56,7 +56,10 @@ export function renderMarkdown(slug: string): string | undefined {
   const entry = getEntryBySlug(slug);
   if (!entry || entry.kind === "issue") return undefined;
   const title = typeof entry.title === "string" ? entry.title : entry.slug;
-  return `# ${title}\n\n${entry.body}`;
+  // Articles carry a Go-produced markdown_body with margin notes rewritten
+  // as footnotes, so text clients lose no note (FR-019; research.md R6).
+  const body = typeof entry.markdown_body === "string" ? entry.markdown_body : entry.body;
+  return `# ${title}\n\n${body}`;
 }
 
 // contentsMarkdown is an issue's contents page as Markdown: the masthead,

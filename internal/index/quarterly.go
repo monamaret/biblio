@@ -214,6 +214,19 @@ func generateQuarterly(contentDir string, cfg content.SiteConfig, opts Options) 
 			if plate := plateFor(opts.Plates, a.Path, fields["image"]); plate != "" {
 				fields["plate"] = plate
 			}
+			footnotes, marginNotes, warnings := content.ExtractNotes(a.Body)
+			if footnotes == nil {
+				footnotes = []content.Note{}
+			}
+			if marginNotes == nil {
+				marginNotes = []content.Note{}
+			}
+			fields["footnotes"] = footnotes
+			fields["margin_notes"] = marginNotes
+			fields["markdown_body"] = content.MarkdownBody(a.Body, marginNotes)
+			for _, w := range warnings {
+				idx.Warnings = append(idx.Warnings, a.Path+": "+w)
+			}
 			idx.Entries = append(idx.Entries, Entry{Slug: a.Slug, Path: a.Path, Body: a.Body, Fields: fields})
 
 			if i, seen := catIndex[key]; seen {

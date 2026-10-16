@@ -41,6 +41,14 @@ describe("renderMarkdown", () => {
     expect(md.startsWith("# Type in Brno\n\n")).toBe(true);
   });
 
+  it("serves an article's markdown_body, with margin notes as footnotes and no note text lost", () => {
+    const md = renderMarkdown("issues/02-autumn-2026/on-margins")!;
+    expect(md).not.toContain("{>>");
+    expect(md).toContain("[^m1]");
+    expect(md).toContain("cf. Gerstner, *Designing Programmes*, 1964");
+    expect(md).toContain("[^1]: Brno, 1971.");
+  });
+
   it("renders the colophon", () => {
     expect(renderMarkdown("colophon")).toContain("# Colophon");
   });

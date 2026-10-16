@@ -1,0 +1,96 @@
+/*
+ * quarterly.css — the template-owned stylesheet for quarterly sites.
+ * It reads only var(--…) values from the generated /tokens.css (linked
+ * first, from app/root.tsx) and never names a color or font family outside
+ * @font-face, so every design value stays in content/site.yaml's
+ * `typesetting:` block (specs/004-quarterly-site-type FR-026;
+ * contracts/config-and-tokens.md "Template stylesheet").
+ */
+
+/* ---------- Notes (research.md R7) ---------------------------------------
+ * Narrow screens: footnotes collect at the article foot (remark-gfm's
+ * section.footnotes); each margin note is a † toggle whose text appears
+ * inline once its checkbox is ticked. No client JS.
+ * Wide screens (64rem+): footnotes (as .sidenote) and margin notes sit in
+ * the margin column beside the line that references them; floated with
+ * clear: right so a long note pushes the next one down instead of
+ * overlapping it.
+ */
+.sidenote {
+  display: none;
+}
+
+.margin-toggle-checkbox {
+  display: none;
+}
+
+.margin-toggle {
+  cursor: pointer;
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  padding: 0 0.15em;
+}
+
+.marginnote {
+  display: none;
+}
+
+.margin-toggle-checkbox:checked + .marginnote {
+  display: block;
+  margin: 0.5em 0 0.5em 1.5em;
+  font-size: 0.85em;
+  color: var(--color-muted);
+}
+
+.marginnotes-foot,
+section.footnotes {
+  margin-top: 2em;
+  font-size: 0.85em;
+  border-top: var(--ts-rule-width, 1px) solid var(--color-rule);
+  padding-top: 0.75em;
+}
+
+.marginnotes-foot ol {
+  list-style: none;
+  padding-left: 0;
+}
+
+.marginnotes-foot li::before {
+  content: "† ";
+  color: var(--color-accent);
+}
+
+@media (min-width: 64rem) {
+  .article-body {
+    padding-right: 32%;
+    position: relative;
+  }
+
+  .sidenote,
+  .marginnote,
+  .margin-toggle-checkbox:checked + .marginnote {
+    display: block;
+    float: right;
+    clear: right;
+    width: 28%;
+    margin: 0.2em -32% 0.8em 0;
+    font-size: 0.8em;
+    line-height: 1.35;
+    color: var(--color-muted);
+    position: relative;
+  }
+
+  .sidenote-number {
+    font-family: var(--font-mono);
+    color: var(--color-accent);
+  }
+
+  .margin-toggle {
+    display: none;
+  }
+
+  /* Footnotes already sit in the margin; the foot list is redundant. */
+  .article-body.with-margin-notes section.footnotes {
+    display: none;
+  }
+}

@@ -69,6 +69,11 @@ describe("Detail", () => {
     vi.mocked(load.getColophon).mockRestore();
   });
 
+  it("tolerates a trailing slash, as Workers Static Assets serves directory pages", () => {
+    renderAt("/issues/02-autumn-2026/type-in-brno/");
+    expect(screen.getByRole("heading", { level: 1, name: "Type in Brno" })).toBeDefined();
+  });
+
   it("renders a not-found view for an unknown slug", () => {
     renderAt("/does-not-exist");
     expect(screen.getByRole("heading", { name: "Not found" })).toBeDefined();

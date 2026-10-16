@@ -11,6 +11,7 @@ export function Layout({ children }: { children: ReactNode }) {
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/tokens.css" />
+        <link rel="stylesheet" href="/quarterly.css" />
         {/* Every page is discoverable in its Markdown-friendly form at the
             same address (content-negotiated via Accept: text/markdown —
             app/negotiation/accept.ts) — this hint surfaces that to

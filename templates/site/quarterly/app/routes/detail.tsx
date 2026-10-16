@@ -10,7 +10,9 @@ import { issueLine } from "../content/numerals";
 // never here.
 export default function Detail() {
   const params = useParams();
-  const slug = params["*"] ?? "";
+  // Workers Static Assets serves prerendered pages at "/slug/", so the
+  // splat can carry a trailing slash after hydration; slugs never do.
+  const slug = (params["*"] ?? "").replace(/\/+$/, "");
   const entry = getEntryBySlug(slug);
 
   if (!entry || entry.kind === "issue") {
@@ -22,9 +24,7 @@ export default function Detail() {
       <main className="colophon-page">
         <Masthead />
         <h1>{entry.title}</h1>
-        <div className="article-body">
-          <ContentBody body={entry.body} />
-        </div>
+        <ContentBody body={entry.body} />
       </main>
     );
   }
@@ -48,9 +48,7 @@ export default function Detail() {
             {article.image_caption && <figcaption>Fig. 1 — {article.image_caption}</figcaption>}
           </figure>
         )}
-        <div className="article-body">
-          <ContentBody body={article.body} />
-        </div>
+        <ContentBody body={article.body} />
       </article>
       {issue && (
         <p className="issue-link">

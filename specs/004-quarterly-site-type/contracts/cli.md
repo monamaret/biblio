@@ -50,9 +50,10 @@ Building (vite build, prerendering content-driven pages)…
 
 - Unchanged for profile, log and docs.
 - For quarterly it runs only the validate and index steps, with publish
-  semantics (drafts excluded). It does not convert images, so a
-  `plate`/`cover_plate` URL is written only when the plate already exists
-  in `public/plates/`. `build` and `dev` always run the full step.
+  semantics (drafts excluded). It does not convert images and never writes
+  `plate`/`cover_plate` URLs or rewrites image destinations: the output is
+  what a fresh scaffold ships (see tasks.md T024). Plates are added only by
+  `build` and `dev`, which always run the full step.
 
 ## `biblio-cli update` / `upgrade`
 

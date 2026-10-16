@@ -352,29 +352,24 @@ existing progressive-enhancement rule.
 
 ## Open Questions
 
-- [ ] Default text face: Archivo or Inter Tight? Set a sample article in
-  both. — owner — moved to before plan (2026-10-15): the spec assumes
-  Archivo, per the preset sketch, and either choice leaves the
-  requirements unchanged
-- [ ] Structured notes: extract them in Go at index time (goldmark footnote
-  extension plus a margin-note scanner) so the index carries
-  `footnotes`/`marginNotes`, or parse them in TS when `get_article` runs?
-  Index time keeps "Go is the sole index producer", but means two parsers
-  (Go for the index, remark for rendering) must agree. **Leaning Go at
-  index time:** [005](005-pdf-output-quarterly.md) proposes it because
-  the PDF renderer needs the same parsed notes. Confirm when reviewing
-  005. — owner — before plan
-- [ ] Ornament toggles: are pure `:root` custom properties enough (toggled
-  through `var()`-driven properties), or should the generator also emit
-  `[data-…]` rule blocks into `tokens.css`, which would make `tokens.css`
-  more than variables? — owner — before plan
+- [x] ~~Default text face: Archivo or Inter Tight?~~ **Resolved
+  2026-10-15:** Archivo (plan research R1). See the Decision Log.
+- [x] ~~Structured notes: extract them in Go at index time, or parse them
+  in TS when `get_article` runs?~~ **Resolved 2026-10-15:** in Go, at
+  index time (plan research R2). See the Decision Log.
+- [x] ~~Ornament toggles: pure `:root` custom properties, or also
+  generated `[data-…]` rule blocks in `tokens.css`?~~ **Resolved
+  2026-10-15:** `:root` properties only; structural switches go in the
+  index (plan research R3). See the Decision Log.
 - [x] ~~Should the pre-step (tokens, images, index) apply to all four types?~~
   **Resolved 2026-10-15:** partly. Settings validation and `index` run
   automatically for all four types; tokens and images stay quarterly-only.
   See the Decision Log.
-- [ ] Image output: keep the source format, or always write JPEG for photos
-  and PNG for images with alpha? What maximum width (e.g. 1600px)? —
-  owner — before plan
+- [x] ~~Image output: keep the source format, or always write JPEG for
+  photos and PNG for images with alpha? What maximum width?~~ **Resolved
+  2026-10-15:** keep JPEG/PNG; WebP becomes PNG if it has transparency,
+  otherwise JPEG; 1600 px max, 40 MP cap (plan research R4). See the
+  Decision Log.
 - [x] ~~Can an issue be marked as a draft (an `issue.md` `draft: true` field
   excluded from build and index)?~~ **Resolved 2026-10-15:** yes; drafts
   are shown in `dev`. See the Decision Log.
@@ -416,6 +411,22 @@ existing progressive-enhancement rule.
   `index` step everywhere without restyling existing sites; making their
   pages read the tokens remains a separate decision. — Project owner
   (spec clarification)
+- **2026-10-15** — Default faces: Archivo (body and display) and IBM Plex
+  Mono, self-hosted woff2 with OFL texts. — Distinct from the Inter used by
+  the profile and docs presets; Latin-Extended covers Czech and Polish. —
+  Project owner (plan, [research R1](../004-quarterly-site-type/research.md#r1-default-text-face-roadmap-05))
+- **2026-10-15** — Footnotes and margin notes are extracted in Go at index
+  time; the index also carries a `markdown_body` with margin notes as
+  footnotes. A template contract test keeps the TS renderer in agreement.
+  (Confirms 005's proposal.) — Project owner (plan, R2, R6)
+- **2026-10-15** — `tokens.css` stays variables only; structural switches
+  (`margin_notes`, `numerals`) go into the content index for components to
+  read. — No CSS style queries needed; one producer (Go). — Project owner
+  (plan, R3)
+- **2026-10-15** — Plates: keep JPEG/PNG format; WebP → PNG with alpha,
+  else JPEG; max 1600 px wide; 40 MP safety cap; hash-named files in
+  `public/plates/`; image links rewritten in Go. — Pure Go, cache-busting
+  names, no path logic in TS. — Project owner (plan, R4, R5)
 
 ## Follow-up
 

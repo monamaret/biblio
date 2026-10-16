@@ -43,10 +43,10 @@ This section is now the **single tracked location for every open research/design
 
 *(Open items from [004-quarterly-site-type.md → Open Questions](004-quarterly-site-type.md#open-questions) that shape §11. None blocks the spec; all are settled during planning.)*
 
-- [ ] **Default text face** — Archivo (assumed in the spec, per 004's preset sketch) or Inter Tight; decide by setting a sample article in both.
-- [ ] **Structured notes** — extract footnotes and margin notes in Go at index time (leaning yes: [005](005-pdf-output-quarterly.md) needs the same parsed notes for PDF) or parse them in TS when `get_article` runs.
-- [ ] **Ornament toggles** — pure `:root` custom properties, or also generated `[data-…]` rule blocks in `tokens.css`.
-- [ ] **Image output** — keep the source format or normalize (JPEG for photos, PNG with alpha), and the maximum width (the spec assumes source format kept and 1600 px).
+- [x] ~~**Default text face** — Archivo or Inter Tight.~~ Archivo. **Resolved 2026-10-15** — see [specs/004-quarterly-site-type/research.md](../004-quarterly-site-type/research.md) R1.
+- [x] ~~**Structured notes** — Go at index time or TS at request time.~~ Go, at index time. **Resolved 2026-10-15** — see [specs/004-quarterly-site-type/research.md](../004-quarterly-site-type/research.md) R2.
+- [x] ~~**Ornament toggles** — `:root` properties or generated `[data-…]` rules.~~ `:root` properties only; structural switches in the index. **Resolved 2026-10-15** — see [specs/004-quarterly-site-type/research.md](../004-quarterly-site-type/research.md) R3.
+- [x] ~~**Image output** — format and maximum width.~~ Keep JPEG/PNG, WebP → PNG/JPEG, 1600 px, 40 MP cap. **Resolved 2026-10-15** — see [specs/004-quarterly-site-type/research.md](../004-quarterly-site-type/research.md) R4.
 
 ## 1. `biblio-cli` foundations
 

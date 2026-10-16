@@ -41,12 +41,12 @@ A fourth site type, `quarterly`: an issue-based magazine with articles grouped b
 
 ## Open questions
 
-Tracked in [roadmap.md §0.5](../research/roadmap.md#05-quarterly-site-type); all are settled during planning, none block the spec:
+None open. The four planning items from [roadmap.md §0.5](../research/roadmap.md#05-quarterly-site-type) were resolved on 2026-10-15 and logged in [004 → Decision Log](../research/004-quarterly-site-type.md#decision-log):
 
-- Default text face: Archivo (assumed) or Inter Tight
-- Structured notes: parse in Go at index time (leaning yes, per 005) or in TS at request time
-- Ornament toggles: `:root` custom properties only, or also generated `[data-…]` rules in `tokens.css`
-- Image output format and maximum width (spec assumes source format kept and 1600 px)
+- Default text face: Archivo
+- Structured notes: parsed in Go at index time
+- Ornament toggles: `:root` custom properties only; structural switches in the index
+- Image output: keep JPEG/PNG (WebP → PNG/JPEG), 1600 px max, 40 MP cap
 
 ## Dependencies
 

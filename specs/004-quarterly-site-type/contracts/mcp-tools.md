@@ -65,12 +65,16 @@ visible. Unknown inputs return a text "not found" result with
   "author": "A. Novak",
   "category": "Essays",
   "issue": { "slug": "03-autumn-2026", "number": 3, "date": "2026-10-01" },
-  "footnotes":   [ { "id": "fn-1", "label": "1", "number": 1, "text": "Brno, 1971.", "ref_offset": 412 } ],
-  "marginNotes": [ { "id": "m1", "text": "cf. Gerstner, 1964", "ref_offset": 233 } ]
+  "footnotes":   [ { "id": "fn-1", "label": "1", "number": 1, "text": "Brno, 1971.", "refOffset": 412 } ],
+  "marginNotes": [ { "id": "m1", "text": "cf. Gerstner, 1964", "refOffset": 233 } ]
 }
 ```
 
   - The tool declares an `outputSchema` matching this shape.
+  - Naming: MCP inputs and outputs use camelCase throughout; the content
+    index stays snake_case. The tool maps `margin_notes` → `marginNotes`
+    and `ref_offset` → `refOffset`; `refOffset` is the same code-point
+    offset into the article's `body` (data-model.md "Note").
 - Not found: `No article matches "<slug>". Use list_articles to find one.`
 
 ## Unchanged

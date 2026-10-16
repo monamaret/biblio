@@ -156,7 +156,7 @@ As the author, I can `update` and `upgrade` a quarterly site like any other site
 
 **Content model**
 
-- **FR-005**: An issue MUST be a folder under `content/issues/` containing an `issue.md` with required `title`, `number`, and `date`, and optional `cover` and `cover_alt`.
+- **FR-005**: An issue MUST be a folder under `content/issues/` containing an `issue.md` with required `title`, `number`, and `date`, and optional `season` (a display label such as "Autumn 2026"; when absent, pages show the date), `cover`, `cover_alt` (required when `cover` is set), and `draft` (see FR-012).
 - **FR-006**: An article MUST be a Markdown file inside an issue folder with required `title` and `category`, and optional `author`, `dek`, `image`, `image_alt`, `image_caption`, `order`, and `tags`. An article's issue MUST come from its folder, not from a frontmatter field.
 - **FR-007**: The site MAY have a `colophon.md` with a required `title`.
 - **FR-008**: Required fields MUST be validated per kind of file (issue, article, colophon), and a validation failure MUST name the file and the field.
@@ -209,7 +209,7 @@ As the author, I can `update` and `upgrade` a quarterly site like any other site
 
 ### Key Entities *(include if feature involves data)*
 
-- **Issue**: One numbered publication. Has a number (unique), title, date, optional cover plate and its alt text, an optional draft flag, and a slug from its folder name. Contains zero or more articles. The highest-numbered published (non-draft) issue is the current one.
+- **Issue**: One numbered publication. Has a number (unique), title, date, an optional season label, optional cover plate and its alt text, an optional draft flag, and a slug from its folder name. Contains zero or more articles. The highest-numbered published (non-draft) issue is the current one.
 - **Article**: One piece of writing inside exactly one issue. Has title, category, and optionally author, dek, lead image with alt text and caption, order, and tags. Derives its issue slug, number, and date from its folder. Contains zero or more footnotes and margin notes.
 - **Category**: A free-text label shared by articles across issues. Has a display label and a normalized form used for its URL and for grouping.
 - **Footnote**: A numbered note in an article. Has a label, its text, and the position of its reference in the body.

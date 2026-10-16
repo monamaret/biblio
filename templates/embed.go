@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 // Package templates embeds the scaffold-template asset tree under site/ so
 // that internal/scaffold can read it without relying on the filesystem at
 // runtime (Go embed directives cannot reach outside their own directory,

@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 // Package migrate_test exercises internal/migrate's Scaffold Region
 // Classification: the per-path judgment the update flow makes before
 // touching anything (data-model.md "Scaffold Region Classification";

@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 // Package pilot_site exercises the full content -> build -> deploy path
 // (FR-004; data-model.md "Pilot Site Validation Record"; constitution
 // Release Process release-closing test) against a scaffolded profile

@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 // Package crosstypereview is the structured, repeatable comparison run only
 // once all three site types exist (research.md "Why documentation is
 // replicated last"; data-model.md "Cross-Type Consistency Record"). This

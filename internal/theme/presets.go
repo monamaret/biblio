@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 // Package theme owns the Theme Preset entity and the deterministic
 // generation of tokens.css from a selected preset (FR-004; Principle II —
 // theming logic lives only here, never duplicated on the TS side).

@@ -188,3 +188,59 @@ func TestParseItem_PathAndSlug(t *testing.T) {
 		t.Errorf("ParseItem() Slug = %q, want %q", item.Slug, "projects/my-project")
 	}
 }
+
+// A quarterly site.yaml's `typesetting:` block is parsed into the typed,
+// validated settings (specs/004-quarterly-site-type FR-022, FR-023).
+func TestReadSiteConfig_QuarterlyTypesetting(t *testing.T) {
+	data := []byte("site_type: quarterly\nname: q\ntypesetting:\n  accent: \"#1e4fd7\"\n  numerals: arabic\n")
+	cfg, err := content.ReadSiteConfig(data)
+	if err != nil {
+		t.Fatalf("ReadSiteConfig() error = %v", err)
+	}
+	if cfg.Typesetting == nil {
+		t.Fatal("ReadSiteConfig(): Typesetting = nil, want parsed settings")
+	}
+	if cfg.Typesetting.Accent == nil || *cfg.Typesetting.Accent != "#1e4fd7" {
+		t.Errorf("Typesetting.Accent = %v, want #1e4fd7", cfg.Typesetting.Accent)
+	}
+	if cfg.Typesetting.Numerals == nil || *cfg.Typesetting.Numerals != "arabic" {
+		t.Errorf("Typesetting.Numerals = %v, want arabic", cfg.Typesetting.Numerals)
+	}
+}
+
+// No `typesetting:` block leaves Typesetting nil (preset defaults apply).
+func TestReadSiteConfig_QuarterlyWithoutTypesetting(t *testing.T) {
+	cfg, err := content.ReadSiteConfig([]byte("site_type: quarterly\nname: q\n"))
+	if err != nil {
+		t.Fatalf("ReadSiteConfig() error = %v", err)
+	}
+	if cfg.Typesetting != nil {
+		t.Errorf("Typesetting = %+v, want nil", cfg.Typesetting)
+	}
+}
+
+// Every invalid typesetting value is reported, each prefixed with
+// "site.yaml:" (contracts/config-and-tokens.md "Error format").
+func TestReadSiteConfig_InvalidTypesettingReportsEveryKey(t *testing.T) {
+	_, err := content.ReadSiteConfig([]byte("site_type: quarterly\ntypesetting:\n  scale: 2\n  align: center\n"))
+	if err == nil {
+		t.Fatal("ReadSiteConfig() error = nil, want validation errors")
+	}
+	for _, want := range []string{"site.yaml: typesetting.scale", "site.yaml: typesetting.align"} {
+		if !strings.Contains(err.Error(), want) {
+			t.Errorf("error %q does not contain %q", err, want)
+		}
+	}
+}
+
+// A `typesetting:` block on any other site type is an error naming the
+// site type, so a setting is never silently ignored (research.md R8).
+func TestReadSiteConfig_TypesettingRejectedOnOtherTypes(t *testing.T) {
+	_, err := content.ReadSiteConfig([]byte("site_type: log\ntypesetting:\n  accent: \"#000000\"\n"))
+	if err == nil {
+		t.Fatal("ReadSiteConfig() error = nil, want an error for typesetting on a log site")
+	}
+	if !strings.Contains(err.Error(), `typesetting is only supported for site_type quarterly (this site is "log")`) {
+		t.Errorf("error = %q, want it to name the site type", err)
+	}
+}

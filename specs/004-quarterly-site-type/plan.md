@@ -135,7 +135,7 @@ internal/
     └── index.go             # unchanged for 3 types; quarterly uses index.Options
 
 templates/site/quarterly/    # new, copied from templates/site/log, then adapted
-├── .gitignore               # public/plates/, .biblio/
+├── .gitignore               # node_modules/, dist/, .wrangler/, .react-router/, public/plates/
 ├── .github/workflows/deploy.yml
 ├── content/                 # sample: 2 issues, 5 articles (one with dense notes), colophon, images
 ├── public/

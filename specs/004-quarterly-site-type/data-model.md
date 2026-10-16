@@ -142,6 +142,7 @@ top-level keys alongside `entries`:
 
 ```text
 {
+  "site":        { "name": "<site.yaml name>", "description": "<site.yaml description>" }   for the masthead and llms.txt
   "entries":     [ Issue | Article | Colophon ... ],   flat objects, as today
   "issues":      [ { issue, slug, number, title, date, season?, cover_plate?, cover_alt?, draft, article_count } ]   newest first
   "categories":  [ { key, label, article_count } ]

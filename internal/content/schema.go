@@ -10,6 +10,8 @@ import (
 	"time"
 
 	"go.yaml.in/yaml/v3"
+
+	"github.com/monamaret/biblio/internal/theme"
 )
 
 // Item is a parsed, validated Authored Content Item (data-model.md).
@@ -22,6 +24,9 @@ type Item struct {
 	Fields map[string]any
 	// Body holds the raw Markdown body following the closing frontmatter delimiter.
 	Body string
+	// Kind is the quarterly file kind ("issue", "article", or "colophon");
+	// empty for the other site types (specs/004-quarterly-site-type FR-008).
+	Kind string
 }
 
 // SiteConfig is the parsed content/site.yaml file that declares the active
@@ -31,16 +36,41 @@ type SiteConfig struct {
 	Name        string `yaml:"name"`
 	Description string `yaml:"description"`
 	MCPEnabled  bool   `yaml:"mcp_enabled"`
+	// Typesetting holds the validated quarterly `typesetting:` overrides,
+	// or nil when the block is absent (specs/004-quarterly-site-type
+	// FR-022). Only quarterly sites may set it.
+	Typesetting *theme.Typesetting `yaml:"-"`
 }
 
-// ReadSiteConfig parses raw site.yaml bytes into a SiteConfig.
+// ReadSiteConfig parses raw site.yaml bytes into a SiteConfig. The rest of
+// site.yaml stays leniently parsed, as before; a `typesetting:` block is
+// validated key by key, and every problem is reported together, each line
+// prefixed "site.yaml:" (contracts/config-and-tokens.md "Error format").
 func ReadSiteConfig(data []byte) (SiteConfig, error) {
-	var cfg SiteConfig
-	if err := yaml.Unmarshal(data, &cfg); err != nil {
+	var raw struct {
+		SiteConfig  `yaml:",inline"`
+		Typesetting map[string]any `yaml:"typesetting"`
+	}
+	if err := yaml.Unmarshal(data, &raw); err != nil {
 		return SiteConfig{}, fmt.Errorf("content: parsing site.yaml: %w", err)
 	}
+	cfg := raw.SiteConfig
 	if cfg.SiteType == "" {
 		return SiteConfig{}, errors.New("content: site.yaml missing required field 'site_type'")
+	}
+	if raw.Typesetting != nil {
+		if cfg.SiteType != "quarterly" {
+			return SiteConfig{}, fmt.Errorf("site.yaml: typesetting is only supported for site_type quarterly (this site is %q)", cfg.SiteType)
+		}
+		ts, errs := theme.ParseTypesetting(raw.Typesetting)
+		if len(errs) > 0 {
+			lines := make([]string, len(errs))
+			for i, e := range errs {
+				lines[i] = "site.yaml: " + e.Error()
+			}
+			return SiteConfig{}, errors.New(strings.Join(lines, "\n"))
+		}
+		cfg.Typesetting = &ts
 	}
 	return cfg, nil
 }

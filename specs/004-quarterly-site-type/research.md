@@ -210,7 +210,7 @@ Each entry gives **Decision / Rationale / Alternatives considered**.
   | Kind | Rule |
   |---|---|
   | color (`accent`) | `^#[0-9a-fA-F]{6}$` |
-  | font family | `^[A-Za-z0-9][A-Za-z0-9 \-]{0,63}$` (no quotes, commas, semicolons, braces) |
+  | font family | `^[\p{L}\p{N}][\p{L}\p{N} \-]{0,63}$`: Unicode letters, digits, spaces, hyphens (so "Söhne" passes; no quotes, commas, semicolons, braces) |
   | length (`base_size`) | `^\d+(\.\d+)?(rem|px)$`, between 0.75rem/12px and 1.5rem/24px |
   | length (`measure`) | `^\d+(\.\d+)?(em|ch)$`, between 20 and 90 |
   | `scale` | number in [1.1, 1.618] |
@@ -256,11 +256,15 @@ Each entry gives **Decision / Rationale / Alternatives considered**.
 ## R11. Template layout and the `.gitignore` gap
 
 - **Decision:** `templates/site/quarterly/` is copied from `templates/site/log`
-  and adapted. It ships a `.gitignore` covering `public/plates/` and
-  `.biblio/`. `scaffold.Walk` currently skips every dotfile, so it would
+  and adapted. It ships a `.gitignore` covering `public/plates/` (and
+  `node_modules/`, `dist/`, `.wrangler/`, `.react-router/`), but not
+  `.biblio/`, which holds the scaffold manifest `update`/`upgrade` need. `scaffold.Walk` currently skips every dotfile, so it would
   drop that file; narrow the skip to `.gitkeep` only. The other three
   templates contain no other dotfiles apart from `.github/` (a directory,
   already copied), so their scaffold output is unchanged. A test pins that.
+  `Walk` also skips `node_modules/` and `.react-router/` directories, because
+  `go:embed all:site` embeds whatever is on disk, and running a template's
+  own tests locally installs `node_modules/` inside the embedded tree.
 - **Rationale:** generated plates should never be committed by the author.
 - **Alternatives considered:** shipping the file as `gitignore` and renaming
   it at scaffold time (a special case in the generator for one file).

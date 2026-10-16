@@ -9,24 +9,34 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/monamaret/biblio/internal/devserver"
+	"github.com/monamaret/biblio/internal/prebuild"
 )
 
 var devCmd = &cobra.Command{
 	Use:   "dev",
 	Short: "Start local preview: vite dev + wrangler dev as one supervised command",
 	Args:  cobra.NoArgs,
-	RunE:  runDev,
+	RunE:  RunDev,
 }
+
+// DevViteCommand and DevWranglerCommand are the two supervised dev-server
+// argvs. Exported so tests can substitute stub commands, as BuildCommand
+// is for `build`.
+var (
+	DevViteCommand     = []string{"npx", "vite", "dev"}
+	DevWranglerCommand = []string{"npx", "wrangler", "dev"}
+)
 
 func init() {
 	rootCmd.AddCommand(devCmd)
 }
 
-// runDev implements `biblio-cli dev`: it resolves the wrangler.jsonc in the
-// current project, launches vite dev and wrangler dev as a supervised pair,
+// RunDev implements `biblio-cli dev`: it resolves the wrangler.jsonc in the
+// current project, runs the pre-build step once in Dev mode (drafts
+// included; specs/004-quarterly-site-type FR-012, FR-035), launches vite dev and wrangler dev as a supervised pair,
 // surfaces both servers' addresses, and exits cleanly on interrupt
 // (contracts/cli-commands.md `biblio-cli dev`; FR-005).
-func runDev(cmd *cobra.Command, _ []string) error {
+func RunDev(cmd *cobra.Command, _ []string) error {
 	cwd, err := os.Getwd()
 	if err != nil {
 		return fmt.Errorf("dev: resolving working directory: %w", err)
@@ -51,12 +61,16 @@ func runDev(cmd *cobra.Command, _ []string) error {
 		return fmt.Errorf("dev: %w", err)
 	}
 
+	if err := runPrebuild(cmd, cwd, prebuild.Dev); err != nil {
+		return fmt.Errorf("dev: %w", err)
+	}
+
 	fmt.Fprintln(cmd.OutOrStdout(), "Starting local preview (vite dev + wrangler dev)…")
 	fmt.Fprintln(cmd.OutOrStdout(), "Press Ctrl+C to stop.")
 
 	s := devserver.NewSupervisor(devserver.Config{
-		ViteCmd:     []string{"npx", "vite", "dev"},
-		WranglerCmd: []string{"npx", "wrangler", "dev"},
+		ViteCmd:     DevViteCommand,
+		WranglerCmd: DevWranglerCommand,
 		Output:      cmd.OutOrStdout(),
 	})
 

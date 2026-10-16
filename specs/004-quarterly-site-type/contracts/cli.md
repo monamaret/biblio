@@ -15,7 +15,8 @@ No new commands. Changed behavior only. Existing contracts:
 - Output: the `templates/site/quarterly/` tree, `content/site.yaml`
   (`site_type: quarterly`, no `typesetting:` block, so the defaults apply),
   `wrangler.jsonc`, `public/tokens.css`, the scaffold manifest, and a
-  `.gitignore` covering `public/plates/` and `.biblio/`.
+  `.gitignore` covering `public/plates/` (not `.biblio/`, which holds the
+  scaffold manifest `update`/`upgrade` need).
 - `--type=quarterly --theme=log-default` fails with the existing
   "not a valid preset for site type" error.
 

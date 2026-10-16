@@ -9,7 +9,7 @@ package theme
 type Preset struct {
 	// ID is the identifier passed via --theme; unique across all presets.
 	ID string
-	// SiteType is the preset's matching site type (profile, log, or docs).
+	// SiteType is the preset's matching site type (profile, log, docs, or quarterly).
 	SiteType string
 	// Name is the preset's human-readable display name (used by the guided
 	// `new` flow's theme prompt).
@@ -60,6 +60,27 @@ var presets = []Preset{
 			"color-muted":  "#6b7280",
 			"font-body":    `"Inter", system-ui, sans-serif`,
 			"font-heading": `"Inter", system-ui, sans-serif`,
+		},
+	},
+	{
+		// The early-1970s academic-book look: grotesk text, one bold red
+		// accent, off-white paper (specs/research/004-quarterly-site-type.md
+		// appendix "Default preset sketch"). Its typesetting defaults live in
+		// typesetting.go; these tokens are the colors and font stacks.
+		ID:       "quarterly-default",
+		SiteType: "quarterly",
+		Name:     "Quarterly Default",
+		Tokens: map[string]string{
+			"color-bg":       "#fbfaf7",
+			"color-fg":       "#111111",
+			"color-accent":   "#d7261e",
+			"color-muted":    "#6b6b6b",
+			"color-rule":     "#111111",
+			"color-plate-bg": "#ececec",
+			"font-body":      `"Archivo", "Helvetica Neue", Arial, sans-serif`,
+			"font-heading":   `"Archivo", "Helvetica Neue", Arial, sans-serif`,
+			"font-display":   `"Archivo", "Helvetica Neue", Arial, sans-serif`,
+			"font-mono":      `"IBM Plex Mono", ui-monospace, monospace`,
 		},
 	},
 }

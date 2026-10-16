@@ -205,15 +205,15 @@ description: "Task list for the quarterly site type"
 
 ### Tests for User Story 5 (write first, confirm they fail)
 
-- [ ] T081 [P] [US5] Create `templates/site/quarterly/app/mcp/tools/quarterly.test.ts` against a fixture index: each tool's text output matches contracts/mcp-tools.md (table header, ordering, numerals, line formats); `get_issue` by slug and by number; `list_articles` with each filter alone and combined (AND), category matched by key, author case-insensitive, date range inclusive on issue date, invalid date returns a message naming the field; `get_article` text includes every note and `structuredContent` has `footnotes`/`marginNotes` with correct `refOffset` values (camelCase only — no snake_case keys anywhere in `structuredContent`); unknown issue/article returns the not-found text with `isError` false; drafts never visible
-- [ ] T082 [P] [US5] Update `templates/site/quarterly/app/mcp/server.test.ts`: `tools/list` returns the three shared tools plus the four quarterly tools, `get_article` advertises an `outputSchema`, and a log-only tool name (`list_entries`) is unknown
+- [X] T081 [P] [US5] Create `templates/site/quarterly/app/mcp/tools/quarterly.test.ts` against a fixture index: each tool's text output matches contracts/mcp-tools.md (table header, ordering, numerals, line formats); `get_issue` by slug and by number; `list_articles` with each filter alone and combined (AND), category matched by key, author case-insensitive, date range inclusive on issue date, invalid date returns a message naming the field; `get_article` text includes every note and `structuredContent` has `footnotes`/`marginNotes` with correct `refOffset` values (camelCase only — no snake_case keys anywhere in `structuredContent`); unknown issue/article returns the not-found text (`isError` false, except `get_article`, which declares an output schema and so returns `isError` true — contracts/mcp-tools.md); drafts never visible
+- [X] T082 [P] [US5] Update `templates/site/quarterly/app/mcp/server.test.ts`: `tools/list` returns the three shared tools plus the four quarterly tools, `get_article` advertises an `outputSchema`, and a log-only tool name (`list_entries`) is unknown
 
 ### Implementation for User Story 5
 
-- [ ] T083 [P] [US5] Implement article filtering in `templates/site/quarterly/app/content/filters.ts` (issue, category key, author, tag, dateFrom/dateTo) with `templates/site/quarterly/app/content/filters.test.ts` covering the same cases as T081's filter rows (write the test first)
-- [ ] T084 [US5] Implement `templates/site/quarterly/app/mcp/tools/quarterly.ts` (`listIssues`, `getIssue`, `listArticles`, `getArticle`, `registerQuarterlyTools`) with zod input schemas and the `outputSchema` for `get_article`, reusing `filters.ts` and `numerals.ts` (makes T081 pass)
-- [ ] T085 [US5] Register the tools in `templates/site/quarterly/app/mcp/server.ts` and update `templates/site/quarterly/app/mcp/query.ts` if the shared tools need the new index shape (makes T082 pass)
-- [ ] T086 [US5] Run `npm test` in `templates/site/quarterly/`, then quickstart.md scenario 6 with MCP Inspector against `biblio-cli dev`
+- [X] T083 [P] [US5] Implement article filtering in `templates/site/quarterly/app/content/filters.ts` (issue, category key, author, tag, dateFrom/dateTo) with `templates/site/quarterly/app/content/filters.test.ts` covering the same cases as T081's filter rows (write the test first)
+- [X] T084 [US5] Implement `templates/site/quarterly/app/mcp/tools/quarterly.ts` (`listIssues`, `getIssue`, `listArticles`, `getArticle`, `registerQuarterlyTools`) with zod input schemas and the `outputSchema` for `get_article`, reusing `filters.ts` and `numerals.ts` (makes T081 pass)
+- [X] T085 [US5] Register the tools in `templates/site/quarterly/app/mcp/server.ts` and update `templates/site/quarterly/app/mcp/query.ts` if the shared tools need the new index shape (makes T082 pass)
+- [X] T086 [US5] Run `npm test` in `templates/site/quarterly/`, then quickstart.md scenario 6 with MCP Inspector against `biblio-cli dev`
 
 **Checkpoint**: the agent surface is at parity with the other types.
 

@@ -18,14 +18,29 @@ async function connectClient() {
 // the tools this quarterly site serves (specs/004-quarterly-site-type
 // FR-032; quarterly-specific tools are added in US5, tasks.md T082).
 describe("MCP server route mounting", () => {
-  it("lists the shared tools", async () => {
+  it("lists the shared tools and the four quarterly tools", async () => {
     const client = await connectClient();
     const { tools } = await client.listTools();
     const names = tools.map((t) => t.name);
 
-    expect(names).toContain("list_pages");
-    expect(names).toContain("get_page");
-    expect(names).toContain("search_content");
+    expect(names).toEqual(
+      expect.arrayContaining(["list_pages", "get_page", "search_content", "list_issues", "get_issue", "list_articles", "get_article"]),
+    );
+    expect(tools.find((t) => t.name === "get_article")?.outputSchema).toBeDefined();
+  });
+
+  it("serves get_article's structured notes over the protocol", async () => {
+    const client = await connectClient();
+    const result = await client.callTool({ name: "get_article", arguments: { slug: "issues/02-autumn-2026/on-margins" } });
+    expect(result.isError).toBeFalsy();
+    expect((result.structuredContent as { marginNotes: unknown[] }).marginNotes).toHaveLength(3);
+  });
+
+  it("answers an unknown issue in text rather than failing", async () => {
+    const client = await connectClient();
+    const result = await client.callTool({ name: "get_issue", arguments: { issue: "7" } });
+    expect(result.isError).toBeFalsy();
+    expect(JSON.stringify(result.content)).toContain("No issue matches");
   });
 });
 

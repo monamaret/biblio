@@ -1,5 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { registerSharedTools } from "./tools/shared";
+import { registerQuarterlyTools } from "./tools/quarterly";
 
 // createServer builds a fully tool-registered McpServer — the shared
 // (cross-site-type) and quarterly-type-specific tools. Deliberately has no
@@ -16,5 +17,6 @@ import { registerSharedTools } from "./tools/shared";
 export function createServer(): McpServer {
   const server = new McpServer({ name: "biblio-quarterly-site", version: "1.0.0" });
   registerSharedTools(server);
+  registerQuarterlyTools(server);
   return server;
 }

@@ -3,8 +3,11 @@
 Registered next to the shared tools `list_pages`, `get_page` and
 `search_content`, whose behavior is unchanged. Every tool returns a
 self-sufficient text `content` item (Principle IV). Drafts are never
-visible. Unknown inputs return a text "not found" result with
-`isError: false`, never a thrown error (FR-034).
+visible. Unknown inputs return a text "not found" result, never a thrown
+error (FR-034): `isError: false` for `list_issues`, `get_issue` and
+`list_articles`; `isError: true` for `get_article`, because the MCP SDK
+requires `structuredContent` on every non-error result of a tool that
+declares an `outputSchema`.
 
 ## `list_issues`
 
@@ -76,6 +79,7 @@ visible. Unknown inputs return a text "not found" result with
     and `ref_offset` → `refOffset`; `refOffset` is the same code-point
     offset into the article's `body` (data-model.md "Note").
 - Not found: `No article matches "<slug>". Use list_articles to find one.`
+  (`isError: true`, no `structuredContent`; see the top of this file.)
 
 ## Unchanged
 

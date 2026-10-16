@@ -8,11 +8,15 @@ As of v0.06 (General Availability), `biblio-cli` is a real, working Go module
 with a full unit + integration test suite — see `AGENTS.md`'s "Build / Test /
 Lint" section for the actual commands (`go build ./...`, `go test ./...`,
 `./scripts/check.sh`). `internal/` holds the CLI's packages (`cli`, `scaffold`,
-`migrate`, `escalation`, `index`, `content`, `theme`, `devserver`, `tui`);
-`templates/site/{profile,log,docs}` holds the three scaffolded site-type
-templates (React + Vite + React Router v7 + Cloudflare Worker, each its own
-independent npm project). See `docs/releases/v0.06/README.md` for the current
-user guide and `docs/releases/CHANGELOG.md` for the full release history.
+`migrate`, `escalation`, `index`, `content`, `theme`, `devserver`, `tui`,
+`prebuild`, `plates`); `templates/site/{profile,log,docs,quarterly}` holds the
+four scaffolded site-type templates (React + Vite + React Router v7 +
+Cloudflare Worker, each its own independent npm project). `build` and `dev`
+validate settings and regenerate `content-index.json` automatically
+(`internal/prebuild`); see `AGENTS.md` "Build / Test / Lint", including why
+`node_modules/` must never sit inside `templates/site/`. See
+`docs/releases/v0.06/README.md` for the current user guide and
+`docs/releases/CHANGELOG.md` for the full release history.
 
 ## Repo layout
 

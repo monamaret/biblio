@@ -244,12 +244,12 @@ description: "Task list for the quarterly site type"
 ## Phase 9: Polish & cross-cutting concerns
 
 - [X] T093 [P] Append decisions R1–R4 (text face, notes in Go, toggles split, image output) to the Decision Log in `specs/research/004-quarterly-site-type.md`, tick its matching Open Questions, and tick `specs/research/roadmap.md` §0.5 — done 2026-10-15 during `/speckit-analyze` remediation, before implementation
-- [ ] T094 [P] Check off the completed §11 tasks in `specs/research/roadmap.md`, and update `specs/features/011-quarterly-site-type.md` scope checkboxes and status
-- [ ] T095 [P] Update `AGENTS.md` and `CLAUDE.md`: four site types, `templates/site/quarterly`, the new `internal/plates` and `internal/prebuild` packages, and that `build`/`dev` now index automatically
-- [ ] T096 [P] Update `specs/research/architecture.md` §2 to drop "(planned)" from step 0 and §4's quarterly note once shipped
-- [ ] T097 [P] Add a quarterly section to the user guide draft for the release (`docs/releases/v0.08/README.md`): create, configure (typesetting keys, drafts), update, deploy, destroy — the constitution's usage-guide minimum — and an entry in `docs/releases/CHANGELOG.md`
-- [ ] T098 Security pass: grep the template for `dangerouslySetInnerHTML` and raw HTML in react-markdown (`rehype-raw` must not be present); confirm every typesetting value in `tokens.css` comes from a validated field; confirm `public/plates/` is gitignored, and `.biblio/` is not, in the scaffolded project
-- [ ] T099 Run the full quickstart.md (scenarios 1–7) on a freshly scaffolded site and record the results in `test/integration/pilot-site-quarterly/QUICKSTART-RECORD.md`
+- [X] T094 [P] Check off the completed §11 tasks in `specs/research/roadmap.md`, and update `specs/features/011-quarterly-site-type.md` scope checkboxes and status
+- [X] T095 [P] Update `AGENTS.md` and `CLAUDE.md`: four site types, `templates/site/quarterly`, the new `internal/plates` and `internal/prebuild` packages, and that `build`/`dev` now index automatically
+- [X] T096 [P] Update `specs/research/architecture.md` §2 to drop "(planned)" from step 0 and §4's quarterly note once shipped
+- [X] T097 [P] Add a quarterly section to the user guide draft for the release (`docs/releases/v0.08/README.md`): create, configure (typesetting keys, drafts), update, deploy, destroy — the constitution's usage-guide minimum — and an entry in `docs/releases/CHANGELOG.md`
+- [X] T098 Security pass: grep the template for `dangerouslySetInnerHTML` and raw HTML in react-markdown (`rehype-raw` must not be present); confirm every typesetting value in `tokens.css` comes from a validated field; confirm `public/plates/` is gitignored, and `.biblio/` is not, in the scaffolded project
+- [X] T099 Run the full quickstart.md (scenarios 1–7) on a freshly scaffolded site and record the results in `test/integration/pilot-site-quarterly/QUICKSTART-RECORD.md`
 
 ---
 

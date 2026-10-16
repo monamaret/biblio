@@ -1,7 +1,7 @@
 # Roadmap: `biblio` implementation plan
 
 **Status:** Draft — tentative, ordered by dependency rather than effort.
-**Progress cursor:** → **§11 (quarterly site type) in progress as of 2026-10-15** — research, feature item and Spec Kit spec written; planning next, targeting v0.08. Before that: **§1–§10 all complete or proven-ready as of v0.06 (2026-06-20) — General Availability.** §1–§9 are complete-and-demonstrated; §10's two conditional storage-escalation items (D1, Vectorize) are proven-executable-on-demand per their own conditional bar, with neither actually adopted (see `test/integration/ga-readiness-review/GA-READINESS-RECORD.md` for the full cross-reference against every release v0.01–v0.06). The per-section checkboxes below were corrected during v0.06's Polish phase to reflect actual shipped evidence — several had gone stale across v0.01–v0.05 despite the underlying work landing. *(Move this pointer forward as new roadmap sections are added post-GA.)*
+**Progress cursor:** → **§11 (quarterly site type) implemented on branch `monamaret/004-quarterly-site-type` as of 2026-10-15** — every §11 item done with unit and integration tests (see `specs/004-quarterly-site-type/tasks.md`); ships with the v0.08 release. Before that: **§1–§10 all complete or proven-ready as of v0.06 (2026-06-20) — General Availability.** §1–§9 are complete-and-demonstrated; §10's two conditional storage-escalation items (D1, Vectorize) are proven-executable-on-demand per their own conditional bar, with neither actually adopted (see `test/integration/ga-readiness-review/GA-READINESS-RECORD.md` for the full cross-reference against every release v0.01–v0.06). The per-section checkboxes below were corrected during v0.06's Polish phase to reflect actual shipped evidence — several had gone stale across v0.01–v0.05 despite the underlying work landing. *(Move this pointer forward as new roadmap sections are added post-GA.)*
 
 This roadmap intentionally **makes no assumptions about timelines, developer hours, or any other "real world" delivery metric** — none of those have been discussed or decided anywhere in the research (see the non-goals in [001-static-site-platform-with-mcp.md](001-static-site-platform-with-mcp.md)), and `biblio` is a sole-developer, personal-scale project where such estimates would be guesswork. Every task below is tied to a deliverable that is already defined by the confirmed decisions and completed research in [001](001-static-site-platform-with-mcp.md), [000-tech-stack.md](000-tech-stack.md), and [architecture.md](architecture.md) — nothing here is speculative scope.
 
@@ -177,15 +177,15 @@ Deliverable: the D1 and Vectorize escalation paths described in the [progressive
 Deliverable: a fourth site type, `quarterly`, an issue-based magazine in an early-1970s academic-book style, promoted from the [003 backlog](003-post-ga-feature-backlog.md) and researched in [004-quarterly-site-type.md](004-quarterly-site-type.md). Depends on §6 (theming) and §9 (the three existing types, `update`/`upgrade`, the cross-type review). PDF output ([005](005-pdf-output-quarterly.md)) is a later follow-on and not part of this section.
 **Feature spec:** [specs/features/011-quarterly-site-type.md](../features/011-quarterly-site-type.md) · **Spec Kit:** [specs/004-quarterly-site-type/spec.md](../004-quarterly-site-type/spec.md)
 
-- [ ] Scaffold the `quarterly` template and register the type (flags and TUI)
-- [ ] Issue/article/colophon content schemas, derived issue fields, and `draft: true` issues (hidden from published output, shown in `dev`)
-- [ ] Contents, archive, category, article and colophon routes
-- [ ] Footnotes and margin notes across HTML (wide and narrow), Markdown and ANSI views
-- [ ] `quarterly-default` preset, the validated `typesetting:` block, and a template stylesheet that reads tokens only
-- [ ] Build-time grayscale plates
-- [ ] Automatic pre-build step in `build`/`dev`: settings validation and `index` for all four types; tokens and plates for quarterly only
-- [ ] Quarterly MCP tools (`list_issues`, `get_issue`, `list_articles`, `get_article` with structured notes)
-- [ ] `update`/`upgrade` support and a four-type cross-type consistency review
+- [x] Scaffold the `quarterly` template and register the type (flags and TUI)
+- [x] Issue/article/colophon content schemas, derived issue fields, and `draft: true` issues (hidden from published output, shown in `dev`)
+- [x] Contents, archive, category, article and colophon routes
+- [x] Footnotes and margin notes across HTML (wide and narrow), Markdown and ANSI views
+- [x] `quarterly-default` preset, the validated `typesetting:` block, and a template stylesheet that reads tokens only
+- [x] Build-time grayscale plates
+- [x] Automatic pre-build step in `build`/`dev`: settings validation and `index` for all four types; tokens and plates for quarterly only
+- [x] Quarterly MCP tools (`list_issues`, `get_issue`, `list_articles`, `get_article` with structured notes)
+- [x] `update`/`upgrade` support and a four-type cross-type consistency review
 
 ## References
 

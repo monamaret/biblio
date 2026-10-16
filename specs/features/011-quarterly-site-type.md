@@ -1,6 +1,6 @@
 # Feature: `quarterly` site type
 
-**Status:** In progress
+**Status:** Complete — implemented and tested on branch `monamaret/004-quarterly-site-type`; ships with v0.08
 **Roadmap reference:** [roadmap.md §11 — Quarterly site type](../research/roadmap.md#11-quarterly-site-type)
 
 ## Summary
@@ -22,15 +22,15 @@ A fourth site type, `quarterly`: an issue-based magazine with articles grouped b
 
 ## Scope
 
-- [ ] Scaffold a `quarterly` template under `templates/site/quarterly/`, copied from `log` and adapted, registered in `SiteTypes` and the TUI type list
-- [ ] Per-file-kind content schemas (issue, article, colophon) and derived index fields (`kind`, `issue`, `issue_number`, `issue_date`, `plate`), including `draft` handling
-- [ ] Routes: current-issue contents at `/`, `/issues`, `/issues/:issue`, `/category/:category`, article and colophon detail
-- [ ] Footnotes and margin notes: wide-screen sidenotes, narrow-screen foot notes and † toggles (CSS only), Markdown/ANSI rewriting, structured notes in the index
-- [ ] `quarterly-default` preset, the `typesetting:` schema with Go validation, and a template stylesheet that reads tokens only; self-hosted OFL fonts with their licenses
-- [ ] Build-time grayscale, width-capped plates with a content-hash cache and decode safety checks
-- [ ] Automatic pre-build step in `build`/`dev`: settings validation and `index` for all four types; tokens and plates for quarterly
-- [ ] MCP tools `list_issues`, `get_issue`, `list_articles`, `get_article` (structured notes), text-first
-- [ ] `update`/`upgrade` support for the new template tree, and the cross-type consistency review extended to four types
+- [x] Scaffold a `quarterly` template under `templates/site/quarterly/`, copied from `log` and adapted, registered in `SiteTypes` and the TUI type list
+- [x] Per-file-kind content schemas (issue, article, colophon) and derived index fields (`kind`, `issue`, `issue_number`, `issue_date`, `plate`), including `draft` handling
+- [x] Routes: current-issue contents at `/`, `/issues`, `/issues/:issue`, `/category/:category`, article and colophon detail
+- [x] Footnotes and margin notes: wide-screen sidenotes, narrow-screen foot notes and † toggles (CSS only), Markdown/ANSI rewriting, structured notes in the index
+- [x] `quarterly-default` preset, the `typesetting:` schema with Go validation, and a template stylesheet that reads tokens only; self-hosted OFL fonts with their licenses
+- [x] Build-time grayscale, width-capped plates with a content-hash cache and decode safety checks
+- [x] Automatic pre-build step in `build`/`dev`: settings validation and `index` for all four types; tokens and plates for quarterly
+- [x] MCP tools `list_issues`, `get_issue`, `list_articles`, `get_article` (structured notes), text-first
+- [x] `update`/`upgrade` support for the new template tree, and the cross-type consistency review extended to four types
 
 ## Out of scope
 

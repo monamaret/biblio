@@ -69,7 +69,7 @@ flowchart LR
 
 Three build steps run in order, normally triggered by a push via GitHub Actions:
 
-0. **Pre-build step inside `biblio-cli build`/`dev`** *(planned, [§11](roadmap.md#11-quarterly-site-type), [004](004-quarterly-site-type.md#build-pipeline-changes))* — for every site type, validate `content/site.yaml` and run step 1 automatically, so `index` no longer has to be run by hand. For `quarterly` sites only, it also regenerates `public/tokens.css` from the preset plus the validated `typesetting:` overrides, and writes grayscale, width-capped copies of content images to `public/plates/` (dashed edges above). Order: validate → tokens → plates → index. Draft issues are left out of the index on `build` and kept on `dev`.
+0. **Pre-build step inside `biblio-cli build`/`dev`** (`internal/prebuild`; [§11](roadmap.md#11-quarterly-site-type), [004](004-quarterly-site-type.md#build-pipeline-changes)) — for every site type, validate `content/site.yaml` and run step 1 automatically, so `index` no longer has to be run by hand. For `quarterly` sites only, it also regenerates `public/tokens.css` from the preset plus the validated `typesetting:` overrides, and writes grayscale, width-capped copies of content images to `public/plates/` (`internal/plates`; dashed edges above). Order: validate → tokens → plates → index. Draft issues are left out of the index on `build` and kept on `dev`.
 1. **`biblio-cli` generates `content-index.json`** — a Go-side generator parses every Markdown file's frontmatter + body (mirroring what `gray-matter` would do in JS) into a single canonical artifact, the source of truth for both the site build and the MCP server.
 2. **`react-router build`** — the framework's native `prerender` (configured in `react-router.config.ts`, driven by an async function that enumerates content-driven routes from the content index) renders every route to static HTML/CSS/JS.
 3. **Wrangler build & deploy** — the Worker `import`s `content-index.json` directly (inlined into its V8 bundle for in-memory querying, no extra fetch at runtime) and binds the prerendered output as static assets, then publishes both to Cloudflare.
@@ -128,7 +128,7 @@ sequenceDiagram
 
 The text-first `content` is always returned — terminal-based hosts stop there; graphical hosts additionally get the richer UI resource. See [001 → MCP App UI rendering](001-static-site-platform-with-mcp.md#architecture-patterns) for the confirmed rationale.
 
-The planned `quarterly` type ([§11](roadmap.md#11-quarterly-site-type)) follows the same flow with its own tools (`list_issues`, `get_issue`, `list_articles`, `get_article`). `get_article` returns footnotes and margin notes as structured lists alongside the text, read from the content index rather than parsed per request (pending the §0.5 structured-notes decision).
+The `quarterly` type ([§11](roadmap.md#11-quarterly-site-type)) follows the same flow with its own tools (`list_issues`, `get_issue`, `list_articles`, `get_article`). `get_article` returns footnotes and margin notes as structured lists (`structuredContent`) alongside the text, read from the content index — biblio-cli extracts them in Go at index time — rather than parsed per request.
 
 ## 5. Patterns considered (and dropped)
 

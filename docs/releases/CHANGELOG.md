@@ -22,6 +22,19 @@ full user guide of each release.
   on the home page — instead of a hard-coded `biblio … site` on every page,
   for every site type. `content-index.json` now carries a `site` object
   (name and description) for profile, log, and docs sites too (#215).
+- `biblio-cli new` now builds `content-index.json` from the new project's
+  own `site.yaml`, so a fresh quarterly site no longer carries the demo
+  name "The Quarterly", and the first `build` leaves the index unchanged
+  for every site type. The quarterly starter colophon no longer names a
+  publication (#216).
+- `llms.txt` no longer starts with a blank paragraph when the site
+  description is empty, for every site type (#217).
+- Every site type now ships a baseline `.gitignore` covering build output,
+  `.dev.vars`, `.env`/`.env.*` (keeping `.env.example`), `*.log`, and
+  `coverage/` (#219).
+- The quarterly deploy workflow now uses Node.js 22, and every site type's
+  deploy workflow gains a `workflow_dispatch` trigger for manual redeploys
+  (#218).
 
 ## v0.07 — Bug-fix release
 

@@ -25,6 +25,11 @@ describe("buildLlmsTxt", () => {
     expect(txt).not.toContain(entries[0].body);
   });
 
+  it("omits the description paragraph when the description is empty", () => {
+    const txt = buildLlmsTxt("My Profile Site", "", entries);
+    expect(txt.startsWith("# My Profile Site\n\n## Pages\n")).toBe(true);
+  });
+
   it("handles zero entries without throwing", () => {
     expect(() => buildLlmsTxt("Empty Site", "", [])).not.toThrow();
   });

@@ -11,6 +11,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/monamaret/biblio/internal/prebuild"
 	"github.com/monamaret/biblio/internal/theme"
 )
 
@@ -40,7 +41,8 @@ type Options struct {
 // Generate scaffolds a new Site Project as destDir/<ProjectName>: it seeds
 // content/ from the embedded site-type template, then writes
 // content/site.yaml (with mcp_enabled: true), wrangler.jsonc (routing from
-// Domain), and tokens.css (from the selected Theme preset) — the artifact
+// Domain), tokens.css (from the selected Theme preset), and
+// content-index.json (via the pre-build step) — the artifact
 // set the `new` contract promises (contracts/cli-commands.md `biblio-cli
 // new`). On any failure the project directory is removed, leaving destDir
 // exactly as it was — never a partially-written project.
@@ -103,6 +105,15 @@ func Generate(destDir string, opts Options) (string, error) {
 	}
 	if err := os.WriteFile(filepath.Join(publicDir, "tokens.css"), []byte(tokensCSS), 0o644); err != nil {
 		return "", fmt.Errorf("scaffold: writing tokens.css: %w", err)
+	}
+
+	// The shipped content-index.json is the template's own, built from its
+	// demo site.yaml (quarterly's names "The Quarterly"). Rebuild it from
+	// the site.yaml just written, exactly as the first `build` would, so a
+	// new project's index names the project and that first build leaves it
+	// unchanged (#216).
+	if _, err := prebuild.Run(projectDir, prebuild.Build); err != nil {
+		return "", fmt.Errorf("scaffold: generating content-index.json: %w", err)
 	}
 
 	manifest, err := BuildManifest(opts.SiteType)

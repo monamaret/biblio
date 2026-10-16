@@ -14,7 +14,12 @@ export function buildLlmsTxt(index: QuarterlyIndex): string {
   const issues = index.issues.filter((issue) => !issue.draft);
   const current = issues.find((issue) => issue.issue === index.current_issue);
 
-  const lines = [`# ${site.name}`, "", site.description, ""];
+  // An empty description (what `biblio-cli new` writes) gets no paragraph
+  // at all rather than a blank one (#217).
+  const lines = [`# ${site.name}`, ""];
+  if (site.description.trim() !== "") {
+    lines.push(site.description, "");
+  }
 
   if (current) {
     lines.push("## Current issue", "", `- ${issueLine(current)}: /issues/${current.issue}`, "");

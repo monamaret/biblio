@@ -18,7 +18,8 @@ export type ContentEntry = {
 // JS/TS site"). content-index.json already carries the parsed body and
 // fields, so no separate `import.meta.glob`/frontmatter-parsing step is
 // needed here.
-const entries = (contentIndex as { entries: ContentEntry[] }).entries;
+const index = contentIndex as { site?: { name: string; description: string }; entries: ContentEntry[] };
+const entries = index.entries;
 
 export function listEntries(): ContentEntry[] {
   return entries;
@@ -26,4 +27,10 @@ export function listEntries(): ContentEntry[] {
 
 export function getEntryBySlug(slug: string): ContentEntry | undefined {
   return entries.find((entry) => entry.slug === slug);
+}
+
+// siteMeta is site.yaml's name and description, copied into the index by
+// biblio-cli. An index written before the `site` block existed has none.
+export function siteMeta(): { name: string; description: string } {
+  return index.site ?? { name: "", description: "" };
 }

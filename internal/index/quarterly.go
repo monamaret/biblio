@@ -13,23 +13,24 @@ import (
 	"github.com/monamaret/biblio/internal/content"
 )
 
-// SiteMeta is the quarterly index's `site` object: the site.yaml name and
-// description, for the masthead and llms.txt.
+// SiteMeta is the index's `site` object: the site.yaml name and
+// description, for page titles, the quarterly masthead and llms.txt.
 type SiteMeta struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 }
 
 // MarshalJSON keeps profile, log, and docs indexes exactly
-// {"entries": [...]}, and always emits every quarterly key — empty arrays
+// {"site": {...}, "entries": [...]}, and always emits every quarterly key — empty arrays
 // and a null current_issue included — for quarterly indexes, which are the
 // ones carrying Typesetting (specs/004-quarterly-site-type data-model.md
 // "content-index.json shape").
 func (idx Index) MarshalJSON() ([]byte, error) {
 	if idx.Typesetting == nil {
 		return json.Marshal(struct {
-			Entries []Entry `json:"entries"`
-		}{idx.Entries})
+			Site    *SiteMeta `json:"site,omitempty"`
+			Entries []Entry   `json:"entries"`
+		}{idx.Site, idx.Entries})
 	}
 	issues, categories := idx.Issues, idx.Categories
 	if issues == nil {

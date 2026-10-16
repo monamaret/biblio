@@ -1,7 +1,16 @@
-import { Link, useParams } from "react-router";
+import { Link, useParams, type MetaFunction } from "react-router";
 import { articlesInIssue, currentIssue, getIssue, typesetting } from "../content/load";
 import { Masthead, NotFound } from "../content/masthead";
 import { issueLine, numeral } from "../content/numerals";
+import { pageTitle } from "../content/title";
+
+// "/" is titled with the site name alone; an issue page with the issue's title (#215).
+export const meta: MetaFunction = ({ params }) => {
+  if (!params.issue) {
+    return [{ title: pageTitle() }];
+  }
+  return [{ title: pageTitle(getIssue(params.issue)?.title ?? "Not found") }];
+};
 
 // Contents is the issue contents page — the current issue at "/", any
 // published issue at "/issues/:issue": masthead, "No. N · season", cover

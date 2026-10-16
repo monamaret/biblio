@@ -1,7 +1,13 @@
-import { Link, useParams } from "react-router";
+import { Link, useParams, type MetaFunction } from "react-router";
 import { articlesInCategory, getCategory, getIssue } from "../content/load";
 import { Masthead, NotFound } from "../content/masthead";
 import { issueLine } from "../content/numerals";
+import { pageTitle } from "../content/title";
+
+// A category page is titled with the category's label, then the site name (#215).
+export const meta: MetaFunction = ({ params }) => [
+  { title: pageTitle(getCategory(params.category ?? "")?.label ?? "Not found") },
+];
 
 // Category lists one category's articles across every issue, newest issue
 // first, each showing its issue (specs/004-quarterly-site-type FR-011,

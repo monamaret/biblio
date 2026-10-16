@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 // Package crosstypereview — terminal-rendering half of the Cross-Type
 // Consistency Record (FR-004, Scenario 3, SC-002). The TS-side negotiation
 // logic itself is exercised per type by each template's own

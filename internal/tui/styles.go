@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 // Package tui holds the Lip Gloss styles and Bubble Tea prompt helpers shared
 // across every guided flow (the `new` flow first, in v0.01; later flows reuse
 // the same look rather than redefining it).

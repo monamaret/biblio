@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 // Package prebuild owns the step `biblio-cli build` and `biblio-cli dev`
 // run before handing off to Vite: validate content/site.yaml, regenerate
 // public/tokens.css (quarterly), convert images to plates (quarterly), and

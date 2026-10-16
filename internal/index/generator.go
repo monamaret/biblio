@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 // Package index owns the canonical content-index.json generation step
 // (FR-003; data-model.md "Content Index"; Principle II — biblio-cli is the
 // sole producer; the generated JSON is consumed unchanged by the React Router

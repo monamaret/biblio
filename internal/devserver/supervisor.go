@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 // Package devserver implements the supervised process pair that powers
 // `biblio-cli dev`: it starts vite dev and wrangler dev together,
 // forwards their output, and shuts both down cleanly on interrupt

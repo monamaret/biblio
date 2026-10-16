@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 // guidance_test exercises internal/escalation's Storage-Escalation
 // Guidance Check: threshold-status computation against a real
 // content-index.json's derived scale (data-model.md "Storage-Escalation

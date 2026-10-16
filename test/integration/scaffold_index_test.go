@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 // Package integration tests the full scaffold → index path for each of the
 // three site types (SC-001, SC-002; quickstart.md Scenarios 1 and 2).
 // These tests call the scaffold and index generators directly rather than

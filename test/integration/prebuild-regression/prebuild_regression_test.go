@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 // Package prebuildregression pins the one change the automatic pre-build
 // step is allowed to make to profile, log, and docs projects: it rewrites
 // content-index.json. Every other file a scaffold produces must be

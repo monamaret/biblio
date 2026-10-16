@@ -1,3 +1,6 @@
+// Copyright 2026 Mona Maret
+// SPDX-License-Identifier: Apache-2.0
+
 // Package plates converts a quarterly site's content images into the
 // published "plates": grayscale (unless turned off), width-capped copies
 // in public/plates/, named by a hash of the source bytes and the

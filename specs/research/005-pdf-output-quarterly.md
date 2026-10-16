@@ -636,9 +636,11 @@ live under `pdf:`.
 - [x] ~~**`biblio-cli dev`.**~~ **Resolved 2026-10-15:** `dev` never builds
   PDFs. A separate `biblio-cli pdf` command handles it (see
   [Commands](#commands-build-pdf-and-dev)).
-- [ ] **Drafts.** If 004 adds `draft: true` issues, drafts should be left
-  out of PDFs too. Should `biblio-cli pdf` still be able to preview them?
-  Owner, before plan.
+- [ ] **Drafts.** 004 now has `draft: true` issues (decided 2026-10-15),
+  so drafts are left out of the PDFs `build` produces, as they are left
+  out of everything else published. Still open: should `biblio-cli pdf`
+  be able to preview a draft issue, the way `dev` shows drafts? Owner,
+  before plan.
 - [ ] **Generalizing later.** Keep `internal/pdf` independent of quarterly
   details (the issue and offprint assembly sit behind an interface) so docs
   sites could get "the whole manual as a PDF" later? Owner, before plan.

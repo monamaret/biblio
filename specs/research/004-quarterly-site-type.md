@@ -353,7 +353,9 @@ existing progressive-enhancement rule.
 ## Open Questions
 
 - [ ] Default text face: Archivo or Inter Tight? Set a sample article in
-  both. — owner — before spec
+  both. — owner — moved to before plan (2026-10-15): the spec assumes
+  Archivo, per the preset sketch, and either choice leaves the
+  requirements unchanged
 - [ ] Structured notes: extract them in Go at index time (goldmark footnote
   extension plus a margin-note scanner) so the index carries
   `footnotes`/`marginNotes`, or parse them in TS when `get_article` runs?
@@ -366,15 +368,16 @@ existing progressive-enhancement rule.
   through `var()`-driven properties), or should the generator also emit
   `[data-…]` rule blocks into `tokens.css`, which would make `tokens.css`
   more than variables? — owner — before plan
-- [ ] Should the pre-step (tokens, images, index) apply to all four types?
-  That would also fix the earlier gaps where pages ignore the tokens and
-  `index` runs manually. — owner — before spec
+- [x] ~~Should the pre-step (tokens, images, index) apply to all four types?~~
+  **Resolved 2026-10-15:** partly. Settings validation and `index` run
+  automatically for all four types; tokens and images stay quarterly-only.
+  See the Decision Log.
 - [ ] Image output: keep the source format, or always write JPEG for photos
   and PNG for images with alpha? What maximum width (e.g. 1600px)? —
   owner — before plan
-- [ ] Can an issue be marked as a draft (an `issue.md` `draft: true` field
-  excluded from build and index)? Not raised in the interview. — owner —
-  before spec
+- [x] ~~Can an issue be marked as a draft (an `issue.md` `draft: true` field
+  excluded from build and index)?~~ **Resolved 2026-10-15:** yes; drafts
+  are shown in `dev`. See the Decision Log.
 
 ## Decision Log
 
@@ -400,10 +403,31 @@ existing progressive-enhancement rule.
   edition, Typst engine) is a separate follow-on feature, researched in
   [005-pdf-output-quarterly.md](005-pdf-output-quarterly.md). — Keeps the
   site type shippable on its own. — Project owner
+- **2026-10-15** — An issue can be marked `draft: true` in `issue.md`. A
+  draft issue and its articles are left out of the built site, the index,
+  `llms.txt`, category pages, the archive and the MCP tools, and never
+  count as the current issue; `dev` still shows them. — Lets the author
+  write the next issue in the same repo without publishing it. — Project
+  owner (spec clarification)
+- **2026-10-15** — The automatic pre-build step in `build`/`dev` runs
+  settings validation and `index` for all four site types; regenerating
+  `tokens.css` and converting images stay quarterly-only. Profile, log
+  and docs pages, styles and assets are unchanged. — Removes the manual
+  `index` step everywhere without restyling existing sites; making their
+  pages read the tokens remains a separate decision. — Project owner
+  (spec clarification)
 
 ## Follow-up
 
-Parked on 2026-10-15 for later. To pick it up:
+**Picked up 2026-10-15.** The spec is written
+([specs/004-quarterly-site-type/spec.md](../004-quarterly-site-type/spec.md)),
+along with the feature item
+([011-quarterly-site-type.md](../features/011-quarterly-site-type.md)) and
+[roadmap §11](roadmap.md#11-quarterly-site-type). The remaining open
+questions are tracked in [roadmap §0.5](roadmap.md#05-quarterly-site-type)
+and settle during planning.
+
+Original parking note (2026-10-15):
 
 1. Resolve the Open Questions above. The ones blocking the spec are the
    default text face and whether the build pre-step applies to all types.

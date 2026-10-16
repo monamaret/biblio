@@ -78,8 +78,11 @@ options to draw from when there's reason to, not a queue.
   research doc. **Promoted →** [004-quarterly-site-type.md](004-quarterly-site-type.md)
   (2026-10-15: `quarterly`, an issue-based magazine in a 1970s
   academic-book style), with follow-on PDF output in
-  [005-pdf-output-quarterly.md](005-pdf-output-quarterly.md). Feature spec
-  not yet written; both docs are parked for follow-up.
+  [005-pdf-output-quarterly.md](005-pdf-output-quarterly.md). The site type
+  is now feature item [011](../features/011-quarterly-site-type.md) /
+  [roadmap §11](roadmap.md#11-quarterly-site-type), with its spec in
+  [specs/004-quarterly-site-type/](../004-quarterly-site-type/spec.md); PDF
+  output stays parked as a follow-on.
 - **Multi-site management from a single `biblio-cli` install.** Today each
   `biblio-cli new` produces one independent project; there's no concept of
   "my sites" across projects. Could matter if the author (or any future user)
